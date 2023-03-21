@@ -2,7 +2,7 @@ import json
 
 from jupyter_server.base.handlers import APIHandler
 from jupyter_server.utils import url_path_join
-import tornado
+import tornado.web
 
 class RouteHandler(APIHandler):
     # The following decorator should be present on all verb methods (head, get, post,
