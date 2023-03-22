@@ -1,27 +1,69 @@
 import { Widget } from '@lumino/widgets';
-import appHtml from '../style/app.html';
 
-const SERVER_URL = '';
+const SERVER_URL = '/myextension';
+
+const TABLE = `
+<div class="container mt-5">
+    <h1 class="mb-4">Batch Jobs</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Job ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Created At</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+                <th class="text-center"><a id="add-job" role="button" class="btn btn-primary btn-xs">Add New</a></th>
+            </tr>
+        </thead>
+        <tbody id="jobs-table-body">
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="consoleLogModal" tabindex="-1" aria-labelledby="consoleLogModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="consoleLogModalLabel">Console Log</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="console-log-content">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+`;
 
 export class BatchJobManager extends Widget {
   constructor() {
+    console.log('BatchJobManager: constructor()!');
     super();
     this.id = 'batch-job-manager';
-    this.node.innerHTML = appHtml;
-    this.addClass('batchJobManager');
-    this.title.label = 'Batch Job Manager';
+    this.node.innerHTML = TABLE;
+
+    // https://jupyterlab.readthedocs.io/en/stable/developer/css.html
+    this.addClass('jp-BatchJobManager');
   }
 
   onAfterAttach(): void {
+    console.log('BatchJobManager: onAfterAttach()!');
     this.fetchJobs();
   }
 
   async fetchJobs(): Promise<void> {
+    console.log('BatchJobManager: fetchJobs()!');
+
     try {
-      const response = await fetch(`${SERVER_URL}/jobs`);
+      const url = `${SERVER_URL}/jobs`;
+      const response = await fetch(url);
       const jobs = await response.json();
       const tableBody = this.node.querySelector(
-        '#jobsTableBody'
+        '#jobs-table-body'
       ) as HTMLElement;
       tableBody.innerHTML = '';
 

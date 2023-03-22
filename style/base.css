@@ -3,3 +3,11 @@
 
     https://jupyterlab.readthedocs.io/en/stable/developer/css.html
 */
+@import 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css';
+
+.jp-BatchJobManager {
+    background: var(--jp-layout-color1);
+    color: var(--jp-ui-font-color1);
+    font-size: var(--jp-ui-font-size1);
+    overflow-y: auto;
+  }
