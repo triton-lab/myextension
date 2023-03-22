@@ -16,6 +16,7 @@
     "name": "Yamato Matsuoka",
     "email": "yamato.matsuoka@tritonlab.io"
   },
+  "private": true,
   "files": [
     "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
     "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
@@ -28,6 +29,7 @@
     "type": "git",
     "url": "https://github.com/yamaton/myextension.git"
   },
+
   "scripts": {
     "build": "jlpm build:lib && jlpm build:labextension:dev",
     "build:prod": "jlpm clean && jlpm build:lib:prod && jlpm build:labextension",
