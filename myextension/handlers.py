@@ -81,7 +81,7 @@ class JobListHandler(APIHandler):
 
     def get(self):
         """Get the job list as JSON"""
-        print(f"HTTP GET: Received a request'")
+        print(f"HTTP GET: JobListHandler received a request")
         jobs_info = self._get_job_info()
         jobs_as_dicts = [x._asdict() for x in jobs_info]
         self.finish(json.dumps(jobs_as_dicts))

@@ -4,7 +4,6 @@ const SERVER_URL = '/myextension';
 
 const TABLE = `
 <div class="container mt-5">
-    <h1 class="mb-4">Batch Jobs</h1>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -43,9 +42,9 @@ export class BatchJobManager extends Widget {
   constructor() {
     console.log('BatchJobManager: constructor()!');
     super();
-    this.id = 'batch-job-manager';
     this.node.innerHTML = TABLE;
-
+    this.title.label = 'Batch Jobs';
+    this.title.closable = true;
     // https://jupyterlab.readthedocs.io/en/stable/developer/css.html
     this.addClass('jp-BatchJobManager');
   }
