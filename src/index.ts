@@ -35,8 +35,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
           const content = new BatchJobManager();
           widget = new MainAreaWidget({ content });
           widget.id = 'batch-job-manager';
-          widget.title.label = 'Astronomy Picture';
-          widget.title.closable = true;
         }
 
         if (!widget.isAttached) {
