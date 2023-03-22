@@ -1293,7 +1293,7 @@
     y-protocols "^1.0.5"
     yjs "^13.5.40"
 
-"@jupyterlab/application@^3.1.0":
+"@jupyterlab/application@^3.4.7":
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/@jupyterlab/application/-/application-3.6.2.tgz#2920f2455484eea9a558956ce27640d18b901a51"
   integrity sha512-yweyVTCQHfpvpxZmuBxLuGfxw30AtS4JrQGCh0P34taAbJfaYwQvzMEdK9fjvzbg8QDzIvp2lhsZZjQBjKdRzw==
@@ -1319,7 +1319,7 @@
     "@lumino/signaling" "^1.10.0"
     "@lumino/widgets" "^1.37.1"
 
-"@jupyterlab/apputils@^3.6.2":
+"@jupyterlab/apputils@^3.4.7", "@jupyterlab/apputils@^3.6.2":
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/@jupyterlab/apputils/-/apputils-3.6.2.tgz#743d46f9a002ff70cc8e487bc3b4b0375574010f"
   integrity sha512-H0oYfIyZSI4QwZKq4X1/weoSWhKbNBKY/ikqQPrG/6KlRYhVqGtxxpRvrHVhhIa8TWQlJxVaXHoW3sbahzok0g==
@@ -1360,7 +1360,7 @@
     "@lumino/disposable" "^1.10.0"
     "@lumino/signaling" "^1.10.0"
 
-"@jupyterlab/builder@^3.1.0":
+"@jupyterlab/builder@^3.4.7":
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/@jupyterlab/builder/-/builder-3.6.2.tgz#910727b6daa881b1a9cc563362c973f5bd91e142"
   integrity sha512-xn6zej5slJLoB6bldq7F+F2FAue5mQQ9djVtmcLuLxyhR8lPSaDqVkfCnHp62XlFxwOFm4YIMCV4ip6W8ug/Fw==
@@ -1689,7 +1689,7 @@
     node-fetch "^2.6.0"
     ws "^7.4.6"
 
-"@jupyterlab/settingregistry@^3.1.0", "@jupyterlab/settingregistry@^3.6.2":
+"@jupyterlab/settingregistry@^3.4.7", "@jupyterlab/settingregistry@^3.6.2":
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/@jupyterlab/settingregistry/-/settingregistry-3.6.2.tgz#1a98315dafa80b8b0166ed36d9e4cbba0af054a6"
   integrity sha512-kAOzuuZOXQWs7UxyvgsK6rDwRLF26HiCpUdjbEQwobmQUVysXB+t6YRG2wYTuz3cMVlWn52gj3Nvi81P+7xPdA==
@@ -1733,7 +1733,7 @@
     react "^17.0.1"
     typestyle "^2.0.4"
 
-"@jupyterlab/testutils@^3.0.0":
+"@jupyterlab/testutils@^3.4.7":
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/@jupyterlab/testutils/-/testutils-3.6.2.tgz#82fb61c59ba224111b37503109fc79ae7cef0f2d"
   integrity sha512-krH7ozAVwGjKqsQnM/kfw8DS6CQmUwMpjYhhrn1sriZ1pcJRB94C9BsMl05ddAu0bof5x9opadp/gVlkFcfQng==
