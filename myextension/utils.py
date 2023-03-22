@@ -15,7 +15,7 @@ class JupyterPathLoadingError(Exception):
 
 def _get_db_path() -> Path:
     p = platformdirs.user_data_dir("jupyter")
-    return Path(p) /  "batchjob.sqlite"
+    return Path(p) /  "batchjob.db"
 
 
 def _create_db(p: Path) -> Connection:
