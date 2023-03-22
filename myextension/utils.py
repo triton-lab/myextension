@@ -1,12 +1,12 @@
 import json
 import os
 import subprocess
-
 from pathlib import Path
 from typing import Optional, Tuple
 import urllib.parse
 import sqlite3
 from sqlite3 import Connection
+import platformdirs
 
 
 class JupyterPathLoadingError(Exception):
@@ -14,13 +14,8 @@ class JupyterPathLoadingError(Exception):
 
 
 def _get_db_path() -> Path:
-    res = subprocess.run("jupyter --paths --json", shell=True, capture_output=True)
-    if res.stdout is None:
-        raise JupyterPathLoadingError("Failed to load jupyter --path")
-    data = json.loads(res.stdout.decode()).get("data", [])
-    if len(data) < 1:
-        raise Exception("No Jupyter data folder found.")
-    return Path(data[0]) /  "batchjob.sqlite"
+    p = platformdirs.user_data_dir("jupyter")
+    return Path(p) /  "batchjob.sqlite"
 
 
 def _create_db(p: Path) -> Connection:
