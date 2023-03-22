@@ -72,7 +72,9 @@ def to_status(request_state: str, instance_state: str) -> JobStatus:
 
 class JobListHandler(APIHandler):
 
-    db = open_or_create_db()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.db = open_or_create_db()
 
     def __del__(self):
         self.db.close()
