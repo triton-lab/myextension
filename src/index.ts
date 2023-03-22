@@ -14,7 +14,10 @@ const plugin: JupyterFrontEndPlugin<void> = {
   id: 'myextension:plugin',
   autoStart: true,
   optional: [ISettingRegistry],
-  activate: (app: JupyterFrontEnd, settingRegistry: ISettingRegistry | null) => {
+  activate: (
+    app: JupyterFrontEnd,
+    settingRegistry: ISettingRegistry | null
+  ) => {
     console.log('JupyterLab extension myextension is activated!');
 
     if (settingRegistry) {
