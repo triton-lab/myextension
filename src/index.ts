@@ -2,10 +2,12 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-
+import { ICommandPalette } from '@jupyterlab/apputils';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import { requestAPI } from './handler';
+import { BatchJobManager } from './batchJobManager';
+import '../style/index.css';
 
 /**
  * Initialization data for the myextension extension.
@@ -13,12 +15,26 @@ import { requestAPI } from './handler';
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'myextension:plugin',
   autoStart: true,
-  optional: [ISettingRegistry],
+  optional: [ICommandPalette, ISettingRegistry],
   activate: (
     app: JupyterFrontEnd,
+    palette: ICommandPalette,
     settingRegistry: ISettingRegistry | null
   ) => {
     console.log('JupyterLab extension myextension is activated!');
+
+    const { commands, shell } = app;
+    const command = 'widgets:batch-job-manager';
+
+    commands.addCommand(command, {
+      label: 'Batch Job Manager',
+      caption: 'Manages batch jobs',
+      execute: () => {
+        const widget = new BatchJobManager();
+        shell.add(widget, 'main');
+      }
+    });
+    palette.addItem({ command: command, category: 'Tutorial' });
 
     if (settingRegistry) {
       settingRegistry
