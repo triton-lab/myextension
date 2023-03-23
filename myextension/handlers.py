@@ -83,6 +83,7 @@ class JobListHandler(APIHandler):
     def __del__(self):
         self.db.close()
 
+    @tornado.web.authenticated
     def get(self):
         """Get the job list as JSON"""
         print(f"HTTP GET: JobListHandler received a request")
@@ -91,6 +92,7 @@ class JobListHandler(APIHandler):
         self.finish(json.dumps(jobs_as_dicts))
 
 
+    @tornado.web.authenticated
     def post(self):
         """Receive a filepath, and then request a job to the JupyterHub 'batch' service """
         # tornado.escape.json_decode(self.request.body) works similarly
@@ -128,6 +130,7 @@ class JobListHandler(APIHandler):
         self.get()
 
 
+    @tornado.web.authenticated
     def delete(self, job_id: str):
         """send cancel to the JupyterHub service 'batch'"""
         print(f"HTTP DELETE: received {job_id}")
