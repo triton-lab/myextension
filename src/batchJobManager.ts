@@ -118,34 +118,84 @@ export class BatchJobManager extends Widget {
     }
   }
 
+  private createFormGroup(
+    labelText: string,
+    inputType: string,
+    inputId: string,
+    inputPlaceholder?: string,
+    options?: Record<string, string>
+  ): HTMLDivElement {
+    const div = document.createElement('div');
+    div.classList.add('mb-3');
+
+    const label = document.createElement('label');
+    label.setAttribute('for', inputId);
+    label.classList.add('form-label');
+    label.textContent = labelText;
+
+    const input = document.createElement(
+      inputType === 'select' ? 'select' : 'input'
+    );
+    input.classList.add(
+      inputType === 'select' ? 'form-select' : 'form-control'
+    );
+    input.id = inputId;
+
+    if (inputType === 'text') {
+      input.setAttribute('type', inputType);
+      input.setAttribute('placeholder', inputPlaceholder || '');
+    } else if (inputType === 'select' && options) {
+      for (const [value, text] of Object.entries(options)) {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = text;
+        input.appendChild(option);
+      }
+    }
+
+    div.appendChild(label);
+    div.appendChild(input);
+
+    return div;
+  }
+
   private async showCreateJobDialog(): Promise<void> {
+    const instanceTypeOptions = {
+      'c6a.large': 'c6a.large',
+      'c6a.xlarge': 'c6a.xlarge',
+      'c6a.2xlarge': 'c6a.2xlarge',
+      't3a.large': 't3a.large',
+      't3a.xlarge': 't3a.xlarge',
+      't3a.2xlarge': 't3a.2xlarge'
+    };
+
+    const nameDiv = this.createFormGroup(
+      'Name',
+      'text',
+      'job-name',
+      'Enter job name'
+    );
+    const filePathDiv = this.createFormGroup(
+      'File Path',
+      'text',
+      'job-file-path',
+      'Enter file path'
+    );
+    const instanceTypeDiv = this.createFormGroup(
+      'Instance Type',
+      'select',
+      'job-instance-type',
+      undefined,
+      instanceTypeOptions
+    );
+
+    const form = document.createElement('form');
+    form.id = 'create-job-form';
+    form.appendChild(nameDiv);
+    form.appendChild(filePathDiv);
+    form.appendChild(instanceTypeDiv);
     const body = new Widget();
-    const nameInput = document.createElement('input');
-    const filePathInput = document.createElement('input');
-    const instanceTypeSelect = document.createElement('select');
-
-    nameInput.placeholder = 'Name';
-    filePathInput.placeholder = 'File Path';
-
-    const instanceTypes = [
-      'c6a.large',
-      'c6a.xlarge',
-      'c6a.2xlarge',
-      't3a.xlarge'
-    ];
-
-    instanceTypes.forEach(instanceType => {
-      const option = document.createElement('option');
-      option.value = instanceType;
-      option.innerText = instanceType;
-      instanceTypeSelect.appendChild(option);
-    });
-
-    body.node.appendChild(nameInput);
-    body.node.appendChild(document.createElement('br'));
-    body.node.appendChild(filePathInput);
-    body.node.appendChild(document.createElement('br'));
-    body.node.appendChild(instanceTypeSelect);
+    body.node.appendChild(form);
 
     const result = await showDialog({
       title: 'Create Job',
@@ -154,9 +204,9 @@ export class BatchJobManager extends Widget {
     });
 
     if (result.button.accept) {
-      console.log('Name:', nameInput.value);
-      console.log('File Path:', filePathInput.value);
-      console.log('Instance Type:', instanceTypeSelect.value);
+      console.log('Name:', nameDiv.childNodes[1].nodeValue);
+      console.log('File Path:', filePathDiv.childNodes[1].nodeValue);
+      console.log('Instance Type:', instanceTypeDiv.childNodes[1].nodeValue);
       // Perform your job creation logic here
     }
   }
