@@ -3,7 +3,7 @@ import { Widget } from '@lumino/widgets';
 
 const SERVER_URL = '/myextension';
 
-const TABLE = `
+const JOB_TABLE = `
 <div class="container mt-5">
   <table class="table table-striped">
     <thead>
@@ -14,7 +14,7 @@ const TABLE = `
         <th scope="col">Status</th>
         <th scope="col">Actions</th>
         <th class="text-center">
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#batch-job-create-job">
+          <button type="button" class="btn btn-primary">
             Create Job
           </button>
         </th>
@@ -26,11 +26,36 @@ const TABLE = `
 </div>
 `;
 
+const JOB_DEFINITION = `
+<form id="create-job-form">
+  <div class="mb-3">
+    <label for="job-name" class="form-label">Name</label>
+    <input type="text" class="form-control" id="job-name" placeholder="Enter job name">
+  </div>
+  <div class="mb-3">
+    <label for="job-file-path" class="form-label">File Path</label>
+    <input type="text" class="form-control" id="job-file-path" placeholder="Enter file path">
+  </div>
+  <div class="mb-3">
+    <label for="job-instance-type" class="form-label">Instance Type</label>
+    <select class="form-select" id="job-instance-type">
+      <option value="c6a.large">c6a.large</option>
+      <option value="c6a.xlarge">c6a.xlarge</option>
+      <option value="c6a.2xlarge">c6a.2xlarge</option>
+      <!-- Add more options as needed -->
+      <option value="t3a.large">t3a.large</option>
+      <option value="t3a.xlarge">t3a.xlarge</option>
+      <option value="t3a.2xlarge">t3a.2xlarge</option>
+    </select>
+  </div>
+</form>
+`;
+
 export class BatchJobManager extends Widget {
   constructor() {
     console.log('BatchJobManager: constructor()!');
     super();
-    this.node.innerHTML = TABLE;
+    this.node.innerHTML = JOB_TABLE;
     this.title.label = 'Batch Jobs';
     this.title.closable = true;
     // https://jupyterlab.readthedocs.io/en/stable/developer/css.html
@@ -94,7 +119,7 @@ export class BatchJobManager extends Widget {
           event.preventDefault();
           const logContent = (event.target as HTMLElement).dataset.log;
           if (logContent) {
-            this.displayLog(logContent);
+            console.log(`logContent: ${logContent}`);
           } else {
             console.warn('Log content is not available');
           }
@@ -118,85 +143,9 @@ export class BatchJobManager extends Widget {
     }
   }
 
-  private createFormGroup(
-    labelText: string,
-    inputType: string,
-    inputId: string,
-    inputPlaceholder?: string,
-    options?: Record<string, string>
-  ): HTMLDivElement {
-    const div = document.createElement('div');
-    div.classList.add('mb-3');
-
-    const label = document.createElement('label');
-    label.setAttribute('for', inputId);
-    label.classList.add('form-label');
-    label.textContent = labelText;
-
-    const input = document.createElement(
-      inputType === 'select' ? 'select' : 'input'
-    );
-    input.classList.add(
-      inputType === 'select' ? 'form-select' : 'form-control'
-    );
-    input.id = inputId;
-
-    if (inputType === 'text') {
-      input.setAttribute('type', inputType);
-      input.setAttribute('placeholder', inputPlaceholder || '');
-    } else if (inputType === 'select' && options) {
-      for (const [value, text] of Object.entries(options)) {
-        const option = document.createElement('option');
-        option.value = value;
-        option.textContent = text;
-        input.appendChild(option);
-      }
-    }
-
-    div.appendChild(label);
-    div.appendChild(input);
-
-    return div;
-  }
-
   private async showCreateJobDialog(): Promise<void> {
-    const instanceTypeOptions = {
-      'c6a.large': 'c6a.large',
-      'c6a.xlarge': 'c6a.xlarge',
-      'c6a.2xlarge': 'c6a.2xlarge',
-      't3a.large': 't3a.large',
-      't3a.xlarge': 't3a.xlarge',
-      't3a.2xlarge': 't3a.2xlarge'
-    };
-
-    const nameDiv = this.createFormGroup(
-      'Name',
-      'text',
-      'job-name',
-      'Enter job name'
-    );
-    const filePathDiv = this.createFormGroup(
-      'File Path',
-      'text',
-      'job-file-path',
-      'Enter file path'
-    );
-    const instanceTypeDiv = this.createFormGroup(
-      'Instance Type',
-      'select',
-      'job-instance-type',
-      undefined,
-      instanceTypeOptions
-    );
-
-    const form = document.createElement('form');
-    form.id = 'create-job-form';
-    form.appendChild(nameDiv);
-    form.appendChild(filePathDiv);
-    form.appendChild(instanceTypeDiv);
     const body = new Widget();
-    body.node.appendChild(form);
-
+    body.node.innerHTML = JOB_DEFINITION;
     const result = await showDialog({
       title: 'Create Job',
       body,
@@ -204,17 +153,20 @@ export class BatchJobManager extends Widget {
     });
 
     if (result.button.accept) {
-      console.log('Name:', nameDiv.childNodes[1].nodeValue);
-      console.log('File Path:', filePathDiv.childNodes[1].nodeValue);
-      console.log('Instance Type:', instanceTypeDiv.childNodes[1].nodeValue);
+      console.log(
+        'Name:',
+        (body.node.querySelector('#job-name') as HTMLSelectElement).value
+      );
+      console.log(
+        'File Path:',
+        (body.node.querySelector('#job-file-path') as HTMLSelectElement).value
+      );
+      console.log(
+        'Instance Type:',
+        (body.node.querySelector('#job-instance-type') as HTMLSelectElement)
+          .value
+      );
       // Perform your job creation logic here
     }
-  }
-
-  displayLog(logContent: string): void {
-    const logModalContent = this.node.querySelector(
-      '#logModalContent'
-    ) as HTMLElement;
-    logModalContent.textContent = logContent;
   }
 }
