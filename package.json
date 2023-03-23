@@ -59,8 +59,8 @@
   "dependencies": {
     "@jupyterlab/application": "^3.4.7",
     "@jupyterlab/apputils": "^3.4.7",
-    "@jupyterlab/coreutils": "^5.1.0",
-    "@jupyterlab/services": "^6.1.0",
+    "@jupyterlab/coreutils": "^5.5.0",
+    "@jupyterlab/services": "^6.5.0",
     "@jupyterlab/settingregistry": "^3.4.7",
     "bootstrap": "^5.0.0"
   },
