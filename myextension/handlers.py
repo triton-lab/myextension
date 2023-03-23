@@ -39,19 +39,23 @@ class JobStatus(Enum):
 
 class JobMetadata(NamedTuple):
     job_id: str
+    name: str
     timestamp: datetime
     request_id: str
     instance_id: str
-
+    instance_type: str
+    extra: str
 
 class JobInfo(NamedTuple):
     job_id: str
+    name: str
     timestamp: datetime
     status: JobStatus
     request_id: str
     instance_id: str
+    instance_type: str
     console: str
-
+    extra: str
 
 def to_status(request_state: str, instance_state: str) -> JobStatus:
     if request_state == "open":
@@ -91,12 +95,19 @@ class JobListHandler(APIHandler):
         """Receive a filepath, and then request a job to the JupyterHub 'batch' service """
         # tornado.escape.json_decode(self.request.body) works similarly
         payload: Optional[Dict] = self.get_json_body()
-        if (payload is None) or ('path' not in payload):
+        if (payload is None):
             self.set_status(400)
             self.finish("POST needs 'path' field")
             return
 
+        for x in ('name', 'path', 'instance_type'):
+            if x not in payload:
+                self.set_status(400)
+                self.finish(f"POST needs '{x}' field")
+                return
+        name = payload['name']
         apipath = payload['path']
+        instance_type = payload['instance_type']
         print(f"HTTP POST: Received file '{apipath}'")
 
         filepath = Path(self.settings["server_root_dir"]) / apipath
@@ -112,7 +123,7 @@ class JobListHandler(APIHandler):
 
         job_id = str(uuid.uuid4())  # TODO: check collision of job ID?
         res = self._start_job(job_id, filepath)
-        meta = JobMetadata(job_id, res['LaunchTime'], res['SpotInstanceRequestId'], res['InstanceId'])
+        meta = JobMetadata(job_id, name, res['LaunchTime'], res['SpotInstanceRequestId'], instance_id=res['InstanceId'], instance_type=instance_type, extra="")
         self._db_add(meta)
         self.get()
 
@@ -234,8 +245,9 @@ class JobListHandler(APIHandler):
             request_state = r[id_]["SpotInstanceRequestState"]
             instance_state = r[id_]["InstanceState"]
             console_output = r[id_]["ConsoleOutput"]
+            instance_type = r[id_]["InstanceType"]
             status = to_status(request_state=request_state, instance_state=instance_state)
-            jobinfo = JobInfo(jobmeta.job_id, jobmeta.timestamp, status, jobmeta.request_id, jobmeta.instance_id, console_output)
+            jobinfo = JobInfo(jobmeta.job_id, jobmeta.name, jobmeta.timestamp, status, jobmeta.request_id, jobmeta.instance_id, instance_type, console_output, extra="")
             result.append(jobinfo)
         return result
 
@@ -254,7 +266,7 @@ class JobListHandler(APIHandler):
 
     def _db_add(self, jobmeta: JobMetadata) -> None:
         with self.db:
-            self.db.execute("insert into jobmeta values (?, ?, ?, ?)", jobmeta)
+            self.db.execute("insert into jobmeta values (?, ?, ?, ?, ?, ?, ?)", jobmeta)
 
 
     def _db_delete(self, job_id: str) -> None:

@@ -167,7 +167,7 @@ export class BatchJobManager extends Widget {
         },
         body: JSON.stringify({
           name: name,
-          file_path: filePath,
+          path: filePath,
           instance_type: instanceType
         })
       });

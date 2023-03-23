@@ -23,7 +23,7 @@ def _create_db(p: Path) -> Connection:
     print(f"Creating {p}")
     print("-----------------------")
     db = sqlite3.connect(p)
-    db.execute("create table jobmeta (job_id text, datetime text, request_id text, instance_id text)")
+    db.execute("create table jobmeta (job_id text, name text, datetime text, request_id text, instance_id text, instance_type text, extra text)")
     return db
 
 
