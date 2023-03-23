@@ -1,5 +1,8 @@
 import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { Widget } from '@lumino/widgets';
+import { ServerConnection } from '@jupyterlab/services';
+
+import { IBatchJobItem } from './types';
 
 const SERVER_URL = '/myextension';
 
@@ -75,71 +78,106 @@ export class BatchJobManager extends Widget {
 
   async fetchJobs(): Promise<void> {
     console.log('BatchJobManager: fetchJobs()!');
-
+    const url = `${SERVER_URL}/jobs`;
+    let response: Response;
     try {
-      const url = `${SERVER_URL}/jobs`;
-      const response = await fetch(url);
-      const jobs = await response.json();
-      const tableBody = this.node.querySelector(
-        '#jobs-table-body'
-      ) as HTMLElement;
-      tableBody.innerHTML = '';
-
-      for (const job of jobs) {
-        const row = document.createElement('tr');
-
-        row.innerHTML = `
-          <td>${job.job_id}</td>
-          <td>${job.name}</td>
-          <td>${job.created_at}</td>
-          <td><a href="#" class="job-status">${job.status}</a></td>
-          <td><button class="btn btn-danger btn-sm delete-job" data-job-id="${job.job_id}">Delete</button></td>
-        `;
-
-        tableBody.appendChild(row);
-      }
-
-      const deleteButtons = this.node.querySelectorAll('.delete-job');
-      deleteButtons.forEach(button => {
-        button.addEventListener('click', async event => {
-          event.preventDefault();
-          const jobId = (event.target as HTMLElement).dataset.jobId;
-          if (jobId) {
-            await this.deleteJob(jobId);
-            this.fetchJobs();
-          } else {
-            console.warn('Job ID is not available');
-          }
-        });
-      });
-
-      const statusLinks = this.node.querySelectorAll('.job-status');
-      statusLinks.forEach(link => {
-        link.addEventListener('click', event => {
-          event.preventDefault();
-          const logContent = (event.target as HTMLElement).dataset.log;
-          if (logContent) {
-            console.log(`logContent: ${logContent}`);
-          } else {
-            console.warn('Log content is not available');
-          }
-        });
-      });
+      response = await fetch(url);
     } catch (error) {
-      console.error('Error fetching jobs:', error);
+      throw new ServerConnection.NetworkError(error as TypeError);
     }
+    if (!response.ok) {
+      throw new ServerConnection.ResponseError(response, response.statusText);
+    }
+
+    const jobs = (await response.json()) as IBatchJobItem[];
+    const tableBody = this.node.querySelector(
+      '#jobs-table-body'
+    ) as HTMLElement;
+    tableBody.innerHTML = '';
+
+    for (const job of jobs) {
+      const row = document.createElement('tr');
+
+      row.innerHTML = `
+        <td>${job.job_id}</td>
+        <td>${job.name}</td>
+        <td>${job.created_at}</td>
+        <td><a href="#" class="job-status">${job.status}</a></td>
+        <td><button class="btn btn-danger btn-sm delete-job" data-job-id="${job.job_id}">Delete</button></td>
+      `;
+
+      tableBody.appendChild(row);
+    }
+
+    const deleteButtons = this.node.querySelectorAll('.delete-job');
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', async event => {
+        event.preventDefault();
+        const jobId = (event.target as HTMLElement).dataset.jobId;
+        if (jobId) {
+          await this.deleteJob(jobId);
+          this.fetchJobs();
+        } else {
+          console.warn('Job ID is not available');
+        }
+      });
+    });
+
+    const statusLinks = this.node.querySelectorAll('.job-status');
+    statusLinks.forEach(link => {
+      link.addEventListener('click', event => {
+        event.preventDefault();
+        const logContent = (event.target as HTMLElement).dataset.log;
+        if (logContent) {
+          console.log(`logContent: ${logContent}`);
+        } else {
+          console.warn('Log content is not available');
+        }
+      });
+    });
   }
 
   async deleteJob(jobId: string): Promise<void> {
+    let response: Response;
     try {
-      const response = await fetch(`${SERVER_URL}/jobs/${jobId}`, {
+      response = await fetch(`${SERVER_URL}/jobs/${jobId}`, {
         method: 'DELETE'
       });
-      if (!response.ok) {
-        throw new Error('Error deleting job');
-      }
     } catch (error) {
-      console.error('Error deleting job:', error);
+      throw new ServerConnection.NetworkError(error as TypeError);
+    }
+
+    if (!response.ok) {
+      console.error('Error deleting a job.');
+      throw new ServerConnection.ResponseError(response, response.statusText);
+    }
+  }
+
+  async addJob(
+    name: string,
+    filePath: string,
+    instanceType: string
+  ): Promise<void> {
+    let response: Response;
+    try {
+      response = await fetch(`${SERVER_URL}/jobs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          file_path: filePath,
+          instance_type: instanceType
+        })
+      });
+    } catch (error) {
+      throw new ServerConnection.NetworkError(error as TypeError);
+    }
+
+    if (!response.ok) {
+      console.error('Error adding a job.');
+      throw new ServerConnection.ResponseError(response, response.statusText);
     }
   }
 
@@ -152,21 +190,25 @@ export class BatchJobManager extends Widget {
       buttons: [Dialog.cancelButton(), Dialog.okButton({ label: 'Create Job' })]
     });
 
+    const name = (body.node.querySelector('#job-name') as HTMLSelectElement)
+      .value;
+    const filePath = (
+      body.node.querySelector('#job-file-path') as HTMLSelectElement
+    ).value;
+    const instanceType = (
+      body.node.querySelector('#job-instance-type') as HTMLSelectElement
+    ).value;
+
     if (result.button.accept) {
-      console.log(
-        'Name:',
-        (body.node.querySelector('#job-name') as HTMLSelectElement).value
-      );
-      console.log(
-        'File Path:',
-        (body.node.querySelector('#job-file-path') as HTMLSelectElement).value
-      );
-      console.log(
-        'Instance Type:',
-        (body.node.querySelector('#job-instance-type') as HTMLSelectElement)
-          .value
-      );
-      // Perform your job creation logic here
+      console.log('Name:', name);
+      console.log('File Path:', filePath);
+      console.log('Instance Type:', instanceType);
+    }
+
+    try {
+      await this.addJob(name, filePath, instanceType);
+    } catch {
+      console.error('Failed to add a job');
     }
   }
 }
