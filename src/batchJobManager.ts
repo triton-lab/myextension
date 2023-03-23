@@ -1,40 +1,28 @@
+import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { Widget } from '@lumino/widgets';
 
 const SERVER_URL = '/myextension';
 
 const TABLE = `
 <div class="container mt-5">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Job ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Created At</th>
-                <th scope="col">Status</th>
-                <th scope="col">Actions</th>
-                <th class="text-center"><a id="add-job" role="button" class="btn btn-primary btn-xs">Add New</a></th>
-            </tr>
-        </thead>
-        <tbody id="jobs-table-body">
-        </tbody>
-    </table>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="consoleLogModal" tabindex="-1" aria-labelledby="consoleLogModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="consoleLogModalLabel">Console Log</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="console-log-content">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Job ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Created At</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+        <th class="text-center">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#batch-job-create-job">
+            Create Job
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody id="jobs-table-body">
+    </tbody>
+  </table>
 </div>
 `;
 
@@ -47,6 +35,12 @@ export class BatchJobManager extends Widget {
     this.title.closable = true;
     // https://jupyterlab.readthedocs.io/en/stable/developer/css.html
     this.addClass('jp-BatchJobManager');
+
+    this.node
+      .querySelector('.btn.btn-primary')
+      ?.addEventListener('click', () => {
+        this.showCreateJobDialog();
+      });
   }
 
   onAfterAttach(): void {
@@ -121,6 +115,49 @@ export class BatchJobManager extends Widget {
       }
     } catch (error) {
       console.error('Error deleting job:', error);
+    }
+  }
+
+  private async showCreateJobDialog(): Promise<void> {
+    const body = new Widget();
+    const nameInput = document.createElement('input');
+    const filePathInput = document.createElement('input');
+    const instanceTypeSelect = document.createElement('select');
+
+    nameInput.placeholder = 'Name';
+    filePathInput.placeholder = 'File Path';
+
+    const instanceTypes = [
+      'c6a.large',
+      'c6a.xlarge',
+      'c6a.2xlarge',
+      't3a.xlarge'
+    ];
+
+    instanceTypes.forEach(instanceType => {
+      const option = document.createElement('option');
+      option.value = instanceType;
+      option.innerText = instanceType;
+      instanceTypeSelect.appendChild(option);
+    });
+
+    body.node.appendChild(nameInput);
+    body.node.appendChild(document.createElement('br'));
+    body.node.appendChild(filePathInput);
+    body.node.appendChild(document.createElement('br'));
+    body.node.appendChild(instanceTypeSelect);
+
+    const result = await showDialog({
+      title: 'Create Job',
+      body,
+      buttons: [Dialog.cancelButton(), Dialog.okButton({ label: 'Create Job' })]
+    });
+
+    if (result.button.accept) {
+      console.log('Name:', nameInput.value);
+      console.log('File Path:', filePathInput.value);
+      console.log('Instance Type:', instanceTypeSelect.value);
+      // Perform your job creation logic here
     }
   }
 

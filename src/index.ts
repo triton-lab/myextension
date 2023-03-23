@@ -7,6 +7,7 @@ import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import { requestAPI } from './handler';
 import { BatchJobManager } from './batchJobManager';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../style/index.css';
 
 /**
