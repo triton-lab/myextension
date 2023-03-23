@@ -99,7 +99,7 @@ class JobListHandler(APIHandler):
         payload: Optional[Dict] = self.get_json_body()
         if (payload is None):
             self.set_status(400)
-            self.finish("POST needs 'path' field")
+            self.finish(json.dumps({"data": "POST needs 'path' field"}))
             return
 
         for x in ('name', 'path', 'instance_type'):
@@ -112,15 +112,16 @@ class JobListHandler(APIHandler):
         instance_type = payload['instance_type']
         print(f"HTTP POST: Received file '{apipath}'")
 
-        filepath = Path(self.settings["server_root_dir"]) / apipath
+        filepath = Path(self.settings["server_root_dir"]).expanduser() / apipath
+        print(f"HTTP POST: filepath: '{filepath}'")
         if not filepath.exists():
             self.set_status(400)
-            self.finish(f"The file does not exist: {apipath}")
+            self.finish(json.dumps({"data": f"The file does not exist: {apipath}"}))
             return
 
-        if not filepath.suffix not in (".ipynb", ".sh"):
+        if filepath.suffix not in (".ipynb", ".sh"):
             self.set_status(400)
-            self.finish(f"Batch job takes either a Jupyter notebook or shell script: {apipath}")
+            self.finish(json.dumps({"data": f"Batch job takes either a Jupyter notebook or shell script: {apipath}"}))
             return
 
         job_id = str(uuid.uuid4())  # TODO: check collision of job ID?
