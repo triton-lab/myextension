@@ -324,7 +324,7 @@ class JobListHandler(APIHandler):
 
 
     def _db_read(self, job_id: str) -> JobMetadata:
-        cur = self.db.execute("select * from jobmeta where job_id=?", job_id)
+        cur = self.db.execute("select * from jobmeta where job_id=?", (job_id, ))
         res = JobMetadata._make(cur.fetchone())
         return res
 
@@ -336,7 +336,7 @@ class JobListHandler(APIHandler):
 
     def _db_delete(self, job_id: str) -> None:
         with self.db:
-            self.db.execute("delete from jobmeta where job_id=?", job_id)
+            self.db.execute("delete from jobmeta where job_id=?", (job_id, ))
 
 
 def setup_handlers(web_app):
