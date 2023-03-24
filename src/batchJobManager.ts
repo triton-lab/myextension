@@ -215,6 +215,7 @@ export class BatchJobManager extends Widget {
 
     try {
       await this.addJob(name, filePath, instanceType);
+      this.fetchJobs();
     } catch {
       console.error('Failed to add a job');
     }
