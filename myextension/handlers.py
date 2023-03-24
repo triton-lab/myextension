@@ -16,6 +16,9 @@ from .utils import open_or_create_db, get_hub_service_url, get_header_auth_keyva
 from .errors import FailedAwsJobRequestError, JupyterHubNotFoundError
 
 
+DRY_RUN = True
+
+
 class RouteHandler(APIHandler):
     # The following decorator should be present on all verb methods (head, get, post,
     # patch, put, delete, options) to ensure only authorized user can request the
@@ -37,6 +40,12 @@ class JobStatus(Enum):
     UNKNOWN = auto()
 
 
+class JobStatusEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, JobStatus):
+            return obj.name
+        return super().default(obj)
+
 
 class JobMetadata(NamedTuple):
     job_id: str
@@ -51,12 +60,12 @@ class JobInfo(NamedTuple):
     job_id: str
     name: str
     timestamp: datetime
-    status: JobStatus
     request_id: str
     instance_id: str
     instance_type: str
-    console: str
     extra: str
+    status: JobStatus
+    console_output: str
 
 def to_status(request_state: str, instance_state: str) -> JobStatus:
     if request_state == "open":
@@ -90,7 +99,10 @@ class JobListHandler(APIHandler):
         print(f"HTTP GET: JobListHandler received a request")
         jobs_info = self._get_job_info()
         jobs_as_dicts = [x._asdict() for x in jobs_info]
-        self.finish(json.dumps(jobs_as_dicts))
+        print(f"{jobs_as_dicts=}")
+        s = json.dumps(jobs_as_dicts, cls=JobStatusEncoder)
+        print(f"{s = }")
+        self.finish(s)
 
 
     @tornado.web.authenticated
@@ -127,20 +139,27 @@ class JobListHandler(APIHandler):
 
         job_id = str(uuid.uuid4())  # TODO: check collision of job ID?
 
-        try:
-            res = self._start_job(job_id, filepath)
-        except JupyterHubNotFoundError:
-            self.set_status(500)
-            self.finish(json.dumps({"data": f"JupyterHubNotFoundError: This extension works only with JupyterHub."}))
-            return
-        except HTTPError:
-            self.set_status(500)
-            self.finish(json.dumps({"data": f"HTTPError: Check the internet connection."}))
-            return
-        except FailedAwsJobRequestError:
-            self.set_status(500)
-            self.finish(json.dumps({"data": f"Failed to start a job at AWS: {apipath}"}))
-            return
+        if DRY_RUN:
+            res = {
+                "LaunchTime": datetime.utcnow(),
+                "SpotInstanceRequestId": str(uuid.uuid4()),
+                "InstanceId": str(uuid.uuid4()),
+            }
+        else:
+            try:
+                res = self._start_job(job_id, filepath)
+            except JupyterHubNotFoundError:
+                self.set_status(500)
+                self.finish(json.dumps({"data": f"JupyterHubNotFoundError: This extension works only with JupyterHub."}))
+                return
+            except HTTPError:
+                self.set_status(500)
+                self.finish(json.dumps({"data": f"HTTPError: Check the internet connection."}))
+                return
+            except FailedAwsJobRequestError:
+                self.set_status(500)
+                self.finish(json.dumps({"data": f"Failed to start a job at AWS: {apipath}"}))
+                return
 
         meta = JobMetadata(job_id, name, res['LaunchTime'], res['SpotInstanceRequestId'], instance_id=res['InstanceId'], instance_type=instance_type, extra="")
         self._db_add(meta)
@@ -152,7 +171,9 @@ class JobListHandler(APIHandler):
         """send cancel to the JupyterHub service 'batch'"""
         print(f"HTTP DELETE: received {job_id}")
         meta = self._db_read(job_id)
-        res = self._cancel_job(meta.request_id, meta.instance_id)
+        if not DRY_RUN:
+            res = self._cancel_job(meta.request_id, meta.instance_id)
+
         # TODO: check job deletion succeeds
         self._db_delete(job_id)
         # TODO: check if local job deletion succeeds
@@ -264,21 +285,34 @@ class JobListHandler(APIHandler):
 
     def _get_job_info(self) -> List[JobInfo]:
         jobs_metadata = self._get_jobmeta_all()
+
+        if DRY_RUN:
+            def to_info(x: JobMetadata) -> JobInfo:
+                d = {
+                    "status": JobStatus.OPENED,
+                    "console_output": "---------  OUTPUT -----------",
+                    "extra": "",
+                    **x._asdict()
+                }
+                return JobInfo(**d)
+            return [to_info(meta) for meta in jobs_metadata]
+
         request_ids = [meta.request_id for meta in jobs_metadata]
         instance_ids = [meta.instance_id for meta in jobs_metadata]
+        instance_type = [meta.instance_type for meta in jobs_metadata]
         if not jobs_metadata:
             return []
 
         r = self._ask_jobs_status(request_ids=request_ids, instance_ids=instance_ids)
         result: List[JobInfo] = []
-        for jobmeta in jobs_metadata:
-            id_ = jobmeta.instance_id
+        for x in jobs_metadata:
+            id_ = x.instance_id
             request_state = r[id_]["SpotInstanceRequestState"]
             instance_state = r[id_]["InstanceState"]
             console_output = r[id_]["ConsoleOutput"]
-            instance_type = r[id_]["InstanceType"]
+            # TODO: check instance_type and other fields agrees with `x`
             status = to_status(request_state=request_state, instance_state=instance_state)
-            jobinfo = JobInfo(jobmeta.job_id, jobmeta.name, jobmeta.timestamp, status, jobmeta.request_id, jobmeta.instance_id, instance_type, console_output, extra="")
+            jobinfo = JobInfo(x.job_id, x.name, x.timestamp, x.request_id, x.instance_id, x.instance_type, "", status, console_output)
             result.append(jobinfo)
         return result
 
