@@ -13,6 +13,7 @@ from jupyter_server.utils import url_path_join
 import tornado.web
 
 from .utils import open_or_create_db, get_hub_service_url, get_header_auth_keyval
+from .errors import FailedAwsJobRequestError, JupyterHubNotFoundError
 
 
 class RouteHandler(APIHandler):
@@ -125,7 +126,22 @@ class JobListHandler(APIHandler):
             return
 
         job_id = str(uuid.uuid4())  # TODO: check collision of job ID?
-        res = self._start_job(job_id, filepath)
+
+        try:
+            res = self._start_job(job_id, filepath)
+        except JupyterHubNotFoundError:
+            self.set_status(500)
+            self.finish(json.dumps({"data": f"JupyterHubNotFoundError: This extension works only with JupyterHub."}))
+            return
+        except HTTPError:
+            self.set_status(500)
+            self.finish(json.dumps({"data": f"HTTPError: Check the internet connection."}))
+            return
+        except FailedAwsJobRequestError:
+            self.set_status(500)
+            self.finish(json.dumps({"data": f"Failed to start a job at AWS: {apipath}"}))
+            return
+
         meta = JobMetadata(job_id, name, res['LaunchTime'], res['SpotInstanceRequestId'], instance_id=res['InstanceId'], instance_type=instance_type, extra="")
         self._db_add(meta)
         self.get()
@@ -145,7 +161,10 @@ class JobListHandler(APIHandler):
 
     def _http_meta(self, url: str, method: str="GET"):
         req = urllib.request.Request(url=url, method=method)
-        req.add_header(*get_header_auth_keyval())
+        auth_keyval = get_header_auth_keyval()
+        if auth_keyval is None:
+            raise JupyterHubNotFoundError("JupyterHub is not running?")
+        req.add_header(*auth_keyval)
         return self._send_request(req)
 
 
@@ -159,8 +178,12 @@ class JobListHandler(APIHandler):
 
     def _http_post(self, url: str, data: bytes):
         req = urllib.request.Request(url=url, data=data, method='POST')
+        auth_keyval = get_header_auth_keyval()
+        if auth_keyval is None:
+            raise JupyterHubNotFoundError("JupyterHub is not running?")
+
         req.add_header('Content-Type', 'text/plain')
-        req.add_header(*get_header_auth_keyval())
+        req.add_header(*auth_keyval)
         return self._send_request(req)
 
 
@@ -175,7 +198,11 @@ class JobListHandler(APIHandler):
         url = get_hub_service_url(f"/job/{job_id}")
         with open(filename, 'rb') as f:
             data = f.read()
-        return self._http_post(url, data)
+        result = self._http_post(url, data)
+        ## TODO: Align with JupyterHub's failure modes
+        if 'response' not in result or not result['response'].ok or 'status' not in result or result['status'].lower().startswith('fail'):
+            raise FailedAwsJobRequestError('AWS somehow failed to start EC2 instance request.')
+        return result
 
 
     def _get_status(self) -> Dict:
@@ -230,8 +257,8 @@ class JobListHandler(APIHandler):
             if e.code != 200 or e.code != 201 or e.code != 204:
                 # TODO: Add error message to the log
                 print(f"{e.code}: Failed {req.get_full_url()}")
-        # TODO: add json parse error handling
-
+            else:
+                print(f"{e.code}: Failed {req.get_full_url()}")
         return dict()
 
 
