@@ -1,6 +1,7 @@
 import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { Widget } from '@lumino/widgets';
 import { ServerConnection } from '@jupyterlab/services';
+import { URLExt } from '@jupyterlab/coreutils';
 
 import { IBatchJobItem } from './types';
 
@@ -76,12 +77,17 @@ export class BatchJobManager extends Widget {
     this.fetchJobs();
   }
 
+  private fetch(endPoint: string, init: RequestInit = {}) {
+    const settings = ServerConnection.makeSettings();
+    const requestUrl = URLExt.join(settings.baseUrl, SERVER_URL, endPoint);
+    return ServerConnection.makeRequest(requestUrl, init, settings);
+  }
+
   async fetchJobs(): Promise<void> {
     console.log('BatchJobManager: fetchJobs()!');
-    const url = `${SERVER_URL}/jobs`;
     let response: Response;
     try {
-      response = await fetch(url);
+      response = await this.fetch('/jobs');
     } catch (error) {
       throw new ServerConnection.NetworkError(error as TypeError);
     }
@@ -140,7 +146,7 @@ export class BatchJobManager extends Widget {
   async deleteJob(jobId: string): Promise<void> {
     let response: Response;
     try {
-      response = await fetch(`${SERVER_URL}/jobs/${jobId}`, {
+      response = await this.fetch(`/jobs/${jobId}`, {
         method: 'DELETE'
       });
     } catch (error) {
@@ -160,7 +166,7 @@ export class BatchJobManager extends Widget {
   ): Promise<void> {
     let response: Response;
     try {
-      response = await fetch(`${SERVER_URL}/jobs`, {
+      response = await this.fetch('/jobs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
