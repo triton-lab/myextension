@@ -14,6 +14,7 @@ const JOB_TABLE = `
       <tr>
         <th scope="col">Job ID</th>
         <th scope="col">Name</th>
+        <th scope="col">File At</th>
         <th scope="col">Created At</th>
         <th scope="col">Instance Type</th>
         <th scope="col">Status</th>
@@ -108,6 +109,7 @@ export class BatchJobManager extends Widget {
       row.innerHTML = `
         <td>${job.job_id}</td>
         <td>${job.name}</td>
+        <td>${job.file_path}</td>
         <td>${job.timestamp}</td>
         <td>${job.instance_type}</td>
         <td><a href="#" class="job-status" data-job-log="${job.console_output}">${job.status}</a></td>

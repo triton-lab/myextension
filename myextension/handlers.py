@@ -50,6 +50,7 @@ class JobStatusEncoder(json.JSONEncoder):
 class JobMetadata(NamedTuple):
     job_id: str
     name: str
+    file_path: str
     timestamp: datetime
     request_id: str
     instance_id: str
@@ -59,6 +60,7 @@ class JobMetadata(NamedTuple):
 class JobInfo(NamedTuple):
     job_id: str
     name: str
+    file_path: str
     timestamp: datetime
     request_id: str
     instance_id: str
@@ -161,7 +163,7 @@ class JobListHandler(APIHandler):
                 self.finish(json.dumps({"data": f"Failed to start a job at AWS: {apipath}"}))
                 return
 
-        meta = JobMetadata(job_id, name, res['LaunchTime'], res['SpotInstanceRequestId'], instance_id=res['InstanceId'], instance_type=instance_type, extra="")
+        meta = JobMetadata(job_id, name, apipath, res['LaunchTime'], res['SpotInstanceRequestId'], instance_id=res['InstanceId'], instance_type=instance_type, extra="")
         self._db_add(meta)
         self.get()
 
@@ -312,7 +314,7 @@ class JobListHandler(APIHandler):
             console_output = r[id_]["ConsoleOutput"]
             # TODO: check instance_type and other fields agrees with `x`
             status = to_status(request_state=request_state, instance_state=instance_state)
-            jobinfo = JobInfo(x.job_id, x.name, x.timestamp, x.request_id, x.instance_id, x.instance_type, "", status, console_output)
+            jobinfo = JobInfo(x.job_id, x.name, x.file_path, x.timestamp, x.request_id, x.instance_id, x.instance_type, "", status, console_output)
             result.append(jobinfo)
         return result
 
@@ -331,7 +333,7 @@ class JobListHandler(APIHandler):
 
     def _db_add(self, jobmeta: JobMetadata) -> None:
         with self.db:
-            self.db.execute("insert into jobmeta values (?, ?, ?, ?, ?, ?, ?)", jobmeta)
+            self.db.execute("insert into jobmeta values (?, ?, ?, ?, ?, ?, ?, ?)", jobmeta)
 
 
     def _db_delete(self, job_id: str) -> None:
