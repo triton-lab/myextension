@@ -110,7 +110,7 @@ export class BatchJobManager extends Widget {
         <td>${job.name}</td>
         <td>${job.timestamp}</td>
         <td>${job.instance_type}</td>
-        <td><a href="#" class="job-status">${job.status}</a></td>
+        <td><a href="#" class="job-status" data-job-log="${job.console_output}">${job.status}</a></td>
         <td><button class="btn btn-danger btn-sm delete-job" data-job-id="${job.job_id}">Delete</button></td>
       `;
 
@@ -121,9 +121,9 @@ export class BatchJobManager extends Widget {
     deleteButtons.forEach(button => {
       button.addEventListener('click', async event => {
         event.preventDefault();
-        const jobId = (event.target as HTMLElement).dataset.jobId;
-        if (jobId) {
-          await this.deleteJob(jobId);
+        const job_id = (event.target as HTMLElement).dataset.jobId;
+        if (job_id) {
+          await this.deleteJob(job_id);
           this.fetchJobs();
         } else {
           console.warn('Job ID is not available');
@@ -135,9 +135,9 @@ export class BatchJobManager extends Widget {
     statusLinks.forEach(link => {
       link.addEventListener('click', event => {
         event.preventDefault();
-        const logContent = (event.target as HTMLElement).dataset.log;
+        const logContent = (event.target as HTMLElement).dataset.jobLog;
         if (logContent) {
-          console.log(`logContent: ${logContent}`);
+          this.showConsoleLog(logContent);
         } else {
           console.warn('Log content is not available');
         }
@@ -219,5 +219,19 @@ export class BatchJobManager extends Widget {
     } catch {
       console.error('Failed to add a job');
     }
+  }
+
+  private async showConsoleLog(logContent: string): Promise<void> {
+    const body = new Widget();
+    //
+    // TODO: Make the window larger. Make the display terminal-like.
+    body.node.innerHTML = `
+    <div class="container mt-5">${logContent}</div>
+    `;
+    await showDialog({
+      title: 'Console Log',
+      body,
+      buttons: [Dialog.okButton()]
+    });
   }
 }
