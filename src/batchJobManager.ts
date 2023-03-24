@@ -15,6 +15,7 @@ const JOB_TABLE = `
         <th scope="col">Job ID</th>
         <th scope="col">Name</th>
         <th scope="col">Created At</th>
+        <th scope="col">Instance Type</th>
         <th scope="col">Status</th>
         <th scope="col">Actions</th>
         <th class="text-center">
@@ -107,7 +108,8 @@ export class BatchJobManager extends Widget {
       row.innerHTML = `
         <td>${job.job_id}</td>
         <td>${job.name}</td>
-        <td>${job.created_at}</td>
+        <td>${job.timestamp}</td>
+        <td>${job.instance_type}</td>
         <td><a href="#" class="job-status">${job.status}</a></td>
         <td><button class="btn btn-danger btn-sm delete-job" data-job-id="${job.job_id}">Delete</button></td>
       `;
