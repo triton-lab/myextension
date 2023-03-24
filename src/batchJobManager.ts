@@ -1,4 +1,4 @@
-import { Dialog, showDialog } from '@jupyterlab/apputils';
+import { Dialog, showDialog, Notification } from '@jupyterlab/apputils';
 import { Widget } from '@lumino/widgets';
 import { ServerConnection } from '@jupyterlab/services';
 import { URLExt } from '@jupyterlab/coreutils';
@@ -216,8 +216,17 @@ export class BatchJobManager extends Widget {
     try {
       await this.addJob(name, filePath, instanceType);
       this.fetchJobs();
-    } catch {
-      console.error('Failed to add a job');
+    } catch (error) {
+      let msg: string;
+      if (error instanceof ServerConnection.ResponseError) {
+        const detail = await error.response.json();
+        msg = `Failed to Create Job: ${detail.data}`;
+      } else if (error instanceof ServerConnection.NetworkError) {
+        msg = `Failed to Create Job: ${error.message}`;
+      } else {
+        msg = `Failed to Create Job: ${error}`;
+      }
+      Notification.error(msg);
     }
   }
 
