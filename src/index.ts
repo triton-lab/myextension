@@ -3,6 +3,7 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 import { ICommandPalette, MainAreaWidget } from '@jupyterlab/apputils';
+import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import { requestAPI } from './handler';
@@ -16,10 +17,11 @@ import '../style/index.css';
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'myextension:plugin',
   autoStart: true,
-  optional: [ICommandPalette, ISettingRegistry],
+  optional: [ICommandPalette, IFileBrowserFactory, ISettingRegistry],
   activate: (
     app: JupyterFrontEnd,
     palette: ICommandPalette,
+    factory: IFileBrowserFactory,
     settingRegistry: ISettingRegistry | null
   ) => {
     console.log('JupyterLab extension myextension is activated!');
@@ -33,7 +35,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       execute: () => {
         if (!widget || widget.isDisposed) {
           console.log('Filling batch-job widget!');
-          const content = new BatchJobManager();
+          const content = new BatchJobManager(factory);
           widget = new MainAreaWidget({ content });
           widget.id = 'batch-job-manager';
         }

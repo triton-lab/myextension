@@ -1,4 +1,5 @@
 import { Dialog, showDialog, Notification } from '@jupyterlab/apputils';
+import { FileDialog, IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { Widget } from '@lumino/widgets';
 import { ServerConnection } from '@jupyterlab/services';
 import { URLExt } from '@jupyterlab/coreutils';
@@ -41,6 +42,7 @@ const JOB_DEFINITION = `
   <div class="mb-3">
     <label for="job-file-path" class="form-label">File Path</label>
     <input type="text" class="form-control" id="job-file-path" placeholder="Enter file path">
+    <button type="button" id="job-file-path-button" class="btn btn-secondary">Browse</button>
   </div>
   <div class="mb-3">
     <label for="job-instance-type" class="form-label">Instance Type</label>
@@ -58,9 +60,9 @@ const JOB_DEFINITION = `
 `;
 
 export class BatchJobManager extends Widget {
-  constructor() {
-    console.log('BatchJobManager: constructor()!');
+  constructor(private factory: IFileBrowserFactory) {
     super();
+    console.log('BatchJobManager: constructor()!');
     this.node.innerHTML = JOB_TABLE;
     this.title.label = 'Batch Jobs';
     this.title.closable = true;
@@ -194,6 +196,24 @@ export class BatchJobManager extends Widget {
   private async showCreateJobDialog(): Promise<void> {
     const body = new Widget();
     body.node.innerHTML = JOB_DEFINITION;
+
+    const filePathInput = body.node.querySelector(
+      '#job-file-path'
+    ) as HTMLInputElement;
+    const filePathButton = body.node.querySelector(
+      '#job-file-path-button'
+    ) as HTMLButtonElement;
+
+    filePathButton.addEventListener('click', async () => {
+      const result = await FileDialog.getOpenFiles({
+        manager: this.factory.defaultBrowser.model.manager
+      });
+
+      if (result.button.accept && result.value && result.value.length > 0) {
+        filePathInput.value = result.value[0].path;
+      }
+    });
+
     const result = await showDialog({
       title: 'Create Job',
       body,
