@@ -197,6 +197,7 @@ export class BatchJobManager extends Widget {
     const body = new Widget();
     body.node.innerHTML = JOB_DEFINITION;
 
+    const nameInput = body.node.querySelector('#job-name') as HTMLInputElement;
     const filePathInput = body.node.querySelector(
       '#job-file-path'
     ) as HTMLInputElement;
@@ -204,21 +205,34 @@ export class BatchJobManager extends Widget {
       '#job-file-path-button'
     ) as HTMLButtonElement;
 
-    filePathButton.addEventListener('click', async () => {
-      const result = await FileDialog.getOpenFiles({
-        manager: this.factory.defaultBrowser.model.manager
-      });
-
-      if (result.button.accept && result.value && result.value.length > 0) {
-        filePathInput.value = result.value[0].path;
-      }
-    });
-
-    const result = await showDialog({
+    const options = {
       title: 'Create Job',
       body,
       buttons: [Dialog.cancelButton(), Dialog.okButton({ label: 'Create Job' })]
+    };
+    let dialog = new Dialog(options);
+
+    filePathButton.addEventListener('click', async () => {
+      // Avoid overlapping of widgets
+      dialog.reject();
+
+      const res = await FileDialog.getOpenFiles({
+        manager: this.factory.defaultBrowser.model.manager
+      });
+
+      if (res.button.accept && res.value && res.value.length > 0) {
+        nameInput.value = res.value[0].name;
+        filePathInput.value = res.value[0].path;
+      }
+
+      // Recover job-definition dialog
+      dialog = new Dialog(options);
+      dialog.launch();
+
+      console.log('--------- bababa -------------');
     });
+
+    const result = await dialog.launch();
 
     const name = (body.node.querySelector('#job-name') as HTMLSelectElement)
       .value;
@@ -233,22 +247,22 @@ export class BatchJobManager extends Widget {
       console.log('Name:', name);
       console.log('File Path:', filePath);
       console.log('Instance Type:', instanceType);
-    }
 
-    try {
-      await this.addJob(name, filePath, instanceType);
-      this.fetchJobs();
-    } catch (error) {
-      let msg: string;
-      if (error instanceof ServerConnection.ResponseError) {
-        const detail = await error.response.json();
-        msg = `Failed to Create Job: ${detail.data}`;
-      } else if (error instanceof ServerConnection.NetworkError) {
-        msg = `Failed to Create Job: ${error.message}`;
-      } else {
-        msg = `Failed to Create Job: ${error}`;
+      try {
+        await this.addJob(name, filePath, instanceType);
+        this.fetchJobs();
+      } catch (error) {
+        let msg: string;
+        if (error instanceof ServerConnection.ResponseError) {
+          const detail = await error.response.json();
+          msg = `Failed to Create Job: ${detail.data}`;
+        } else if (error instanceof ServerConnection.NetworkError) {
+          msg = `Failed to Create Job: ${error.message}`;
+        } else {
+          msg = `Failed to Create Job: ${error}`;
+        }
+        Notification.error(msg);
       }
-      Notification.error(msg);
     }
   }
 
