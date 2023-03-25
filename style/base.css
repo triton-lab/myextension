@@ -11,3 +11,7 @@
     font-size: var(--jp-ui-font-size1);
     overflow-y: auto;
 }
+
+.jp-BatchJobManager * {
+  color: inherit !important;
+}
