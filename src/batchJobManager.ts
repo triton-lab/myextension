@@ -212,27 +212,42 @@ export class BatchJobManager extends Widget {
     };
     let dialog = new Dialog(options);
 
-    filePathButton.addEventListener('click', async () => {
-      // Avoid overlapping of widgets
-      dialog.reject();
+    // 1. Job definition dialog hides the file-browser dialog.
+    // 2. Can avoid overlapping only if the first dialog promise is fulfilled.
+    // 3. Main thread need to get values after the last promise is fullfilled.
+    //
+    // This is why I created a queue; `await` all of its elements.
+    //
+    const queue: Promise<any>[] = [];
+    queue.push(dialog.launch());
+    let gotValues = false;
 
-      const res = await FileDialog.getOpenFiles({
+    filePathButton.addEventListener('click', async () => {
+      const pOpenFiles = FileDialog.getOpenFiles({
         manager: this.factory.defaultBrowser.model.manager
       });
 
+      // Put next promise in the queue before rejecting current one
+      queue.push(pOpenFiles);
+      dialog.reject();
+
+      const res = await pOpenFiles;
       if (res.button.accept && res.value && res.value.length > 0) {
         nameInput.value = res.value[0].name;
         filePathInput.value = res.value[0].path;
+        gotValues = true;
       }
 
-      // Recover job-definition dialog
       dialog = new Dialog(options);
-      dialog.launch();
-
-      console.log('--------- bababa -------------');
+      queue.push(dialog.launch());
     });
 
-    const result = await dialog.launch();
+    while (queue.length > 0) {
+      const p = queue.pop();
+      await p;
+    }
+
+    console.log(`gotValues: ${gotValues}`);
 
     const name = (body.node.querySelector('#job-name') as HTMLSelectElement)
       .value;
@@ -243,7 +258,7 @@ export class BatchJobManager extends Widget {
       body.node.querySelector('#job-instance-type') as HTMLSelectElement
     ).value;
 
-    if (result.button.accept) {
+    if (gotValues) {
       console.log('Name:', name);
       console.log('File Path:', filePath);
       console.log('Instance Type:', instanceType);
