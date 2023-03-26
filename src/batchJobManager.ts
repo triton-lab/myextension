@@ -220,7 +220,6 @@ export class BatchJobManager extends Widget {
     //
     const queue: Promise<any>[] = [];
     queue.push(dialog.launch());
-    let gotValues = false;
 
     filePathButton.addEventListener('click', async () => {
       const pOpenFiles = FileDialog.getOpenFiles({
@@ -235,30 +234,30 @@ export class BatchJobManager extends Widget {
       if (res.button.accept && res.value && res.value.length > 0) {
         nameInput.value = res.value[0].name;
         filePathInput.value = res.value[0].path;
-        gotValues = true;
       }
 
       dialog = new Dialog(options);
       queue.push(dialog.launch());
     });
 
+    let valuesEntered = false;
     while (queue.length > 0) {
-      const p = queue.pop();
-      await p;
+      let result = await queue.pop();
+      if (result.button && result.button.label === 'Create Job' && result.button.accept) {
+        valuesEntered = true;
+        console.log('result: ', result);
+      }
     }
 
-    console.log(`gotValues: ${gotValues}`);
-
-    const name = (body.node.querySelector('#job-name') as HTMLSelectElement)
-      .value;
-    const filePath = (
-      body.node.querySelector('#job-file-path') as HTMLSelectElement
-    ).value;
-    const instanceType = (
-      body.node.querySelector('#job-instance-type') as HTMLSelectElement
-    ).value;
-
-    if (gotValues) {
+    if (valuesEntered) {
+      const name = (body.node.querySelector('#job-name') as HTMLSelectElement)
+        .value;
+      const filePath = (
+        body.node.querySelector('#job-file-path') as HTMLSelectElement
+      ).value;
+      const instanceType = (
+        body.node.querySelector('#job-instance-type') as HTMLSelectElement
+      ).value;
       console.log('Name:', name);
       console.log('File Path:', filePath);
       console.log('Instance Type:', instanceType);
