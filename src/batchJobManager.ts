@@ -242,8 +242,12 @@ export class BatchJobManager extends Widget {
 
     let valuesEntered = false;
     while (queue.length > 0) {
-      let result = await queue.pop();
-      if (result.button && result.button.label === 'Create Job' && result.button.accept) {
+      const result = await queue.pop();
+      if (
+        result.button &&
+        result.button.label === 'Create Job' &&
+        result.button.accept
+      ) {
         valuesEntered = true;
         console.log('result: ', result);
       }
