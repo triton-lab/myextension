@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime
 from enum import Enum, auto
 from pathlib import Path
@@ -16,7 +17,7 @@ from .utils import open_or_create_db, get_hub_service_url, get_header_auth_keyva
 from .errors import FailedAwsJobRequestError, JupyterHubNotFoundError
 
 
-DRY_RUN = True
+DRY_RUN = (not bool(os.environ.get("JUPYTERHUB_API_URL", ""))) or bool(os.environ.get("JUPYTERLAB_BATCH_DRYRUN", ""))
 
 
 class RouteHandler(APIHandler):
