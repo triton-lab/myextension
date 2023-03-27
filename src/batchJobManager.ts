@@ -54,6 +54,7 @@ const JOB_DEFINITION = `
       <option value="t3a.large">t3a.large</option>
       <option value="t3a.xlarge">t3a.xlarge</option>
       <option value="t3a.2xlarge">t3a.2xlarge</option>
+      <option value="t3.medium">t3.medium</option>
     </select>
   </div>
 </form>
