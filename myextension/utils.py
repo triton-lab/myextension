@@ -1,9 +1,7 @@
-import json
 import os
-import subprocess
+import re
 from pathlib import Path
 from typing import Optional, Tuple
-import urllib.parse
 import sqlite3
 from sqlite3 import Connection
 import platformdirs
@@ -33,11 +31,13 @@ def open_or_create_db(p: Optional[Path]=None) -> Connection:
     return sqlite3.connect(p) if p.exists() else _create_db(p)
 
 
+def join_url_parts(*parts):
+    return '/'.join(re.sub(r'^/|/$', '', part) for part in parts)
+
+
 def get_hub_service_url(api: str) -> str:
-    url = os.environ.get("JUPYTERHUB_API_URL", "http://localhost:8888")
-    if api.startswith('/'):
-        api = api[1:]
-    return urllib.parse.urljoin(url,  f"/services/batch/{api}")
+    url = os.environ.get("JUPYTERHUB_API_URL", "")
+    return join_url_parts(url,  f"/services/batch", api)
 
 
 def get_header_auth_keyval() -> Optional[Tuple[str, str]]:
