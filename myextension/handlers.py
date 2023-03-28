@@ -31,6 +31,66 @@ class RouteHandler(APIHandler):
         self.finish(json.dumps({"data": "This is /myextension/get_example endpoint!"}))
 
 
+class TestHubHandler(APIHandler):
+    # The following decorator should be present on all verb methods (head, get, post,
+    # patch, put, delete, options) to ensure only authorized user can request the
+    # Jupyter server
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not bool(os.environ.get("JUPYTERHUB_API_URL", "")):
+            self.log.error(">>>>========================================")
+            self.log.error("  Failed to get JUPYTERHUB_API_URL: running properly?")
+            self.log.info("    Activates DRY_RUN due to lack of JupyterHub")
+            self.log.error("<<<<========================================")
+
+    @tornado.web.authenticated
+    def get(self):
+        self.log.info(">>>>========================================")
+        self.log.info("   TestHubHandler: GET received")
+        self.log.info("<<<<========================================")
+        status = self._get_status()
+        self.finish(status)
+
+    def _get_status(self) -> Dict:
+        url = get_hub_service_url("/status")
+        self.log.info(f"Getting use status: {url}")
+        return self._http_get(url)
+
+    def _http_get(self, url):
+        self.log.info(">>>>--------------------------------------------")
+        self.log.info("  Sending HTTP GET request")
+        self.log.info(f"    {url}")
+        self.log.info("<<<<--------------------------------------------")
+        return self._http_meta(url, method="GET")
+
+    def _http_meta(self, url: str, method: str = "GET"):
+        req = urllib.request.Request(url=url, method=method)
+        auth_keyval = get_header_auth_keyval()
+        if auth_keyval is None:
+            self.set_status(500)
+            self.finish(json.dumps({"data": f"JupyterHub auth info is not found."}))
+            raise JupyterHubNotFoundError("JupyterHub auth info is not found.")
+        req.add_header(*auth_keyval)
+        return self._send_request(req)
+
+    def _send_request(self, req: urllib.request.Request) -> Dict:
+        try:
+            with urllib.request.urlopen(req) as response:
+                result = json.loads(response.read())
+                return result
+        except HTTPError as e:
+            if e.code != 200 or e.code != 201 or e.code != 204:
+                self.log.error(">>>>=======================================")
+                self.log.error(f"{e.code}: Failed {req.get_full_url()}")
+                self.log.error(e)
+                self.log.error("<<<<=======================================")
+                self.set_status(500)
+                self.finish(json.dumps({"data": f"JupyterHub service responded with an error: {e}"}))
+            else:
+                self.log.info(f"{e.code}: OK")
+        return dict()
+
+
 class JobStatus(Enum):
     OPENED = auto()
     PREPARING = auto()
@@ -113,7 +173,7 @@ class JobListHandler(APIHandler):
         self.log.info(f"{jobs_as_dicts=}")
         s = json.dumps(jobs_as_dicts, cls=JobStatusEncoder)
         self.log.info(f"{s = }")
-        self.finish(s)
+        self.finish(json.dumps({"data": s}))
 
     @tornado.web.authenticated
     def post(self):
@@ -229,6 +289,8 @@ class JobListHandler(APIHandler):
         req = urllib.request.Request(url=url, method=method)
         auth_keyval = get_header_auth_keyval()
         if auth_keyval is None:
+            self.set_status(500)
+            self.finish(json.dumps({"data": f"JupyterHub auth info is not found."}))
             raise JupyterHubNotFoundError("JupyterHub is not running?")
         req.add_header(*auth_keyval)
         return self._send_request(req)
@@ -291,11 +353,6 @@ class JobListHandler(APIHandler):
             raise FailedAwsJobRequestError(msg)
         return result
 
-    def _get_status(self) -> Dict:
-        url = get_hub_service_url("/status")
-        self.log.info(f"Getting use status: {url}")
-        return self._http_get(url)
-
     def _ask_jobs_status(
         self, request_ids: Iterable[str], instance_ids: Iterable[str]
     ) -> Dict:
@@ -352,6 +409,8 @@ class JobListHandler(APIHandler):
                 self.log.error(f"{e.code}: Failed {req.get_full_url()}")
                 self.log.error(e)
                 self.log.error("<<<<=======================================")
+                self.set_status(500)
+                self.finish(json.dumps({"data": f"JupyterHub service responded with an error: {e}"}))
             else:
                 self.log.info(f"{e.code}: OK")
         return dict()
@@ -439,6 +498,7 @@ def setup_handlers(web_app):
 
     handlers = [
         (f("get_example"), RouteHandler),
+        (f("testhub"), TestHubHandler),
         (f("jobs"), JobListHandler),
         (f("jobs/(.*)"), JobListHandler),
     ]

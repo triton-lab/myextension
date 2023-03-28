@@ -72,6 +72,16 @@ const plugin: JupyterFrontEndPlugin<void> = {
           `The myextension server extension appears to be missing.\n${reason}`
         );
       });
+
+    requestAPI<any>('testhub')
+      .then(data => {
+        console.log(data);
+      })
+      .catch(reason => {
+        console.error(
+          `Looks like a connection error: Jupyter Server --> JupyterHub service.\n${reason}`
+        );
+      });
   }
 };
 

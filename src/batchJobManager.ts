@@ -82,6 +82,7 @@ export class BatchJobManager extends Widget {
     this.fetchJobs();
   }
 
+  // Use JupyterLab API instead of fetch() to make the auth easy
   private fetch(endPoint: string, init: RequestInit = {}) {
     const settings = ServerConnection.makeSettings();
     const requestUrl = URLExt.join(settings.baseUrl, SERVER_URL, endPoint);
