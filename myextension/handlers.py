@@ -173,7 +173,7 @@ class JobListHandler(APIHandler):
         self.log.info(f"{jobs_as_dicts=}")
         s = json.dumps(jobs_as_dicts, cls=JobStatusEncoder)
         self.log.info(f"{s = }")
-        self.finish(json.dumps({"data": s}))
+        self.finish(s)
 
     @tornado.web.authenticated
     def post(self):
