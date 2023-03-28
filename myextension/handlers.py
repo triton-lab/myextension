@@ -17,7 +17,9 @@ from .utils import open_or_create_db, get_hub_service_url, get_header_auth_keyva
 from .errors import FailedAwsJobRequestError, JupyterHubNotFoundError
 
 
-DRY_RUN = (not bool(os.environ.get("JUPYTERHUB_API_URL", ""))) or bool(os.environ.get("JUPYTERLAB_BATCH_DRYRUN", ""))
+DRY_RUN = (not bool(os.environ.get("JUPYTERHUB_API_URL", ""))) or bool(
+    os.environ.get("JUPYTERLAB_BATCH_DRYRUN", "")
+)
 
 
 class RouteHandler(APIHandler):
@@ -26,9 +28,7 @@ class RouteHandler(APIHandler):
     # Jupyter server
     @tornado.web.authenticated
     def get(self):
-        self.finish(json.dumps({
-            "data": "This is /myextension/get_example endpoint!"
-        }))
+        self.finish(json.dumps({"data": "This is /myextension/get_example endpoint!"}))
 
 
 class JobStatus(Enum):
@@ -78,9 +78,9 @@ def to_status(request_state: str, instance_state: str) -> JobStatus:
         status = JobStatus.PREPARING
     elif instance_state == "running":
         status = JobStatus.RUNNING
-    elif instance_state == 'shutting-down':
+    elif instance_state == "shutting-down":
         status = JobStatus.STOPPING
-    elif instance_state == 'terminated':
+    elif instance_state == "terminated":
         status = JobStatus.TERMINATED
     else:
         # TODO: Add log saying something is wrong
@@ -89,10 +89,15 @@ def to_status(request_state: str, instance_state: str) -> JobStatus:
 
 
 class JobListHandler(APIHandler):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.db = open_or_create_db()
+
+        if not bool(os.environ.get("JUPYTERHUB_API_URL", "")):
+            self.log.error(">>>>========================================")
+            self.log.error("  Failed to get JUPYTERHUB_API_URL: running properly?")
+            self.log.info("    Activates DRY_RUN due to lack of JupyterHub")
+            self.log.error("<<<<========================================")
 
     def __del__(self):
         self.db.close()
@@ -101,7 +106,7 @@ class JobListHandler(APIHandler):
     def get(self):
         """Get the job list as JSON"""
         self.log.info(">>>>========================================")
-        self.log.info(f"   GET request received")
+        self.log.info("   GET request received")
         self.log.info("<<<<========================================")
         jobs_info = self._get_job_info()
         jobs_as_dicts = [x._asdict() for x in jobs_info]
@@ -110,28 +115,27 @@ class JobListHandler(APIHandler):
         self.log.info(f"{s = }")
         self.finish(s)
 
-
     @tornado.web.authenticated
     def post(self):
-        """Receive a filepath, and then request a job to the JupyterHub 'batch' service """
+        """Receive a filepath, and then request a job to the JupyterHub 'batch' service"""
         # tornado.escape.json_decode(self.request.body) works similarly
         self.log.info(">>>>========================================")
-        self.log.info(f"   POST request received")
+        self.log.info("   POST request received")
         self.log.info("<<<<========================================")
         payload: Optional[Dict] = self.get_json_body()
-        if (payload is None):
+        if payload is None:
             self.set_status(400)
             self.finish(json.dumps({"data": "POST needs 'path' field"}))
             return
 
-        for x in ('name', 'path', 'instance_type'):
+        for x in ("name", "path", "instance_type"):
             if x not in payload:
                 self.set_status(400)
                 self.finish(f"POST needs '{x}' field")
                 return
-        name = payload['name']
-        apipath = payload['path']
-        instance_type = payload['instance_type']
+        name = payload["name"]
+        apipath = payload["path"]
+        instance_type = payload["instance_type"]
         self.log.info(f"HTTP POST: Received file '{apipath}'")
 
         filepath = Path(self.settings["server_root_dir"]).expanduser() / apipath
@@ -143,7 +147,13 @@ class JobListHandler(APIHandler):
 
         if filepath.suffix not in (".ipynb", ".sh"):
             self.set_status(400)
-            self.finish(json.dumps({"data": f"Batch job takes either a Jupyter notebook or shell script: {apipath}"}))
+            self.finish(
+                json.dumps(
+                    {
+                        "data": f"Batch job takes either a Jupyter notebook or shell script: {apipath}"
+                    }
+                )
+            )
             return
 
         job_id = str(uuid.uuid4())  # TODO: check collision of job ID?
@@ -176,7 +186,7 @@ class JobListHandler(APIHandler):
                 self.finish(json.dumps({"data": msg}))
                 return
             except FailedAwsJobRequestError:
-                msg =f"Failed to start a job at AWS: {apipath}"
+                msg = f"Failed to start a job at AWS: {apipath}"
                 self.log.error(">>>>=======================================")
                 self.log.error(msg)
                 self.log.error(">>>>=======================================")
@@ -184,16 +194,24 @@ class JobListHandler(APIHandler):
                 self.finish(json.dumps({"data": msg}))
                 return
 
-        meta = JobMetadata(job_id, name, apipath, res['LaunchTime'], res['SpotInstanceRequestId'], instance_id=res['InstanceId'], instance_type=instance_type, extra="")
+        meta = JobMetadata(
+            job_id,
+            name,
+            apipath,
+            res["LaunchTime"],
+            res["SpotInstanceRequestId"],
+            instance_id=res["InstanceId"],
+            instance_type=instance_type,
+            extra="",
+        )
         self._db_add(meta)
         self.get()
-
 
     @tornado.web.authenticated
     def delete(self, job_id: str):
         """send cancel to the JupyterHub service 'batch'"""
         self.log.info(">>>>========================================")
-        self.log.info(f"  DELETE request received")
+        self.log.info("  DELETE request received")
         self.log.info(f"     Job ID: {job_id}")
         self.log.info("<<<<========================================")
         meta = self._db_read(job_id)
@@ -207,8 +225,7 @@ class JobListHandler(APIHandler):
         # TODO: check if local job deletion succeeds
         self.get()
 
-
-    def _http_meta(self, url: str, method: str="GET"):
+    def _http_meta(self, url: str, method: str = "GET"):
         req = urllib.request.Request(url=url, method=method)
         auth_keyval = get_header_auth_keyval()
         if auth_keyval is None:
@@ -216,22 +233,19 @@ class JobListHandler(APIHandler):
         req.add_header(*auth_keyval)
         return self._send_request(req)
 
-
     def _http_get(self, url):
         self.log.info(">>>>--------------------------------------------")
         self.log.info("  Sending HTTP GET request")
         self.log.info(f"    {url}")
         self.log.info("<<<<--------------------------------------------")
-        return self._http_meta(url, method='GET')
-
+        return self._http_meta(url, method="GET")
 
     def _http_delete(self, url):
         self.log.info(">>>>--------------------------------------------")
         self.log.info("  Sending HTTP DELETE request")
         self.log.info(f"    {url}")
         self.log.info("<<<<--------------------------------------------")
-        return self._http_meta(url, method='DELETE')
-
+        return self._http_meta(url, method="DELETE")
 
     def _http_post(self, url: str, data: bytes):
         self.log.info(">>>>--------------------------------------------")
@@ -239,15 +253,14 @@ class JobListHandler(APIHandler):
         self.log.info(f"    {url}")
         self.log.info(f"    {data.decode()}")
         self.log.info("<<<<--------------------------------------------")
-        req = urllib.request.Request(url=url, data=data, method='POST')
+        req = urllib.request.Request(url=url, data=data, method="POST")
         auth_keyval = get_header_auth_keyval()
         if auth_keyval is None:
             raise JupyterHubNotFoundError("JupyterHub is not running?")
 
-        req.add_header('Content-Type', 'text/plain')
+        req.add_header("Content-Type", "text/plain")
         req.add_header(*auth_keyval)
         return self._send_request(req)
-
 
     def _start_job(self, job_id: str, filename: Path) -> Dict:
         """Send as POST request to start an instance
@@ -258,22 +271,34 @@ class JobListHandler(APIHandler):
             - LaunchTime
         """
         url = get_hub_service_url(f"/job/{job_id}")
-        with open(filename, 'rb') as f:
+        self.log.debug(f"url: {url}")
+        with open(filename, "rb") as f:
             data = f.read()
         result = self._http_post(url, data)
         ## TODO: Align with JupyterHub's failure modes
-        if 'response' not in result or not result['response'].ok or 'status' not in result or result['status'].lower().startswith('fail'):
-            raise FailedAwsJobRequestError('AWS somehow failed to start EC2 instance request.')
+        if (
+            "response" not in result
+            or not result["response"].ok
+            or "status" not in result
+            or result["status"].lower().startswith("fail")
+        ):
+            msg = "AWS somehow failed to start EC2 instance request"
+            self.log.error(">>>>=======================================")
+            self.log.error(url)
+            self.log.error(msg)
+            self.log.error(result)
+            self.log.error(">>>>=======================================")
+            raise FailedAwsJobRequestError(msg)
         return result
 
-
     def _get_status(self) -> Dict:
-        url = get_hub_service_url('/status')
-        self.log.info(f'Getting use status: {url}')
+        url = get_hub_service_url("/status")
+        self.log.info(f"Getting use status: {url}")
         return self._http_get(url)
 
-
-    def _ask_jobs_status(self, request_ids: Iterable[str], instance_ids: Iterable[str]) -> Dict:
+    def _ask_jobs_status(
+        self, request_ids: Iterable[str], instance_ids: Iterable[str]
+    ) -> Dict:
         """
         Returns a dictonary with <InstanceId> as keys
             <InstanceId>:
@@ -283,14 +308,15 @@ class JobListHandler(APIHandler):
                 _SpotInstanceRequestResponse: <dict>
                 _InstanceStatusResponse: <dict>
         """
-        params = urllib.parse.urlencode({
-            'request_ids': ','.join(request_ids),
-            'instance_ids': ','.join(instance_ids),
-        })
+        params = urllib.parse.urlencode(
+            {
+                "request_ids": ",".join(request_ids),
+                "instance_ids": ",".join(instance_ids),
+            }
+        )
         url = get_hub_service_url(f"/job?{params}")
-        self.log.info(f'Asking jobs statuses: {url}')
+        self.log.info(f"Asking jobs statuses: {url}")
         return self._http_get(url)
-
 
     def _cancel_job(self, request_id: str, instance_id: str) -> Dict:
         """
@@ -304,15 +330,16 @@ class JobListHandler(APIHandler):
                     - Code
                     - Name
         """
-        params = urllib.parse.urlencode({
-            'request_id': request_id,
-            'instance_id': instance_id,
-        })
+        params = urllib.parse.urlencode(
+            {
+                "request_id": request_id,
+                "instance_id": instance_id,
+            }
+        )
         url = get_hub_service_url(f"/job?{params}")
 
         self.log.debug(f"Canceling job: {url}")
         return self._http_delete(url)
-
 
     def _send_request(self, req: urllib.request.Request) -> Dict:
         try:
@@ -329,7 +356,6 @@ class JobListHandler(APIHandler):
                 self.log.info(f"{e.code}: OK")
         return dict()
 
-
     def _get_job_info(self) -> List[JobInfo]:
         jobs_metadata = self._get_jobmeta_all()
 
@@ -342,9 +368,10 @@ class JobListHandler(APIHandler):
                     "status": JobStatus.OPENED,
                     "console_output": "---------  OUTPUT -----------",
                     "extra": "",
-                    **x._asdict()
+                    **x._asdict(),
                 }
                 return JobInfo(**d)
+
             return [to_info(meta) for meta in jobs_metadata]
 
         request_ids = [meta.request_id for meta in jobs_metadata]
@@ -361,40 +388,52 @@ class JobListHandler(APIHandler):
             instance_state = r[id_]["InstanceState"]
             console_output = r[id_]["ConsoleOutput"]
             # TODO: check instance_type and other fields agrees with `x`
-            status = to_status(request_state=request_state, instance_state=instance_state)
-            jobinfo = JobInfo(x.job_id, x.name, x.file_path, x.timestamp, x.request_id, x.instance_id, x.instance_type, "", status, console_output)
+            status = to_status(
+                request_state=request_state, instance_state=instance_state
+            )
+            jobinfo = JobInfo(
+                x.job_id,
+                x.name,
+                x.file_path,
+                x.timestamp,
+                x.request_id,
+                x.instance_id,
+                x.instance_type,
+                "",
+                status,
+                console_output,
+            )
             result.append(jobinfo)
         return result
 
-
     def _get_jobmeta_all(self) -> List[JobMetadata]:
         self.log.debug("Reading all from db")
-        res =  self.db.execute("select * from jobmeta")
+        res = self.db.execute("select * from jobmeta")
         ## TODO: Get status
         return [JobMetadata._make(tup) for tup in res.fetchall()]
 
-
     def _db_read(self, job_id: str) -> JobMetadata:
         self.log.debug(f"Reading an entry from db: {job_id}")
-        cur = self.db.execute("select * from jobmeta where job_id=?", (job_id, ))
+        cur = self.db.execute("select * from jobmeta where job_id=?", (job_id,))
         res = JobMetadata._make(cur.fetchone())
         return res
-
 
     def _db_add(self, jobmeta: JobMetadata) -> None:
         self.log.debug(f"Adding an entry to db: {jobmeta}")
         with self.db:
-            self.db.execute("insert into jobmeta values (?, ?, ?, ?, ?, ?, ?, ?)", jobmeta)
-
+            self.db.execute(
+                "insert into jobmeta values (?, ?, ?, ?, ?, ?, ?, ?)", jobmeta
+            )
 
     def _db_delete(self, job_id: str) -> None:
         self.log.debug(f"Deleting an entry to db: {job_id}")
         with self.db:
-            self.db.execute("delete from jobmeta where job_id=?", (job_id, ))
+            self.db.execute("delete from jobmeta where job_id=?", (job_id,))
 
 
 def setup_handlers(web_app):
     base_url = web_app.settings["base_url"]
+
     def f(api_name: str) -> str:
         return url_path_join(base_url, "myextension", api_name)
 
