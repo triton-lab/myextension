@@ -53,7 +53,7 @@ class TestHubHandler(APIHandler):
 
     def _get_status(self) -> Dict:
         url = get_hub_service_url("/status")
-        self.log.info(f"Getting use status: {url}")
+        self.log.info(f"Accessing /status in hub: {url}")
         return self._http_get(url)
 
     def _http_get(self, url):
@@ -68,7 +68,7 @@ class TestHubHandler(APIHandler):
         auth_keyval = get_header_auth_keyval()
         if auth_keyval is None:
             self.set_status(500)
-            self.finish(json.dumps({"data": f"JupyterHub auth info is not found."}))
+            self.write(json.dumps({"data": f"JupyterHub auth info is not found."}))
             raise JupyterHubNotFoundError("JupyterHub auth info is not found.")
         req.add_header(*auth_keyval)
         return self._send_request(req)
@@ -85,7 +85,7 @@ class TestHubHandler(APIHandler):
                 self.log.error(e)
                 self.log.error("<<<<=======================================")
                 self.set_status(500)
-                self.finish(json.dumps({"data": f"JupyterHub service responded with an error: {e}"}))
+                self.write(json.dumps({"data": f"JupyterHub service responded with an error: {e}\n{req}"}))
             else:
                 self.log.info(f"{e.code}: OK")
         return dict()
@@ -191,7 +191,7 @@ class JobListHandler(APIHandler):
         for x in ("name", "path", "instance_type"):
             if x not in payload:
                 self.set_status(400)
-                self.finish(f"POST needs '{x}' field")
+                self.finish(json.dumps({"data": f"POST needs '{x}' field"}))
                 return
         name = payload["name"]
         apipath = payload["path"]
@@ -235,7 +235,6 @@ class JobListHandler(APIHandler):
                 self.log.error(">>>>=======================================")
                 self.set_status(500)
                 self.finish(json.dumps({"data": msg}))
-
                 return
             except HTTPError:
                 msg = f"HTTPError: Check the internet connection."
@@ -290,7 +289,7 @@ class JobListHandler(APIHandler):
         auth_keyval = get_header_auth_keyval()
         if auth_keyval is None:
             self.set_status(500)
-            self.finish(json.dumps({"data": f"JupyterHub auth info is not found."}))
+            self.write(json.dumps({"data": f"JupyterHub auth info is not found."}))
             raise JupyterHubNotFoundError("JupyterHub is not running?")
         req.add_header(*auth_keyval)
         return self._send_request(req)
@@ -410,7 +409,7 @@ class JobListHandler(APIHandler):
                 self.log.error(e)
                 self.log.error("<<<<=======================================")
                 self.set_status(500)
-                self.finish(json.dumps({"data": f"JupyterHub service responded with an error: {e}"}))
+                self.write(json.dumps({"data": f"JupyterHub service responded with an error: {e}"}))
             else:
                 self.log.info(f"{e.code}: OK")
         return dict()
