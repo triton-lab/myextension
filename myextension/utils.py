@@ -36,8 +36,8 @@ def join_url_parts(*parts):
 
 
 def get_hub_service_url(api: str) -> str:
-    url = os.environ.get("JUPYTERHUB_API_URL", "")
-    return join_url_parts(url,  f"/services/batch", api)
+    base = "http://127.0.0.1"
+    return join_url_parts(base,  f"/services/batch", api)
 
 
 def get_header_auth_keyval() -> Optional[Tuple[str, str]]:
