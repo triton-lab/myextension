@@ -189,11 +189,13 @@ class JobListHandler(APIHandler):
             self.finish(json.dumps({"data": "POST needs 'path' field"}))
             return
 
+        params: Dict[str, str] = dict()
         for x in ("name", "path", "instance_type"):
             if x not in payload:
                 self.set_status(400)
                 self.finish(json.dumps({"data": f"POST needs '{x}' field"}))
                 return
+            params[x] = payload[x]
         name = payload["name"]
         apipath = payload["path"]
         instance_type = payload["instance_type"]
@@ -228,7 +230,7 @@ class JobListHandler(APIHandler):
             }
         else:
             try:
-                res = self._start_job(job_id, filepath)
+                res = self._start_job(job_id, filepath, params)
             except JupyterHubNotFoundError:
                 msg = f"JupyterHubNotFoundError: This extension works only with JupyterHub."
                 self.log.error(">>>>=======================================")
@@ -324,11 +326,12 @@ class JobListHandler(APIHandler):
         req.add_header(*auth_keyval)
         return self._send_request(req)
 
-    def _http_post_multipart(self, url: str, filename: Path) -> requests.Response:
+    def _http_post_multipart(self, url: str, filename: Path, params: Dict) -> requests.Response:
         self.log.info(">>>>--------------------------------------------")
         self.log.info("  Sending HTTP POST request")
         self.log.info(f"    {url}")
         self.log.info(f"    {filename}")
+        self.log.info(f"    {params}")
         self.log.info("<<<<--------------------------------------------")
         files = {'file': (filename.name, filename.open('rb'), 'text/plain', {'Expires': '0'})}
         auth_keyval = get_header_auth_keyval()
@@ -336,10 +339,10 @@ class JobListHandler(APIHandler):
             raise JupyterHubNotFoundError("JupyterHub is not running?")
 
         headers = dict([auth_keyval])
-        res = requests.post(url, files=files, headers=headers)
+        res = requests.post(url, files=files, headers=headers, data=params)
         return res
 
-    def _start_job(self, job_id: str, filename: Path) -> Dict:
+    def _start_job(self, job_id: str, filename: Path, params: Dict) -> Dict:
         """Send as POST request to start an instance
 
         Returns a dictionary including
@@ -349,7 +352,7 @@ class JobListHandler(APIHandler):
         """
         url = get_hub_service_url(f"/job/{job_id}")
         self.log.debug(f"url: {url}")
-        result = self._http_post_multipart(url, filename)
+        result = self._http_post_multipart(url, filename, params)
         ## TODO: Align with JupyterHub's failure modes
         if not result.ok:
             msg = "AWS somehow failed to start EC2 instance request"
