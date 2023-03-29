@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from enum import Enum, auto
 from pathlib import Path
+import requests
 import urllib.request
 import urllib.parse
 from typing import List, Dict, NamedTuple, Iterable, Optional
@@ -323,6 +324,21 @@ class JobListHandler(APIHandler):
         req.add_header(*auth_keyval)
         return self._send_request(req)
 
+    def _http_post_multipart(self, url: str, filename: Path) -> requests.Response:
+        self.log.info(">>>>--------------------------------------------")
+        self.log.info("  Sending HTTP POST request")
+        self.log.info(f"    {url}")
+        self.log.info(f"    {filename}")
+        self.log.info("<<<<--------------------------------------------")
+        files = {'file': (filename.name, filename.open('rb'), 'text/plain', {'Expires': '0'})}
+        auth_keyval = get_header_auth_keyval()
+        if auth_keyval is None:
+            raise JupyterHubNotFoundError("JupyterHub is not running?")
+
+        headers = dict([auth_keyval])
+        res = requests.post(url, files=files, headers=headers)
+        return res
+
     def _start_job(self, job_id: str, filename: Path) -> Dict:
         """Send as POST request to start an instance
 
@@ -333,24 +349,17 @@ class JobListHandler(APIHandler):
         """
         url = get_hub_service_url(f"/job/{job_id}")
         self.log.debug(f"url: {url}")
-        with open(filename, "rb") as f:
-            data = f.read()
-        result = self._http_post(url, data)
+        result = self._http_post_multipart(url, filename)
         ## TODO: Align with JupyterHub's failure modes
-        if (
-            "response" not in result
-            or not result["response"].ok
-            or "status" not in result
-            or result["status"].lower().startswith("fail")
-        ):
+        if not result.ok:
             msg = "AWS somehow failed to start EC2 instance request"
             self.log.error(">>>>=======================================")
             self.log.error(url)
             self.log.error(msg)
-            self.log.error(result)
+            self.log.error(result.json())
             self.log.error(">>>>=======================================")
             raise FailedAwsJobRequestError(msg)
-        return result
+        return result.json()
 
     def _ask_jobs_status(
         self, request_ids: Iterable[str], instance_ids: Iterable[str]
