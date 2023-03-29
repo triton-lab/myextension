@@ -98,6 +98,7 @@ class JobStatus(Enum):
     RUNNING = auto()
     STOPPING = auto()
     TERMINATED = auto()
+    STALE = auto()
     UNKNOWN = auto()
 
 
@@ -139,10 +140,12 @@ def to_status(request_state: str, instance_state: str) -> JobStatus:
         status = JobStatus.PREPARING
     elif instance_state == "running":
         status = JobStatus.RUNNING
-    elif instance_state == "shutting-down":
+    elif instance_state in ("shutting-down", "stopping"):
         status = JobStatus.STOPPING
-    elif instance_state == "terminated":
+    elif instance_state in ("terminated", "stopped"):
         status = JobStatus.TERMINATED
+    elif instance_state in ("stale", "notfound-id"):
+        status = JobStatus.STALE
     else:
         # TODO: Add log saying something is wrong
         status = JobStatus.UNKNOWN
@@ -280,11 +283,12 @@ class JobListHandler(APIHandler):
         if DRY_RUN:
             self.log.debug("DRY_RUN activated in delete()")
         else:
+            self.log.debug(f"---- Cancel Job: {job_id} ----")
             res = self._cancel_job(meta.request_id, meta.instance_id)
+            self.log.debug(res)
 
-        # TODO: check job deletion succeeds
+        # TODO: delete wisely based on `res`
         self._db_delete(job_id)
-        # TODO: check if local job deletion succeeds
         self.get()
 
     def _http_meta(self, url: str, method: str = "GET"):
@@ -370,11 +374,11 @@ class JobListHandler(APIHandler):
         """
         Returns a dictonary with <InstanceId> as keys
             <InstanceId>:
-                SpotInstanceRequestState: 'open|active|closed|cancelled|failed'
-                InstanceState 'pending'|'running'|'shutting-down'|'terminated'|'stopping'|'stopped'
-                ConsoleOutput: <str>
-                _SpotInstanceRequestResponse: <dict>
-                _InstanceStatusResponse: <dict>
+                request: open|active|closed|cancelled|failed|notfound-id,
+                instance pending|running|shutting-down|terminated|stopping|stopped|stale|notfound-id,
+                (optinal) console: <str>
+                (optinal) _SpotInstanceRequest: <dict>
+                (optinal) _InstanceStatus: <dict>
         """
         params = urllib.parse.urlencode(
             {
@@ -389,14 +393,8 @@ class JobListHandler(APIHandler):
     def _cancel_job(self, request_id: str, instance_id: str) -> Dict:
         """
         Return a dict with response keys:
-            - CancelSpotInstanceRequestsResponse
-                - SpotInstanceRequestId
-                - State
-            - TerminateInstanceRequestsResponse
-                - InstanceId
-                - CurrentState
-                    - Code
-                    - Name
+            cancel: notfound_request_id|error...|<cancel_spot_instance_requests response>
+            terminate: notfound_instance_id|error...|<terminate_instances response>
         """
         params = urllib.parse.urlencode(
             {
@@ -446,17 +444,19 @@ class JobListHandler(APIHandler):
 
         request_ids = [meta.request_id for meta in jobs_metadata]
         instance_ids = [meta.instance_id for meta in jobs_metadata]
-        instance_type = [meta.instance_type for meta in jobs_metadata]
         if not jobs_metadata:
             return []
 
         r = self._ask_jobs_status(request_ids=request_ids, instance_ids=instance_ids)
+        self.log.debug("---- Job status ----")
+        self.log.debug(r)
+
         result: List[JobInfo] = []
         for x in jobs_metadata:
             id_ = x.instance_id
-            request_state = r[id_]["SpotInstanceRequestState"]
-            instance_state = r[id_]["InstanceState"]
-            console_output = r[id_]["ConsoleOutput"]
+            request_state = r[id_]["request"]
+            instance_state = r[id_]["instance"]
+            console_output = r[id_].get("console", "")
             # TODO: check instance_type and other fields agrees with `x`
             status = to_status(
                 request_state=request_state, instance_state=instance_state
