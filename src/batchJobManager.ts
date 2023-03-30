@@ -5,6 +5,7 @@ import { ServerConnection } from '@jupyterlab/services';
 import { URLExt } from '@jupyterlab/coreutils';
 
 import { IBatchJobItem } from './types';
+import { escapeHtmlAttribute } from './utils';
 
 const SERVER_URL = '/myextension';
 
@@ -109,14 +110,14 @@ export class BatchJobManager extends Widget {
 
     for (const job of jobs) {
       const row = document.createElement('tr');
-
+      const escaped_console = escapeHtmlAttribute(job.console_output);
       row.innerHTML = `
         <td>${job.job_id}</td>
         <td>${job.name}</td>
         <td>${job.file_path}</td>
         <td>${job.timestamp}</td>
         <td>${job.instance_type}</td>
-        <td><a href="#" class="job-status" data-job-log="${job.console_output}">${job.status}</a></td>
+        <td><a href="#" class="job-status" data-job-log="${escaped_console}">${job.status}</a></td>
         <td><button class="btn btn-danger btn-sm delete-job" data-job-id="${job.job_id}">Delete</button></td>
       `;
 
