@@ -106,6 +106,8 @@ class JobStatusEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, JobStatus):
             return obj.name
+        elif isinstance(obj, datetime):
+            return obj.isoformat()
         return super().default(obj)
 
 
@@ -250,13 +252,13 @@ class JobListHandler(APIHandler):
                 self.set_status(500)
                 self.finish(json.dumps({"data": msg}))
                 return
-            except FailedAwsJobRequestError:
-                msg = f"Failed to start a job at AWS: {apipath}"
+            except FailedAwsJobRequestError as e:
                 self.log.error(">>>>=======================================")
-                self.log.error(msg)
+                self.log.error(f"Failed to start a job at AWS: {apipath}")
+                self.log.error(e)
                 self.log.error(">>>>=======================================")
                 self.set_status(500)
-                self.finish(json.dumps({"data": msg}))
+                self.finish(json.dumps(e, cls=JobStatusEncoder, indent=1))
                 return
 
         meta = JobMetadata(
@@ -359,13 +361,12 @@ class JobListHandler(APIHandler):
         result = self._http_post_multipart(url, filename, params)
         ## TODO: Align with JupyterHub's failure modes
         if not result.ok:
-            msg = "AWS somehow failed to start EC2 instance request"
             self.log.error(">>>>=======================================")
+            self.log.error("AWS somehow failed to start EC2 instance request")
             self.log.error(url)
-            self.log.error(msg)
             self.log.error(result.json())
             self.log.error(">>>>=======================================")
-            raise FailedAwsJobRequestError(msg)
+            raise FailedAwsJobRequestError(result.json())
         return result.json()
 
     def _ask_jobs_status(
