@@ -98,7 +98,8 @@ class JobStatus(Enum):
     RUNNING = auto()
     STOPPING = auto()
     TERMINATED = auto()
-    STALE = auto()
+    EMPTY = auto()  # either just started or after termination
+    STALE = auto()  # when instance ID is no longer found
     UNKNOWN = auto()
 
 
@@ -146,7 +147,9 @@ def to_status(request_state: str, instance_state: str) -> JobStatus:
         status = JobStatus.STOPPING
     elif instance_state in ("terminated", "stopped"):
         status = JobStatus.TERMINATED
-    elif instance_state in ("stale", "notfound-id"):
+    elif instance_state == "info-empty":
+        status = JobStatus.EMPTY
+    elif instance_state == "notfound-id":
         status = JobStatus.STALE
     else:
         # TODO: Add log saying something is wrong
@@ -376,7 +379,7 @@ class JobListHandler(APIHandler):
         Returns a dictonary with <InstanceId> as keys
             <InstanceId>:
                 request: open|active|closed|cancelled|failed|notfound-id,
-                instance pending|running|shutting-down|terminated|stopping|stopped|stale|notfound-id,
+                instance pending|running|shutting-down|terminated|stopping|stopped|info-empty|notfound-id,
                 (optinal) console: <str>
                 (optinal) _SpotInstanceRequest: <dict>
                 (optinal) _InstanceStatus: <dict>
