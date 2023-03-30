@@ -292,7 +292,7 @@ export class BatchJobManager extends Widget {
     //
     // TODO: Make the window larger. Make the display terminal-like.
     body.node.innerHTML = `
-    <div class="container mt-5">${logContent}</div>
+    <div class="container mt-5"><pre>${logContent}</pre></div>
     `;
     await showDialog({
       title: 'Console Log',
