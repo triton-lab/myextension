@@ -10,9 +10,9 @@ import { escapeHtmlAttribute } from './utils';
 const SERVER_URL = '/myextension';
 
 const JOB_TABLE = `
-<div class="container mt-5">
-  <div class="container ">
-    <button type="button" class="btn btn-secondary my-refresh-button">
+<div class="container mt-5 job-table-page">
+  <div class="container job-table-header">
+    <button type="button" class="btn btn-secondary my-update-button">
     <i class="bi bi-arrow-clockwise"></i> Refresh
     </button>
   </div>
@@ -83,9 +83,11 @@ export class BatchJobManager extends Widget {
       });
 
     this.node
-      .querySelector('.my-refresh-button')
-      ?.addEventListener('click', () => {
-        this.fetchJobs();
+      .querySelector('.my-update-button')
+      ?.addEventListener('click', async () => {
+        this.showAlert('Updating...', 'updating-job-aleart');
+        await this.fetchJobs();
+        this.removeAlert('updating-job-aleart');
       });
   }
 
@@ -159,8 +161,10 @@ export class BatchJobManager extends Widget {
         } else {
           const job_id = (event.target as HTMLElement).dataset.jobId;
           if (job_id) {
+            this.showAlert('Deleting...', 'deleting-job-alert', 'info');
             await this.deleteJob(job_id);
             this.fetchJobs();
+            this.removeAlert('deleting-job-alert');
           } else {
             console.warn('Job ID is not available');
           }
@@ -300,8 +304,10 @@ export class BatchJobManager extends Widget {
       console.log('Instance Type:', instanceType);
 
       try {
+        this.showAlert('Submitting a job...', 'submitting-job-alert', 'info');
         await this.addJob(name, filePath, instanceType);
         this.fetchJobs();
+        this.removeAlert('submitting-job-alert');
       } catch (error) {
         let msg: string;
         if (error instanceof ServerConnection.ResponseError) {
@@ -312,6 +318,7 @@ export class BatchJobManager extends Widget {
         } else {
           msg = `Failed to Create Job: ${error}`;
         }
+        this.showAlert(msg, 'job-submission-error-alert', 'danger');
         Notification.error(msg);
       }
     }
@@ -329,5 +336,29 @@ export class BatchJobManager extends Widget {
       body,
       buttons: [Dialog.okButton()]
     });
+  }
+
+  private async showAlert(
+    message: string,
+    classname: string,
+    type = 'info'
+  ): Promise<void> {
+    // Create an alert element
+    const alertElement = document.createElement('div');
+    alertElement.className = `alert alert-${type} ${classname}`;
+    alertElement.setAttribute('role', 'alert');
+    alertElement.textContent = message;
+
+    // Add the alert to the DOM
+    this.node.querySelector('.job-table-header')?.prepend(alertElement);
+
+    setTimeout(() => {
+      alertElement.remove();
+    }, 20000);
+  }
+
+  private async removeAlert(classname: string): Promise<void> {
+    // Add the alert to the DOM
+    this.node.querySelector(`.alert.${classname}`)?.remove();
   }
 }
