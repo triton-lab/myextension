@@ -4,9 +4,11 @@ import {
 } from '@jupyterlab/application';
 import { ICommandPalette, MainAreaWidget } from '@jupyterlab/apputils';
 import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
+import { ILauncher } from '@jupyterlab/launcher';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import { requestAPI } from './handler';
+import { batchManagerIcon } from './icons';
 import { BatchJobManager } from './batchJobManager';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../style/index.css';
@@ -17,11 +19,13 @@ import '../style/index.css';
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'myextension:plugin',
   autoStart: true,
-  optional: [ICommandPalette, IFileBrowserFactory, ISettingRegistry],
+  requires: [IFileBrowserFactory, ILauncher, ICommandPalette],
+  optional: [ISettingRegistry],
   activate: (
     app: JupyterFrontEnd,
-    palette: ICommandPalette,
     factory: IFileBrowserFactory,
+    launcher: ILauncher,
+    palette: ICommandPalette,
     settingRegistry: ISettingRegistry | null
   ) => {
     console.log('JupyterLab extension myextension is activated!');
@@ -32,6 +36,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     app.commands.addCommand(command, {
       label: 'Batch Job Manager',
       caption: 'Manages batch jobs',
+      icon: batchManagerIcon,
       execute: () => {
         if (!widget || widget.isDisposed) {
           console.log('Filling batch-job widget!');
@@ -51,7 +56,11 @@ const plugin: JupyterFrontEndPlugin<void> = {
       }
     });
     palette.addItem({ command: command, category: 'Tutorial' });
-
+    launcher.add({
+      command,
+      category: 'Other',
+      rank: 6
+    });
     if (settingRegistry) {
       settingRegistry
         .load(plugin.id)
