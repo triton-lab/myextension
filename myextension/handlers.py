@@ -86,7 +86,13 @@ class TestHubHandler(APIHandler):
                 self.log.error(e)
                 self.log.error("<<<<=======================================")
                 self.set_status(500)
-                self.write(json.dumps({"data": f"JupyterHub service responded with an error: {e}\n{req}"}))
+                self.write(
+                    json.dumps(
+                        {
+                            "data": f"JupyterHub service responded with an error: {e}\n{req}"
+                        }
+                    )
+                )
             else:
                 self.log.info(f"{e.code}: OK")
         return dict()
@@ -335,14 +341,18 @@ class JobListHandler(APIHandler):
         req.add_header(*auth_keyval)
         return self._send_request(req)
 
-    def _http_post_multipart(self, url: str, filename: Path, params: Dict) -> requests.Response:
+    def _http_post_multipart(
+        self, url: str, filename: Path, params: Dict
+    ) -> requests.Response:
         self.log.info(">>>>--------------------------------------------")
         self.log.info("  Sending HTTP POST request")
         self.log.info(f"    {url}")
         self.log.info(f"    {filename}")
         self.log.info(f"    {params}")
         self.log.info("<<<<--------------------------------------------")
-        files = {'file': (filename.name, filename.open('rb'), 'text/plain', {'Expires': '0'})}
+        files = {
+            "file": (filename.name, filename.open("rb"), "text/plain", {"Expires": "0"})
+        }
         auth_keyval = get_header_auth_keyval()
         if auth_keyval is None:
             raise JupyterHubNotFoundError("JupyterHub is not running?")
@@ -423,7 +433,11 @@ class JobListHandler(APIHandler):
                 self.log.error(e)
                 self.log.error("<<<<=======================================")
                 self.set_status(500)
-                self.write(json.dumps({"data": f"JupyterHub service responded with an error: {e}"}))
+                self.write(
+                    json.dumps(
+                        {"data": f"JupyterHub service responded with an error: {e}"}
+                    )
+                )
             else:
                 self.log.info(f"{e.code}: OK")
         return dict()
