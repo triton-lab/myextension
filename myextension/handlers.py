@@ -142,7 +142,7 @@ class JobInfo(NamedTuple):
     console_output: str
 
 
-def to_status(request_state: str, instance_state: str) -> JobStatus:
+def to_status(request_state: str, instance_state: str, console: str) -> JobStatus:
     if request_state == "open":
         status = JobStatus.OPENED
     elif instance_state == "pending":
@@ -153,7 +153,11 @@ def to_status(request_state: str, instance_state: str) -> JobStatus:
         status = JobStatus.STOPPING
     elif instance_state in ("terminated", "stopped"):
         status = JobStatus.TERMINATED
+    elif instance_state == "info-empty" and console:
+        status = JobStatus.TERMINATED
     elif instance_state == "info-empty":
+        # Either (1) right after instance creation
+        #    or  (2) long after instance termination
         status = JobStatus.EMPTY
     elif instance_state == "notfound-id":
         status = JobStatus.STALE
@@ -476,9 +480,7 @@ class JobListHandler(APIHandler):
             instance_state = r[id_]["instance"]
             console_output = r[id_].get("console", "")
             # TODO: check instance_type and other fields agrees with `x`
-            status = to_status(
-                request_state=request_state, instance_state=instance_state
-            )
+            status = to_status(request_state, instance_state, console_output)
             jobinfo = JobInfo(
                 x.job_id,
                 x.name,
