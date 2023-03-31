@@ -136,15 +136,34 @@ export class BatchJobManager extends Widget {
     }
 
     const deleteButtons = this.node.querySelectorAll('.delete-job');
+    const clickedButtons = new Set();
+
     deleteButtons.forEach(button => {
       button.addEventListener('click', async event => {
         event.preventDefault();
-        const job_id = (event.target as HTMLElement).dataset.jobId;
-        if (job_id) {
-          await this.deleteJob(job_id);
-          this.fetchJobs();
+
+        if (!clickedButtons.has(button)) {
+          // Change the appearance of the button on the first click
+          clickedButtons.add(button);
+          button.classList.add('btn-warning');
+          button.classList.remove('btn-danger');
+          button.textContent = 'Confirm Delete';
+
+          // Reset the button state after a timeout (e.g., 3 seconds)
+          setTimeout(() => {
+            clickedButtons.delete(button);
+            button.classList.add('btn-danger');
+            button.classList.remove('btn-warning');
+            button.textContent = 'Delete';
+          }, 3000);
         } else {
-          console.warn('Job ID is not available');
+          const job_id = (event.target as HTMLElement).dataset.jobId;
+          if (job_id) {
+            await this.deleteJob(job_id);
+            this.fetchJobs();
+          } else {
+            console.warn('Job ID is not available');
+          }
         }
       });
     });
