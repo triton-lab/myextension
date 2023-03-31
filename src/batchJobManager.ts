@@ -12,7 +12,7 @@ const SERVER_URL = '/myextension';
 const JOB_TABLE = `
 <div class="container mt-5">
   <div class="container ">
-    <button type="button" class="btn btn-primary my-refresh">
+    <button type="button" class="btn btn-secondary my-refresh-button">
     <i class="bi bi-arrow-clockwise"></i> Refresh
     </button>
   </div>
@@ -27,7 +27,7 @@ const JOB_TABLE = `
         <th scope="col">Status</th>
         <th scope="col">Actions</th>
         <th class="text-center">
-          <button type="button" class="btn btn-primary my-create">
+          <button type="button" class="btn btn-primary my-create-button">
             Create Job
           </button>
         </th>
@@ -77,13 +77,13 @@ export class BatchJobManager extends Widget {
     this.addClass('jp-BatchJobManager');
 
     this.node
-      .querySelector('.btn.btn-primary.my-create')
+      .querySelector('.my-create-button')
       ?.addEventListener('click', () => {
         this.showCreateJobDialog();
       });
 
     this.node
-      .querySelector('.btn.btn-primary.my-refresh')
+      .querySelector('.my-refresh-button')
       ?.addEventListener('click', () => {
         this.fetchJobs();
       });

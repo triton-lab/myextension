@@ -13,6 +13,6 @@
   overflow-y: auto;
 }
 
-.jp-BatchJobManager * {
+.jp-BatchJobManager *:not(.btn) {
   color: inherit !important;
 }
