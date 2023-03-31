@@ -5,6 +5,7 @@ from typing import Optional, Tuple
 import sqlite3
 from sqlite3 import Connection
 import platformdirs
+import urllib.parse
 
 
 class JupyterPathLoadingError(Exception):
@@ -36,7 +37,9 @@ def join_url_parts(*parts):
 
 
 def get_hub_service_url(api: str) -> str:
-    base = "http://127.0.0.1"
+    url = os.environ.get('JUPYTERHUB_API_URL', "http://127.0.0.1")
+    parsed = urllib.parse.urlparse(url)
+    base = parsed.scheme + "://" + (parsed.hostname or "")
     return join_url_parts(base,  f"/services/batch", api)
 
 
