@@ -11,8 +11,10 @@ const SERVER_URL = '/myextension';
 
 const JOB_TABLE = `
 <div class="container mt-5 job-table-page">
+  <div class="container job-table-alert">
+  </div>
   <div class="container job-table-header d-flex align-items-center">
-    <button type="button" class="btn btn-secondary my-update-button me-2">
+    <button type="button" class="btn btn-secondary my-update-button">
     <i class="bi bi-arrow-clockwise"></i> Reload
     </button>
   </div>
@@ -345,14 +347,12 @@ export class BatchJobManager extends Widget {
     classname: string,
     type = 'info'
   ): Promise<void> {
-    // Create an alert element
     const alertElement = document.createElement('div');
     alertElement.className = `alert alert-${type} ${classname}`;
     alertElement.setAttribute('role', 'alert');
     alertElement.textContent = message;
 
-    // Add the alert to the DOM
-    this.node.querySelector('.job-table-header')?.prepend(alertElement);
+    this.node.querySelector('.job-table-alert')?.appendChild(alertElement);
 
     setTimeout(() => {
       alertElement.remove();
@@ -360,13 +360,12 @@ export class BatchJobManager extends Widget {
   }
 
   private async removeAlert(classname: string): Promise<void> {
-    // Add the alert to the DOM
     this.node.querySelector(`.alert.${classname}`)?.remove();
   }
 
   private async showSpinner(classname = 'my-loading-spinner'): Promise<void> {
     const spinnerElement = document.createElement('div');
-    spinnerElement.className = `spinner-border text-secondary ${classname}`;
+    spinnerElement.className = `spinner-border text-secondary ms-2 ${classname}`;
     spinnerElement.setAttribute('role', 'status');
 
     const child = document.createElement('span');
@@ -374,7 +373,7 @@ export class BatchJobManager extends Widget {
     child.textContent = 'Loading...';
     spinnerElement.appendChild(child);
 
-    this.node.querySelector('.job-table-header')?.append(spinnerElement);
+    this.node.querySelector('.job-table-header')?.appendChild(spinnerElement);
 
     setTimeout(() => {
       spinnerElement.remove();
