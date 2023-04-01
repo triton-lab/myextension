@@ -11,9 +11,9 @@ const SERVER_URL = '/myextension';
 
 const JOB_TABLE = `
 <div class="container mt-5 job-table-page">
-  <div class="container job-table-header">
-    <button type="button" class="btn btn-secondary my-update-button">
-    <i class="bi bi-arrow-clockwise"></i> Refresh
+  <div class="container job-table-header d-flex align-items-center">
+    <button type="button" class="btn btn-secondary my-update-button me-2">
+    <i class="bi bi-arrow-clockwise"></i> Reload
     </button>
   </div>
   <table class="table table-striped">
@@ -85,15 +85,17 @@ export class BatchJobManager extends Widget {
     this.node
       .querySelector('.my-update-button')
       ?.addEventListener('click', async () => {
-        this.showAlert('Updating...', 'updating-job-aleart');
+        this.showSpinner();
         await this.fetchJobs();
-        this.removeAlert('updating-job-aleart');
+        this.removeSpinner();
       });
   }
 
-  onAfterAttach(): void {
+  async onAfterAttach(): Promise<void> {
     console.log('BatchJobManager: onAfterAttach()!');
-    this.fetchJobs();
+    this.showSpinner();
+    await this.fetchJobs();
+    this.removeSpinner();
   }
 
   // Use JupyterLab API instead of fetch() to make the auth easy
@@ -360,5 +362,27 @@ export class BatchJobManager extends Widget {
   private async removeAlert(classname: string): Promise<void> {
     // Add the alert to the DOM
     this.node.querySelector(`.alert.${classname}`)?.remove();
+  }
+
+  private async showSpinner(classname = 'my-loading-spinner'): Promise<void> {
+    const spinnerElement = document.createElement('div');
+    spinnerElement.className = `spinner-border text-secondary ${classname}`;
+    spinnerElement.setAttribute('role', 'status');
+
+    const child = document.createElement('span');
+    child.className = 'visually-hidden';
+    child.textContent = 'Loading...';
+    spinnerElement.appendChild(child);
+
+    this.node.querySelector('.job-table-header')?.append(spinnerElement);
+
+    setTimeout(() => {
+      spinnerElement.remove();
+    }, 20000);
+  }
+
+  private async removeSpinner(classname = 'my-loading-spinner'): Promise<void> {
+    // Add the alert to the DOM
+    this.node.querySelector(`.${classname}`)?.remove();
   }
 }
