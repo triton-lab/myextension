@@ -101,73 +101,52 @@ class TestHubHandler(APIHandler):
         return dict()
 
 
-class JobStatus(Enum):
-    OPENED = auto()
-    PREPARING = auto()
-    RUNNING = auto()
-    STOPPING = auto()
-    TERMINATED = auto()
-    EMPTY = auto()  # either just started or after termination
-    STALE = auto()  # when instance ID is no longer found
-    UNKNOWN = auto()
+class B2DownloadHandler(APIHandler):
+    """Download file(s) from B2 as batch job results
+
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.db = open_or_create_db()
+
+    @tornado.web.authenticated
+    def get(self):
+        self.log.info(">>>>========================================")
+        self.log.info("   B2DownloadHandler: GET received")
+        self.log.info("<<<<========================================")
+        job_id = self.get_query_argument("job_id", default=None)
+        if job_id is None:
+            msg = "Require job_id parameter."
+            self.set_status(400)
+            self.log.error(msg)
+            self.finish(utils.asjson(msg))
+            return
+
+        meta = db_read(self.db, job_id)
+        filename = Path(meta.file_path).name
+        params = urllib.parse.urlencode({"job_id": job_id, "filename": filename})
+        url = get_hub_service_url(f"/job?{params}")
+        output_path = utils.get_output_path(meta)
+
+        try:
+            with urllib.request.urlopen(url) as response:
+                with open(output_path, 'wb') as f:
+                    f.write(response.read())
+            msg = f"Saved the file to {output_path}"
+            self.log.debug(msg)
+            self.finish(utils.asjson(msg))
+        except HTTPError as e:
+            msg = "Unable to download the file. Status code: {e.code}"
+            self.log.error(f"Error: {msg}")
+            self.set_status(e.code)
+            self.write(utils.asjson(msg))
+        except Exception as e:
+            msg = "Unknown error"
+            self.log.error(f"Error downloading and saving file: {msg}")
+            self.set_status(500)
+            self.write(utils.asjson(msg))
 
 
-class JobStatusEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, JobStatus):
-            return obj.name
-        elif isinstance(obj, datetime):
-            return obj.isoformat()
-        return super().default(obj)
-
-
-class JobMetadata(NamedTuple):
-    job_id: str
-    name: str
-    file_path: str
-    timestamp: datetime
-    request_id: str
-    instance_id: str
-    instance_type: str
-    extra: str
-
-
-class JobInfo(NamedTuple):
-    job_id: str
-    name: str
-    file_path: str
-    timestamp: datetime
-    request_id: str
-    instance_id: str
-    instance_type: str
-    extra: str
-    status: JobStatus
-    console_output: str
-
-
-def to_status(request_state: str, instance_state: str, console: str) -> JobStatus:
-    if request_state == "open":
-        status = JobStatus.OPENED
-    elif instance_state == "pending":
-        status = JobStatus.PREPARING
-    elif instance_state == "running":
-        status = JobStatus.RUNNING
-    elif instance_state in ("shutting-down", "stopping"):
-        status = JobStatus.STOPPING
-    elif instance_state in ("terminated", "stopped"):
-        status = JobStatus.TERMINATED
-    elif instance_state == "info-empty" and console:
-        status = JobStatus.TERMINATED
-    elif instance_state == "info-empty":
-        # Either (1) right after instance creation
-        #    or  (2) long after instance termination
-        status = JobStatus.EMPTY
-    elif instance_state == "notfound-id":
-        status = JobStatus.STALE
-    else:
-        # TODO: Add log saying something is wrong
-        status = JobStatus.UNKNOWN
-    return status
 
 
 class JobListHandler(APIHandler):
@@ -522,6 +501,7 @@ def setup_handlers(web_app):
         (f("testhub"), TestHubHandler),
         (f("jobs"), JobListHandler),
         (f("jobs/(.*)"), JobListHandler),
+        (f("download"), B2DownloadHandler),
     ]
 
     host_pattern = ".*$"

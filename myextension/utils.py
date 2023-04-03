@@ -1,3 +1,4 @@
+import json
 import os
 import re
 from pathlib import Path
@@ -7,6 +8,7 @@ from sqlite3 import Connection
 import platformdirs
 import urllib.parse
 
+from .types import JobMetadata
 
 class JupyterPathLoadingError(Exception):
     pass
@@ -50,3 +52,27 @@ def get_header_auth_keyval() -> Optional[Tuple[str, str]]:
     if not tokenval:
         return None
     return ("Authorization", f"token {tokenval}")
+
+
+def asjson(msg: str) -> str:
+    return json.dumps({"data": msg})
+
+
+def shorten_id(job_id: str) -> str:
+    """Assume job_id is UUID4. Returns the first part.
+    """
+    parts = job_id.split("-")
+    return parts[0]
+
+
+def get_output_path(meta: JobMetadata) -> str:
+    """"
+    """
+    p = Path(meta.file_path)
+    job_name = meta.name
+    filename = p.name
+    root = p.parent
+    parent_dir = job_name + "_" + shorten_id(meta.job_id)
+    path = root / parent_dir
+    path.mkdir(exist_ok=True)
+    return (path / filename).as_posix()
