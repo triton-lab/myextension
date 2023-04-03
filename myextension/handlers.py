@@ -1,13 +1,13 @@
 import json
 import os
 from datetime import datetime
-from enum import Enum, auto
+
 from pathlib import Path
 from sqlite3 import Connection
 import requests
 import urllib.request
 import urllib.parse
-from typing import List, Dict, NamedTuple, Iterable, Optional
+from typing import List, Dict, Iterable, Optional
 import uuid
 from urllib.error import HTTPError
 
@@ -15,8 +15,10 @@ from jupyter_server.base.handlers import APIHandler
 from jupyter_server.utils import url_path_join
 import tornado.web
 
+from . import utils
 from .utils import open_or_create_db, get_hub_service_url, get_header_auth_keyval
 from .errors import FailedAwsJobRequestError, JupyterHubNotFoundError
+from .types import JobInfo, JobMetadata, JobStatus, JobStatusEncoder, to_status
 
 
 DRY_RUN = (not bool(os.environ.get("JUPYTERHUB_API_URL", ""))) or bool(
