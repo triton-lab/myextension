@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from enum import Enum, auto
 from pathlib import Path
+from sqlite3 import Connection
 import requests
 import urllib.request
 import urllib.parse
@@ -284,7 +285,8 @@ class JobListHandler(APIHandler):
             instance_type=instance_type,
             extra="",
         )
-        self._db_add(meta)
+        self.log.debug(f"Adding an entry to db: {meta}")
+        db_add(self.db, meta)
         self.get()
 
     @tornado.web.authenticated
@@ -294,7 +296,9 @@ class JobListHandler(APIHandler):
         self.log.info("  DELETE request received")
         self.log.info(f"     Job ID: {job_id}")
         self.log.info("<<<<========================================")
-        meta = self._db_read(job_id)
+
+        self.log.debug(f"Reading an entry from db: {job_id}")
+        meta = db_read(self.db, job_id)
         if DRY_RUN:
             self.log.debug("DRY_RUN activated in delete()")
         else:
@@ -303,7 +307,8 @@ class JobListHandler(APIHandler):
             self.log.debug(res)
 
         # TODO: delete wisely based on `res`
-        self._db_delete(job_id)
+        self.log.debug(f"Deleting an entry to db: {job_id}")
+        db_delete(self.db, job_id)
         self.get()
 
     def _http_meta(self, url: str, method: str = "GET"):
@@ -502,23 +507,6 @@ class JobListHandler(APIHandler):
         ## TODO: Get status
         return [JobMetadata._make(tup) for tup in res.fetchall()]
 
-    def _db_read(self, job_id: str) -> JobMetadata:
-        self.log.debug(f"Reading an entry from db: {job_id}")
-        cur = self.db.execute("select * from jobmeta where job_id=?", (job_id,))
-        res = JobMetadata._make(cur.fetchone())
-        return res
-
-    def _db_add(self, jobmeta: JobMetadata) -> None:
-        self.log.debug(f"Adding an entry to db: {jobmeta}")
-        with self.db:
-            self.db.execute(
-                "insert into jobmeta values (?, ?, ?, ?, ?, ?, ?, ?)", jobmeta
-            )
-
-    def _db_delete(self, job_id: str) -> None:
-        self.log.debug(f"Deleting an entry to db: {job_id}")
-        with self.db:
-            self.db.execute("delete from jobmeta where job_id=?", (job_id,))
 
 
 def setup_handlers(web_app):
@@ -536,3 +524,22 @@ def setup_handlers(web_app):
 
     host_pattern = ".*$"
     web_app.add_handlers(host_pattern, handlers)
+
+
+
+
+def db_read(db: Connection, job_id: str) -> JobMetadata:
+
+    cur = db.execute("select * from jobmeta where job_id=?", (job_id,))
+    res = JobMetadata._make(cur.fetchone())
+    return res
+
+def db_add(db: Connection, jobmeta: JobMetadata) -> None:
+    with db:
+        db.execute(
+            "insert into jobmeta values (?, ?, ?, ?, ?, ?, ?, ?)", jobmeta
+        )
+
+def db_delete(db: Connection, job_id: str) -> None:
+    with db:
+        db.execute("delete from jobmeta where job_id=?", (job_id,))
