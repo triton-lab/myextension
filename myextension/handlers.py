@@ -113,25 +113,35 @@ class B2DownloadHandler(APIHandler):
     @tornado.web.authenticated
     def get(self, job_id):
         self.log.info(">>>>========================================")
-        self.log.info("   B2DownloadHandler: GET received")
-        self.log.info(f"       job_id: {job_id}")
-        self.log.info("<<<<========================================")
+        self.log.info("  B2DownloadHandler: GET received")
+        self.log.info(f"    job_id: {job_id}")
 
         meta = db_read(self.db, job_id)
         filename = Path(meta.file_path).name
         params = urllib.parse.urlencode({"job_id": job_id, "filename": filename})
-        url = get_hub_service_url(f"/job?{params}")
+        url = get_hub_service_url(f"/download?{params}")
         output_path = utils.get_output_path(meta)
 
+        self.log.info(f"    filename: {filename}")
+        self.log.info(f"    Accessing with HTTP GET: {url}")
+        self.log.info("<<<<========================================")
+        req = urllib.request.Request(url=url, method='GET')
+        auth_keyval = get_header_auth_keyval()
+        if auth_keyval is None:
+            self.set_status(500)
+            self.write(json.dumps({"data": f"JupyterHub auth info is not found."}))
+            raise JupyterHubNotFoundError("JupyterHub is not running?")
+        req.add_header(*auth_keyval)
         try:
-            with closing(urllib.request.urlopen(url)) as response:
+            with closing(urllib.request.urlopen(req)) as response:
                 with open(output_path, 'wb') as f:
-                    f.write(response.read())
-            msg = f"File '{output_path}' downloaded successfully."
-            self.log.info(">>>>-----------------------------------------")
-            self.log.info(msg)
-            self.log.info("<<<<-----------------------------------------")
-            self.finish(utils.asjson(msg))
+                    content = response.read()
+                    f.write(content)
+
+            self.log.info(">>>>=================================================")
+            self.log.info(f"    Content of {output_path}")
+            self.log.info(content)
+            self.log.info("<<<<=================================================")
         except HTTPError as e:
             msg = f"Error: Unable to download the file. Status code: {e.code}"
             self.log.error(">>>>========================================")
@@ -146,7 +156,6 @@ class B2DownloadHandler(APIHandler):
             self.log.error("<<<<========================================")
             self.set_status(500)
             self.write(utils.asjson(msg))
-
 
 
 class JobListHandler(APIHandler):
