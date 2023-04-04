@@ -1,3 +1,4 @@
+from contextlib import closing
 import json
 import os
 from datetime import datetime
@@ -110,17 +111,11 @@ class B2DownloadHandler(APIHandler):
         self.db = open_or_create_db()
 
     @tornado.web.authenticated
-    def get(self):
+    def get(self, job_id):
         self.log.info(">>>>========================================")
         self.log.info("   B2DownloadHandler: GET received")
+        self.log.info(f"       job_id: {job_id}")
         self.log.info("<<<<========================================")
-        job_id = self.get_query_argument("job_id", default=None)
-        if job_id is None:
-            msg = "Require job_id parameter."
-            self.set_status(400)
-            self.log.error(msg)
-            self.finish(utils.asjson(msg))
-            return
 
         meta = db_read(self.db, job_id)
         filename = Path(meta.file_path).name
@@ -129,23 +124,28 @@ class B2DownloadHandler(APIHandler):
         output_path = utils.get_output_path(meta)
 
         try:
-            with urllib.request.urlopen(url) as response:
+            with closing(urllib.request.urlopen(url)) as response:
                 with open(output_path, 'wb') as f:
                     f.write(response.read())
-            msg = f"Saved the file to {output_path}"
-            self.log.debug(msg)
+            msg = f"File '{output_path}' downloaded successfully."
+            self.log.info(">>>>-----------------------------------------")
+            self.log.info(msg)
+            self.log.info("<<<<-----------------------------------------")
             self.finish(utils.asjson(msg))
         except HTTPError as e:
-            msg = "Unable to download the file. Status code: {e.code}"
+            msg = f"Error: Unable to download the file. Status code: {e.code}"
+            self.log.error(">>>>========================================")
             self.log.error(f"Error: {msg}")
+            self.log.error("<<<<========================================")
             self.set_status(e.code)
             self.write(utils.asjson(msg))
         except Exception as e:
-            msg = "Unknown error"
+            msg = f"Error: {e}"
+            self.log.error(">>>>========================================")
             self.log.error(f"Error downloading and saving file: {msg}")
+            self.log.error("<<<<========================================")
             self.set_status(500)
             self.write(utils.asjson(msg))
-
 
 
 
@@ -501,7 +501,7 @@ def setup_handlers(web_app):
         (f("testhub"), TestHubHandler),
         (f("jobs"), JobListHandler),
         (f("jobs/(.*)"), JobListHandler),
-        (f("download"), B2DownloadHandler),
+        (f("download/(.*)"), B2DownloadHandler),
     ]
 
     host_pattern = ".*$"
