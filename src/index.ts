@@ -40,7 +40,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       execute: () => {
         if (!widget || widget.isDisposed) {
           console.log('Filling batch-job widget!');
-          const content = new BatchJobManager(factory);
+          const content = new BatchJobManager(factory, app.commands);
           widget = new MainAreaWidget({ content });
           widget.id = 'batch-job-manager';
         }

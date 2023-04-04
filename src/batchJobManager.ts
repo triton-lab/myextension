@@ -3,9 +3,10 @@ import { FileDialog, IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { Widget } from '@lumino/widgets';
 import { ServerConnection } from '@jupyterlab/services';
 import { URLExt } from '@jupyterlab/coreutils';
+import { CommandRegistry } from '@lumino/commands';
 
 import { IBatchJobItem } from './types';
-import { escapeHtmlAttribute } from './utils';
+import { escapeHtmlAttribute, getOutputPath, fileExists } from './utils';
 
 const SERVER_URL = '/myextension';
 
@@ -23,7 +24,8 @@ const JOB_TABLE = `
       <tr>
         <th scope="col">Job ID</th>
         <th scope="col">Name</th>
-        <th scope="col">File At</th>
+        <th scope="col">Input File</th>
+        <th scope="col">Outputs</th>
         <th scope="col">Created At</th>
         <th scope="col">Instance Type</th>
         <th scope="col">Status</th>
@@ -69,7 +71,10 @@ const JOB_DEFINITION = `
 `;
 
 export class BatchJobManager extends Widget {
-  constructor(private factory: IFileBrowserFactory) {
+  constructor(
+    private factory: IFileBrowserFactory,
+    private commands: CommandRegistry
+  ) {
     super();
     console.log('BatchJobManager: constructor()!');
     this.node.innerHTML = JOB_TABLE;
@@ -127,16 +132,35 @@ export class BatchJobManager extends Widget {
 
     for (const job of jobs) {
       const row = document.createElement('tr');
+      row.id = `job-table-row-${job.job_id}`;
       const escaped_console = escapeHtmlAttribute(job.console_output);
+      const outputPath = getOutputPath(job);
       row.innerHTML = `
         <td>${job.job_id}</td>
         <td>${job.name}</td>
-        <td>${job.file_path}</td>
+        <td><a href="#" class="job-table-row-input-link"></a></td>
+        <td class="job-table-row-output">
+          <a href="#" class="job-table-row-output-link"></a>
+        </td>
         <td>${job.timestamp}</td>
         <td>${job.instance_type}</td>
         <td><a href="#" class="job-status" data-job-log="${escaped_console}">${job.status}</a></td>
         <td><button class="btn btn-danger btn-sm delete-job" data-job-id="${job.job_id}">Delete</button></td>
       `;
+
+      // Add link to input file
+      this.addlink(row, 'job-table-row-input-link', job.file_path);
+
+      // Add nothing / button to download / link to output file
+      if (await fileExists(outputPath)) {
+        this.addlink(row, 'job-table-row-output-link', outputPath);
+      } else if (job.status === 'TERMINATED' || job.status === 'EMPTY') {
+        console.log('-----------------------------------');
+        console.log('Request downloading from B2!');
+        console.log('-----------------------------------');
+        this.fetch(`/download/${job.job_id}`);
+        this.addlink(row, 'job-table-row-output-link', outputPath);
+      }
 
       tableBody.appendChild(row);
     }
@@ -188,6 +212,17 @@ export class BatchJobManager extends Widget {
         }
       });
     });
+  }
+
+  private addlink(row: HTMLTableRowElement, classname: string, path: string) {
+    const link = row.querySelector(`.${classname}`);
+    if (link) {
+      link.textContent = path;
+      link.addEventListener('click', event => {
+        event.preventDefault();
+        this.commands.execute('docmanager:open', { path });
+      });
+    }
   }
 
   async deleteJob(jobId: string): Promise<void> {
@@ -384,4 +419,8 @@ export class BatchJobManager extends Widget {
     // Add the alert to the DOM
     this.node.querySelector(`.${classname}`)?.remove();
   }
+
+  // private downloadButtonOrLink(): string {
+  //   return '';
+  // }
 }
