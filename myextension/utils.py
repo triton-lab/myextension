@@ -43,7 +43,9 @@ def join_url_parts(*parts):
 def get_hub_service_url(api: str) -> str:
     url = os.environ.get("JUPYTERHUB_API_URL", "http://127.0.0.1")
     parsed = urllib.parse.urlparse(url)
-    base = parsed.scheme + "://" + (parsed.hostname or "")
+    # FIXME: This port number is hard coded.
+    # Must match the "url" in the response from $JUPYTERHUB_API_URL/services/batch
+    base = parsed.scheme + "://" + (parsed.hostname or "") + ":12345"
     return join_url_parts(base, f"/services/batch", api)
 
 
