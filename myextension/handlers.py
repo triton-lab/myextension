@@ -33,13 +33,44 @@ class RouteHandler(APIHandler):
     # Jupyter server
     @tornado.web.authenticated
     def get(self):
+        self.log.info(">>>>========================================")
+        self.log.info("   RouteHandler: GET received")
+        self.log.info("<<<<========================================")
+        self.log.info("")
         self.finish(json.dumps({"data": "This is /myextension/get_example endpoint!"}))
 
 
+class SettingsHandler(APIHandler):
+    """For debug / testing purposes
+    """
+    @tornado.web.authenticated
+    def get(self):
+        self.log.info(">>>>========================================")
+        self.log.info(" SettingsHandler: GET received")
+        self.log.info("   settings:")
+        res = dict()
+        for k, v in self.settings.items():
+            self.log.info(f"      {k}: {v}")
+            res[k] = str(v)
+        self.log.info("<<<<========================================")
+        self.log.info("")
+        self.finish(json.dumps(res))
+
+
+class ConfigHandler(APIHandler):
+    """For debug / testing purposes
+    """
+    @tornado.web.authenticated
+    def get(self):
+        self.log.info(">>>>========================================")
+        self.log.info(" ConfigHandler: GET received")
+        self.log.info(f"   config: {self.config}")
+        self.log.info("<<<<========================================")
+        self.log.info("")
+        self.finish(json.dumps(self.config))
+
+
 class TestHubHandler(APIHandler):
-    # The following decorator should be present on all verb methods (head, get, post,
-    # patch, put, delete, options) to ensure only authorized user can request the
-    # Jupyter server
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not bool(os.environ.get("JUPYTERHUB_API_URL", "")):
@@ -109,6 +140,7 @@ class B2DownloadHandler(APIHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.db = open_or_create_db()
+        self.root_dir = self.config
 
     @tornado.web.authenticated
     def get(self, job_id):
@@ -508,6 +540,8 @@ def setup_handlers(web_app):
     handlers = [
         (f("get_example"), RouteHandler),
         (f("testhub"), TestHubHandler),
+        (f("settings"), SettingsHandler),
+        (f("config"), ConfigHandler),
         (f("jobs"), JobListHandler),
         (f("jobs/(.*)"), JobListHandler),
         (f("download/(.*)"), B2DownloadHandler),

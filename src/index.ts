@@ -91,6 +91,26 @@ const plugin: JupyterFrontEndPlugin<void> = {
           `Looks like a connection error: Jupyter Server --> JupyterHub service.\n${reason}`
         );
       });
+
+    requestAPI<any>('settings')
+      .then(data => {
+        console.debug(data);
+      })
+      .catch(reason => {
+        console.error(
+          `Failed to get settings available to handlers.\n${reason}`
+        );
+      });
+
+    requestAPI<any>('config')
+      .then(data => {
+        console.debug(data);
+      })
+      .catch(reason => {
+        console.error(
+          `Failed to get settings available to handlers.\n${reason}`
+        );
+      });
   }
 };
 
