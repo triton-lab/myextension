@@ -40,30 +40,19 @@ class RouteHandler(APIHandler):
         self.finish(json.dumps({"data": "This is /myextension/get_example endpoint!"}))
 
 
-class SettingsHandler(APIHandler):
-    """For debug / testing purposes
-    """
-    @tornado.web.authenticated
-    def get(self):
-        self.log.info(">>>>========================================")
-        self.log.info(" SettingsHandler: GET received")
-        self.log.info("   settings:")
-        res = dict()
-        for k, v in self.settings.items():
-            self.log.info(f"      {k}: {v}")
-            res[k] = str(v)
-        self.log.info("<<<<========================================")
-        self.log.info("")
-        self.finish(json.dumps(res))
-
-
-class ConfigHandler(APIHandler):
+class ConfigViewHandler(APIHandler):
     """For debug / testing purposes
     """
     @tornado.web.authenticated
     def get(self):
         self.log.info(">>>>========================================")
         self.log.info(" ConfigHandler: GET received")
+        self.log.info("   settings:")
+        for k, v in sorted(self.settings.items()):
+            self.log.info(f"      {k}: {v}")
+        self.log.info("   lab_config:")
+        for k, v in sorted(self.settings["lab_config"].items()):
+            self.log.info(f"      {k}: {v}")
         self.log.info(f"   config: {self.config}")
         self.log.info("<<<<========================================")
         self.log.info("")
@@ -540,8 +529,7 @@ def setup_handlers(web_app):
     handlers = [
         (f("get_example"), RouteHandler),
         (f("testhub"), TestHubHandler),
-        (f("settings"), SettingsHandler),
-        (f("config"), ConfigHandler),
+        (f("config"), ConfigViewHandler),
         (f("jobs"), JobListHandler),
         (f("jobs/(.*)"), JobListHandler),
         (f("download/(.*)"), B2DownloadHandler),

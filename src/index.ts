@@ -92,16 +92,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
         );
       });
 
-    requestAPI<any>('settings')
-      .then(data => {
-        console.debug(data);
-      })
-      .catch(reason => {
-        console.error(
-          `Failed to get settings available to handlers.\n${reason}`
-        );
-      });
-
     requestAPI<any>('config')
       .then(data => {
         console.debug(data);
