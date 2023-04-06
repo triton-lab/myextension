@@ -2,7 +2,7 @@ import json
 import os
 import re
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Dict, Optional, Tuple
 import sqlite3
 from sqlite3 import Connection
 import platformdirs
@@ -67,14 +67,34 @@ def shorten_id(job_id: str) -> str:
     return parts[0]
 
 
-def get_output_path(meta: JobMetadata) -> str:
-    """"
+def get_output_path(meta: JobMetadata, root_dir: str = "") -> str:
+    """Output path for the batch file described in `meta`.
     """
     p = Path(meta.file_path)
-    job_name = meta.name
+    # remove directory and extension if included in the name
+    job_name = Path(meta.name).stem
     filename = p.name
-    root = p.parent
-    parent_dir = job_name + "_" + shorten_id(meta.job_id)
-    path = root / parent_dir
+    # root is based on jupyterlab's SingleUserNotebookApp.notebook_dir / ServerApp.root_dir
+    root = Path(root_dir) / p.parent
+    # This may not be the most user-friendly
+    container = job_name + "_" + shorten_id(meta.job_id)
+    path = root / container
     path.mkdir(exist_ok=True)
     return (path / filename).as_posix()
+
+
+def get_root_dir(config: Dict) -> str:
+    """Dig config and extract root_dir / notebook_dir information
+    """
+    root_dir = config.get("SingleUserNotebookApp", {}).get("notebook_dir", None)
+
+    if root_dir is None:
+        root_dir = config.get("SingleUserNotebookApp", {}).get("root_dir", None)
+
+    if root_dir is None:
+        root_dir = config.get("ServerApp", {}).get("root_dir", None)
+
+    if root_dir is None:
+        root_dir = config.get("ServerApp", {}).get("notebook_dir", None)
+
+    return root_dir or ""

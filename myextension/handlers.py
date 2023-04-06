@@ -140,7 +140,7 @@ class B2DownloadHandler(APIHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.db = open_or_create_db()
-        self.root_dir = self.config
+        self.root_dir = utils.get_root_dir(self.config) # type: ignore
 
     @tornado.web.authenticated
     def get(self, job_id):
@@ -152,7 +152,7 @@ class B2DownloadHandler(APIHandler):
         filename = Path(meta.file_path).name
         params = urllib.parse.urlencode({"job_id": job_id, "filename": filename})
         url = get_hub_service_url(f"/download?{params}")
-        output_path = utils.get_output_path(meta)
+        output_path = utils.get_output_path(meta, self.root_dir)
 
         self.log.info(f"    filename: {filename}")
         self.log.info(f"    Accessing with HTTP GET: {url}")
