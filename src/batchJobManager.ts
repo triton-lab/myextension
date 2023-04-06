@@ -191,7 +191,7 @@ export class BatchJobManager extends Widget {
           if (job_id) {
             this.showAlert('Deleting...', 'deleting-job-alert', 'info');
             await this.deleteJob(job_id);
-            this.fetchJobs();
+            await this.fetchJobs();
             this.removeAlert('deleting-job-alert');
           } else {
             console.warn('Job ID is not available');
@@ -345,7 +345,7 @@ export class BatchJobManager extends Widget {
       try {
         this.showAlert('Submitting a job...', 'submitting-job-alert', 'info');
         await this.addJob(name, filePath, instanceType);
-        this.fetchJobs();
+        await this.fetchJobs();
         this.removeAlert('submitting-job-alert');
       } catch (error) {
         let msg: string;
