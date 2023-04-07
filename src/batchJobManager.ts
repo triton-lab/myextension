@@ -107,6 +107,10 @@ const JOB_DEFINITION = `
   <div>
     <p>See <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">instance types</a> for details.</p>
   </div>
+  <div class="mb-3">
+    <label for="job-max-coins-per-hour" class="form-label">Max Coins Per Hour</label>
+    <input type="range" min="5" max="100" value="10" step="1" class="form-range" id="job-max-coins-per-hour">
+  </div>
 </form>
 `;
 
@@ -284,7 +288,8 @@ export class BatchJobManager extends Widget {
   async addJob(
     name: string,
     filePath: string,
-    instanceType: string
+    instanceType: string,
+    maxCoinsPerHour: string
   ): Promise<void> {
     let response: Response;
     try {
@@ -296,7 +301,8 @@ export class BatchJobManager extends Widget {
         body: JSON.stringify({
           name: name,
           path: filePath,
-          instance_type: instanceType
+          instance_type: instanceType,
+          max_coins_per_hour: maxCoinsPerHour
         })
       });
     } catch (error) {
@@ -378,13 +384,17 @@ export class BatchJobManager extends Widget {
       const instanceType = (
         body.node.querySelector('#job-instance-type') as HTMLSelectElement
       ).value;
+      const maxCoinsPerHour = (
+        body.node.querySelector('#job-max-coins-per-hour') as HTMLSelectElement
+      ).value;
       console.log('Name:', name);
       console.log('File Path:', filePath);
       console.log('Instance Type:', instanceType);
+      console.log('maxCoinsPerHour:', maxCoinsPerHour);
 
       try {
         this.showAlert('Submitting a job...', 'submitting-job-alert', 'info');
-        await this.addJob(name, filePath, instanceType);
+        await this.addJob(name, filePath, instanceType, maxCoinsPerHour);
         await this.fetchJobs();
         this.removeAlert('submitting-job-alert');
       } catch (error) {

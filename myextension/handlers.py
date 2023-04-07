@@ -220,7 +220,7 @@ class JobListHandler(APIHandler):
             return
 
         params: Dict[str, str] = dict()
-        for x in ("name", "path", "instance_type"):
+        for x in ("name", "path", "instance_type", "max_coins_per_hour"):
             if x not in payload:
                 self.set_status(400)
                 self.finish(json.dumps({"data": f"POST needs '{x}' field"}))
@@ -286,6 +286,7 @@ class JobListHandler(APIHandler):
                 self.finish(json.dumps(e, cls=JobStatusEncoder, indent=1))
                 return
 
+        ## TODO: Should I include `max_coins_per_hour` information here?
         meta = JobMetadata(
             job_id,
             name,
