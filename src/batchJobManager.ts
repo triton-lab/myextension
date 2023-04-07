@@ -6,7 +6,12 @@ import { URLExt } from '@jupyterlab/coreutils';
 import { CommandRegistry } from '@lumino/commands';
 
 import { IBatchJobItem } from './types';
-import { escapeHtmlAttribute, getOutputPath, fileExists } from './utils';
+import {
+  escapeHtmlAttribute,
+  getOutputPath,
+  fileExists,
+  toOptionTags
+} from './utils';
 
 const SERVER_URL = '/myextension';
 
@@ -43,6 +48,45 @@ const JOB_TABLE = `
 </div>
 `;
 
+const INSTANCE_TYPES = [
+  't3a.medium',
+  'm6a.large',
+  'm6a.xlarge',
+  'm6a.2xlarge',
+  'm6a.4xlarge',
+  'm6a.8xlarge',
+  'm6a.12xlarge',
+  // 'm6a.16xlarge',
+  // 'm6a.24xlarge',
+  // 'm6a.32large',
+  // 'm6a.48xlarge',
+  // 'm6a.metal',
+  // ------------------------
+  'c6a.large',
+  'c6a.xlarge',
+  'c6a.2xlarge',
+  'c6a.4xlarge',
+  'c6a.8xlarge',
+  'c6a.12xlarge',
+  // 'c6a.16xlarge',
+  // 'c6a.24xlarge',
+  // 'c6a.32large',
+  // 'c6a.48xlarge',
+  // 'c6a.metal',
+  //
+  'r6a.large',
+  'r6a.xlarge',
+  'r6a.2xlarge',
+  'r6a.4xlarge',
+  'r6a.8xlarge',
+  'r6a.12xlarge',
+  // 'r6a.16xlarge',
+  // 'r6a.24xlarge',
+  'r6a.32large'
+  // 'r6a.48xlarge',
+  // 'r6a.metal',
+];
+
 const JOB_DEFINITION = `
 <form id="create-job-form">
   <div class="mb-3">
@@ -57,15 +101,11 @@ const JOB_DEFINITION = `
   <div class="mb-3">
     <label for="job-instance-type" class="form-label">Instance Type</label>
     <select class="form-select" id="job-instance-type">
-      <option value="c6a.large">c6a.large</option>
-      <option value="c6a.xlarge">c6a.xlarge</option>
-      <option value="c6a.2xlarge">c6a.2xlarge</option>
-      <!-- Add more options as needed -->
-      <option value="t3a.large">t3a.large</option>
-      <option value="t3a.xlarge">t3a.xlarge</option>
-      <option value="t3a.2xlarge">t3a.2xlarge</option>
-      <option value="t3.medium">t3.medium</option>
+      ${toOptionTags(INSTANCE_TYPES)}
     </select>
+  </div>
+  <div>
+    <p>See <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">instance types</a> for details.</p>
   </div>
 </form>
 `;

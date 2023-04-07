@@ -48,3 +48,12 @@ export async function fileExists(relPath: string): Promise<boolean> {
     throw error;
   }
 }
+
+function addOptionTag(instanceType: string): string {
+  return `<option value="${instanceType}">${instanceType}</option>`;
+}
+
+export function toOptionTags(instanceTypes: string[]): string {
+  const xs = instanceTypes.map(addOptionTag);
+  return xs.join('\n      ');
+}
