@@ -100,16 +100,13 @@ const JOB_DEFINITION = `
     <button type="button" id="job-file-path-button" class="btn btn-secondary">Browse</button>
   </div>
   <div class="mb-3">
-    <label for="job-instance-type" class="form-label">Instance Type</label>
+    <label for="job-instance-type" class="form-label">Instance Type (<a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">INFO</a>)</label>
     <select class="form-select" id="job-instance-type">
       ${toOptionTags(INSTANCE_TYPES)}
     </select>
   </div>
-  <div>
-    <p>See <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">instance types</a> for details.</p>
-  </div>
   <div class="mb-3">
-    <label for="job-max-coins-per-hour" class="form-label">Max Coins Per Hour</label>
+    <label for="job-max-coins-per-hour" class="form-label">Max Coins Per Hour: <span id="job-max-coins-per-hour-value">10</span></label>
     <input type="range" min="5" max="100" value="10" step="1" class="form-range" id="job-max-coins-per-hour">
   </div>
 </form>
@@ -334,6 +331,17 @@ export class BatchJobManager extends Widget {
   private async showCreateJobDialog(): Promise<void> {
     const body = new Widget();
     body.node.innerHTML = JOB_DEFINITION;
+    const rangeInput = (body.node as HTMLElement).querySelector(
+      '#job-max-coins-per-hour'
+    );
+    const rangeValue = body.node.querySelector('#job-max-coins-per-hour-value');
+
+    if (rangeInput && rangeValue) {
+      rangeInput.addEventListener('input', event => {
+        const x = (event.target as HTMLInputElement).value;
+        rangeValue.textContent = x;
+      });
+    }
 
     const nameInput = body.node.querySelector('#job-name') as HTMLInputElement;
     const filePathInput = body.node.querySelector(
