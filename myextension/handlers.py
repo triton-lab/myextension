@@ -2,6 +2,7 @@ from contextlib import closing
 import json
 import os
 from datetime import datetime
+import tarfile
 
 from pathlib import Path
 from sqlite3 import Connection
@@ -18,7 +19,7 @@ import tornado.web
 
 from . import utils
 from .utils import open_or_create_db, get_hub_service_url, get_header_auth_keyval
-from .errors import FailedAwsJobRequestError, JupyterHubNotFoundError, ErrorStatusEncoder
+from .errors import FailedAwsJobRequestError, JupyterHubNotFoundError, ErrorStatusEncoder, FailedB2DownloadError
 from .types import JobInfo, JobMetadata, JobStatus, JobStatusEncoder, to_status
 
 
@@ -155,28 +156,48 @@ class B2DownloadHandler(APIHandler):
         req.add_header(*auth_keyval)
         try:
             with closing(urllib.request.urlopen(req)) as response:
-                with open(output_path, 'wb') as f:
+                fn = utils.get_filename_from_response(response)
+                if fn is None:
+                    raise FailedB2DownloadError(response)
+                fpath = output_path / fn
+                with fpath.open('wb') as f:
                     content = response.read()
                     f.write(content)
 
             self.log.info(">>>>=================================================")
-            self.log.info(f"    Content of {output_path}")
+            self.log.info(f"    Original file: {filename}")
+            self.log.info(f"    Content of '{fpath}'")
             self.log.info(content)
             self.log.info("<<<<=================================================")
         except HTTPError as e:
-            msg = f"Error: Unable to download the file. Status code: {e.code}"
+            msg = f"Unable to download the file. Status code: {e.code}"
             self.log.error(">>>>========================================")
             self.log.error(f"Error: {msg}")
             self.log.error("<<<<========================================")
             self.set_status(e.code)
             self.write(utils.asjson(msg))
+            return
+        except FailedB2DownloadError as e:
+            msg = f"Failed to get file name from a HTTP response."
+            self.log.error(">>>>========================================")
+            self.log.error(f"Error: {msg}")
+            self.log.error(e.data)
+            self.log.error("<<<<========================================")
+            self.set_status(500)
+            self.write(utils.asjson(e.data))
+            return
         except Exception as e:
-            msg = f"Error: {e}"
+            msg = f"{e}"
             self.log.error(">>>>========================================")
             self.log.error(f"Error downloading and saving file: {msg}")
             self.log.error("<<<<========================================")
             self.set_status(500)
             self.write(utils.asjson(msg))
+            return
+
+        if fpath.name == "archive.tar.gz":
+            with tarfile.open(fpath, 'r:gz') as tar:
+                tar.extractall(path=output_path)
 
 
 class JobListHandler(APIHandler):

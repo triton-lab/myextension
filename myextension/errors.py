@@ -10,6 +10,12 @@ class FailedAwsJobRequestError(Exception):
         self.data = data
 
 
+class FailedB2DownloadError(Exception):
+    def __init__(self, data):
+        super().__init__()
+        self.data = data
+
+
 class ErrorStatusEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, JupyterHubNotFoundError):

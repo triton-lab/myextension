@@ -7,8 +7,10 @@ import sqlite3
 from sqlite3 import Connection
 import platformdirs
 import urllib.parse
+from http.client import HTTPResponse
 
 from .types import JobMetadata
+
 
 class JupyterPathLoadingError(Exception):
     pass
@@ -63,15 +65,13 @@ def asjson(msg: str) -> str:
 
 
 def shorten_id(job_id: str) -> str:
-    """Assume job_id is UUID4. Returns the first part.
-    """
+    """Assume job_id is UUID4. Returns the first part."""
     parts = job_id.split("-")
     return parts[0]
 
 
-def get_output_path(meta: JobMetadata, root_dir: str = "") -> str:
-    """Output path for the batch file described in `meta`.
-    """
+def get_output_path(meta: JobMetadata, root_dir: str = "") -> Path:
+    """Output path for the batch file described in `meta`."""
     p = Path(meta.file_path)
     # remove directory and extension if included in the name
     job_name = Path(meta.name).stem
@@ -82,12 +82,11 @@ def get_output_path(meta: JobMetadata, root_dir: str = "") -> str:
     container = job_name + "_" + shorten_id(meta.job_id)
     path = root / container
     path.mkdir(exist_ok=True)
-    return (path / filename).as_posix()
+    return path
 
 
 def get_root_dir(config: Dict) -> str:
-    """Dig config and extract root_dir / notebook_dir information
-    """
+    """Dig config and extract root_dir / notebook_dir information"""
     root_dir = config.get("SingleUserNotebookApp", {}).get("notebook_dir", None)
 
     if root_dir is None:
@@ -100,3 +99,13 @@ def get_root_dir(config: Dict) -> str:
         root_dir = config.get("ServerApp", {}).get("notebook_dir", None)
 
     return root_dir or ""
+
+
+def get_filename_from_response(response: HTTPResponse) -> Optional[str]:
+    """Get filename from a HTTP Response"""
+    content_disposition = response.getheader("Content-Disposition")
+    if content_disposition:
+        value, params = content_disposition.split(";")
+        if value.lower() == "attachment":
+            return params.strip().split("=")[-1].strip('"')
+    return None
