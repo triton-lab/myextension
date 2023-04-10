@@ -49,6 +49,7 @@ const JOB_TABLE = `
 `;
 
 const INSTANCE_TYPES = [
+  't3.medium',
   't3a.medium',
   'm6a.large',
   'm6a.xlarge',
@@ -165,7 +166,7 @@ export class BatchJobManager extends Widget {
       throw new ServerConnection.NetworkError(error as TypeError);
     }
     if (!response.ok) {
-      throw new ServerConnection.ResponseError(response, response.statusText);
+      throw new ServerConnection.ResponseError(response);
     }
 
     const jobs = (await response.json()) as IBatchJobItem[];
@@ -233,10 +234,25 @@ export class BatchJobManager extends Widget {
         } else {
           const job_id = (event.target as HTMLElement).dataset.jobId;
           if (job_id) {
-            this.showAlert('Deleting...', 'deleting-job-alert', 'info');
-            await this.deleteJob(job_id);
-            await this.fetchJobs();
-            this.removeAlert('deleting-job-alert');
+            try {
+              this.showAlert('Deleting...', 'deleting-job-alert', 'info');
+              await this.deleteJob(job_id);
+              await this.fetchJobs();
+              this.removeAlert('deleting-job-alert');
+            } catch (error) {
+              let msg: string;
+              if (error instanceof ServerConnection.ResponseError) {
+                const json = await error.response.json();
+                const cause = json.data;
+                msg = `Failed: ${cause}.`;
+              } else if (error instanceof ServerConnection.NetworkError) {
+                msg = `Failed to delete Job (NetworkError): ${error.message}`;
+              } else {
+                msg = `Failed to delete Job: ${error}`;
+              }
+              this.showAlert(msg, 'deleting-job-error-alert', 'danger');
+              Notification.error(msg);
+            }
           } else {
             console.warn('Job ID is not available');
           }
@@ -281,7 +297,7 @@ export class BatchJobManager extends Widget {
 
     if (!response.ok) {
       console.error('Error deleting a job.');
-      throw new ServerConnection.ResponseError(response, response.statusText);
+      throw new ServerConnection.ResponseError(response);
     }
   }
 
@@ -311,7 +327,7 @@ export class BatchJobManager extends Widget {
 
     if (!response.ok) {
       console.error('Error adding a job.');
-      throw new ServerConnection.ResponseError(response, response.statusText);
+      throw new ServerConnection.ResponseError(response);
     }
   }
 
@@ -400,10 +416,18 @@ export class BatchJobManager extends Widget {
       } catch (error) {
         let msg: string;
         if (error instanceof ServerConnection.ResponseError) {
-          const detail = await error.response.json();
-          msg = `Failed to Create Job: ${detail.data}`;
+          const json = await error.response.json();
+          const cause = json.data;
+          if (cause === 'SpotMaxPriceTooLow') {
+            msg = 'Failed: Increase Max Coins Per Hour in the job definition.';
+          } else if (cause === 'InsufficientInstanceCapacity') {
+            msg =
+              'Failed: Insufficient instance capacity. Wait or choose other instance types.';
+          } else {
+            msg = `Failed: ${cause}.`;
+          }
         } else if (error instanceof ServerConnection.NetworkError) {
-          msg = `Failed to Create Job: ${error.message}`;
+          msg = `Failed to Create Job (NetworkError): ${error.message}`;
         } else {
           msg = `Failed to Create Job: ${error}`;
         }
@@ -432,6 +456,8 @@ export class BatchJobManager extends Widget {
     classname: string,
     type = 'info'
   ): Promise<void> {
+    console.info(`showAlert (${type}): ${message}`);
+
     const alertElement = document.createElement('div');
     alertElement.className = `alert alert-${type} ${classname}`;
     alertElement.setAttribute('role', 'alert');

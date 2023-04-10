@@ -18,7 +18,7 @@ import tornado.web
 
 from . import utils
 from .utils import open_or_create_db, get_hub_service_url, get_header_auth_keyval
-from .errors import FailedAwsJobRequestError, JupyterHubNotFoundError
+from .errors import FailedAwsJobRequestError, JupyterHubNotFoundError, ErrorStatusEncoder
 from .types import JobInfo, JobMetadata, JobStatus, JobStatusEncoder, to_status
 
 
@@ -187,7 +187,7 @@ class JobListHandler(APIHandler):
         if not bool(os.environ.get("JUPYTERHUB_API_URL", "")):
             self.log.error(">>>>========================================")
             self.log.error("  Failed to get JUPYTERHUB_API_URL: running properly?")
-            self.log.info("    Activates DRY_RUN due to lack of JupyterHub")
+            self.log.error("    Activates DRY_RUN due to lack of JupyterHub")
             self.log.error("<<<<========================================")
 
     def __del__(self):
@@ -261,29 +261,29 @@ class JobListHandler(APIHandler):
         else:
             try:
                 res = self._start_job(job_id, filepath, params)
-            except JupyterHubNotFoundError:
-                msg = f"JupyterHubNotFoundError: This extension works only with JupyterHub."
+            except JupyterHubNotFoundError as e:
                 self.log.error(">>>>=======================================")
-                self.log.error(msg)
-                self.log.error(">>>>=======================================")
+                self.log.error("JupyterHubNotFoundError: This extension works only with JupyterHub.")
+                self.log.error(e)
+                self.log.error("<<<<=======================================")
                 self.set_status(500)
-                self.finish(json.dumps({"data": msg}))
+                self.finish(json.dumps(e, cls=ErrorStatusEncoder, indent=1))
                 return
             except HTTPError:
                 msg = f"HTTPError: Check the internet connection."
                 self.log.error(">>>>=======================================")
                 self.log.error(msg)
-                self.log.error(">>>>=======================================")
+                self.log.error("<<<<=======================================")
                 self.set_status(500)
                 self.finish(json.dumps({"data": msg}))
                 return
             except FailedAwsJobRequestError as e:
                 self.log.error(">>>>=======================================")
                 self.log.error(f"Failed to start a job at AWS: {apipath}")
-                self.log.error(e)
-                self.log.error(">>>>=======================================")
+                self.log.error(e.data)
+                self.log.error("<<<<=======================================")
                 self.set_status(500)
-                self.finish(json.dumps(e, cls=JobStatusEncoder, indent=1))
+                self.finish(json.dumps(e.data, indent=1))
                 return
 
         ## TODO: Should I include `max_coins_per_hour` information here?
@@ -327,8 +327,6 @@ class JobListHandler(APIHandler):
         req = urllib.request.Request(url=url, method=method)
         auth_keyval = get_header_auth_keyval()
         if auth_keyval is None:
-            self.set_status(500)
-            self.write(json.dumps({"data": f"JupyterHub auth info is not found."}))
             raise JupyterHubNotFoundError("JupyterHub is not running?")
         req.add_header(*auth_keyval)
         return self._send_request(req)
@@ -398,9 +396,10 @@ class JobListHandler(APIHandler):
             self.log.error(">>>>=======================================")
             self.log.error("AWS somehow failed to start EC2 instance request")
             self.log.error(url)
-            self.log.error(result.json())
-            self.log.error(">>>>=======================================")
-            raise FailedAwsJobRequestError(result.json())
+            d = result.json()
+            self.log.error(d)
+            self.log.error("<<<<=======================================")
+            raise FailedAwsJobRequestError(d)
         return result.json()
 
     def _ask_jobs_status(

@@ -1,6 +1,19 @@
+import json
+
 class JupyterHubNotFoundError(Exception):
     pass
 
 
 class FailedAwsJobRequestError(Exception):
-    pass
+    def __init__(self, data):
+        super().__init__()
+        self.data = data
+
+
+class ErrorStatusEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, JupyterHubNotFoundError):
+            return {"data": f"JupyterHubNotFoundError"}
+        elif isinstance(obj, FailedAwsJobRequestError):
+            return obj.data
+        return super().default(obj)
