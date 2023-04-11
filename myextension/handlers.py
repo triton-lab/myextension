@@ -259,12 +259,12 @@ class JobListHandler(APIHandler):
             self.finish(json.dumps({"data": f"The file does not exist: {apipath}"}))
             return
 
-        if filepath.suffix not in (".ipynb", ".sh"):
+        if filepath.suffix.lower() not in (".ipynb", ".sh", '.py', '.r'):
             self.set_status(400)
             self.finish(
                 json.dumps(
                     {
-                        "data": f"Batch job takes either a Jupyter notebook or shell script: {apipath}"
+                        "data": f"Batch job takes either a Jupyter notebook, bash shell, python, or R script: {apipath}"
                     }
                 )
             )
