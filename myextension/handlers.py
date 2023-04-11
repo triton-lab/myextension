@@ -157,7 +157,7 @@ class B2DownloadHandler(APIHandler):
         try:
             with closing(urllib.request.urlopen(req)) as response:
                 fn = utils.get_filename_from_response(response)
-                if fn is None:
+                if (not fn):
                     raise FailedB2DownloadError(response)
                 fpath = output_path / fn
                 with fpath.open('wb') as f:

@@ -71,11 +71,13 @@ def shorten_id(job_id: str) -> str:
 
 
 def get_output_path(meta: JobMetadata, root_dir: str = "") -> Path:
-    """Output path for the batch file described in `meta`."""
+    """Output path for the batch file described in `meta`.
+
+    [NOTE] This must agree with getOutputPath() in utils.ts
+    """
     p = Path(meta.file_path)
     # remove directory and extension if included in the name
     job_name = Path(meta.name).stem
-    filename = p.name
     # root is based on jupyterlab's SingleUserNotebookApp.notebook_dir / ServerApp.root_dir
     root = Path(root_dir) / p.parent
     # This may not be the most user-friendly

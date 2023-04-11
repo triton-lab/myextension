@@ -15,14 +15,37 @@ function shortenId(job_id: string): string {
   return parts[0];
 }
 
+// This must agree with get_output_path() in utils.py
 export function getOutputPath(meta: IBatchJobItem): string {
   const pathComponents = meta.file_path.split('/');
-  const job_name = meta.name;
+  const jobNameShort = getStem(meta.name);
   const filename = pathComponents.pop();
+  const outputFilename = getOutputFilename(filename);
   const root = pathComponents.join('/');
-  const parent_dir = `${job_name}_${shortenId(meta.job_id)}`;
+  const jobIdShort = shortenId(meta.job_id);
+  const parent_dir = `${jobNameShort}_${jobIdShort}`;
   const outputPath = `${root}/${parent_dir}`;
-  return `${outputPath}/${filename}`;
+  return `${outputPath}/${outputFilename}`;
+}
+
+function getStem(filename: string): string {
+  if (!filename.includes('.')) {
+    return filename;
+  }
+  return filename.split('.').slice(0, -1).join('.');
+}
+
+function getOutputFilename(filename: string | undefined): string {
+  if (!filename) {
+    return 'undefined';
+  }
+
+  const xs = filename.split('.');
+  if (xs[xs.length - 1] === 'ipynb') {
+    return filename;
+  } else {
+    return getStem(filename) + '.out';
+  }
 }
 
 export async function fileExists(relPath: string): Promise<boolean> {
