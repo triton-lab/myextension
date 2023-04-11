@@ -16,3 +16,11 @@
 .jp-BatchJobManager *:not(.btn):not(.alert) {
   color: inherit !important;
 }
+
+code {
+  color: unset;
+}
+
+mark {
+  padding: unset;
+}
