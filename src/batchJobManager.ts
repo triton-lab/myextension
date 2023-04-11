@@ -278,6 +278,8 @@ export class BatchJobManager extends Widget {
       link.addEventListener('click', event => {
         event.preventDefault();
         this.commands.execute('docmanager:open', { path });
+        this.commands.execute('filebrowser:activate', { path });
+        this.commands.execute('filebrowser:go-to-path', { path });
       });
     }
   }
