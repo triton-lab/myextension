@@ -1,3 +1,4 @@
+style/bootstrap
 *.bundle.*
 lib/
 node_modules/
