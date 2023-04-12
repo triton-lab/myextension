@@ -24,7 +24,7 @@ const JOB_TABLE = `
     <i class="bi bi-arrow-clockwise"></i> Reload
     </button>
   </div>
-  <table class="table table-striped">
+  <table class="table">
     <thead>
       <tr>
         <th scope="col">Job ID</th>
@@ -97,7 +97,7 @@ const JOB_DEFINITION = `
   <div class="mb-3">
     <label for="job-file-path" class="form-label">File Path</label>
     <input type="text" class="form-control" id="job-file-path" placeholder="Enter file path">
-    <button type="button" id="job-file-path-button" class="btn btn-secondary">Browse</button>
+    <button type="button" id="job-file-path-button" class="btn btn-sm btn-secondary">Browse</button>
   </div>
   <div class="mb-3">
     <label for="job-instance-type" class="form-label">Instance Type (<a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">INFO</a>)</label>
@@ -124,6 +124,7 @@ export class BatchJobManager extends Widget {
     this.title.closable = true;
     // https://jupyterlab.readthedocs.io/en/stable/developer/css.html
     this.addClass('jp-BatchJobManager');
+    this.addClass('my-bootstrap-scope');
 
     this.node
       .querySelector('.my-create-button')
@@ -333,6 +334,8 @@ export class BatchJobManager extends Widget {
   private async showCreateJobDialog(): Promise<void> {
     const body = new Widget();
     body.node.innerHTML = JOB_DEFINITION;
+    body.addClass('my-bootstrap-scope');
+
     const rangeInput = (body.node as HTMLElement).querySelector(
       '#job-max-coins-per-hour'
     );
@@ -385,6 +388,7 @@ export class BatchJobManager extends Widget {
       }
 
       dialog = new Dialog(options);
+
       queue.push(dialog.launch());
     });
 
@@ -454,6 +458,7 @@ export class BatchJobManager extends Widget {
     body.node.innerHTML = `
     <div class="container mt-5"><pre>${logContent}</pre></div>
     `;
+    body.addClass('my-bootstrap-scope');
     await showDialog({
       title: 'Console Log',
       body,

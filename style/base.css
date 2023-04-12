@@ -3,24 +3,35 @@
 
     https://jupyterlab.readthedocs.io/en/stable/developer/css.html
 */
-@import 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css';
+@import './my-bootstrap-scope.css';
 @import 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css';
 
-.jp-BatchJobManager {
+
+.my-bootstrap-scope {
+  --bs-body-color: var(--jp-ui-font-color1);
+  --bs-body-bg: var(--jp-input-background);
+  --bs-border-width: var(--jp-border-width);
+  --bs-border-color: var(--jp-border-color1);
+  --bs-border-radius: var(--jp-border-radius);
+  --bs-border-radius-sm: var(--jp-border-radius);
+  --bs-secondary-color: var(--jp-ui-font-color3);
+  --bs-tertiary-bg: var(--jp-input-background);
+  --bs-info-bg-subtle: #cff4fc;
+  --bs-info-text-emphasis: #055160;
+  --bs-danger-bg-subtle: #f8d7da;
+  --bs-danger-text-emphasis: #58151c;
+
   background: var(--jp-layout-color1);
   color: var(--jp-ui-font-color1);
   font-size: var(--jp-ui-font-size1);
   overflow-y: auto;
 }
 
-.jp-BatchJobManager *:not(.btn):not(.alert) {
-  color: inherit !important;
+.my-bootstrap-scope .btn {
+  --bs-btn-border-radius: .25rem;
+  --bs-btn-border-radius-sm: var(--bs-btn-border-radius);
 }
 
-code {
-  color: unset;
-}
-
-mark {
-  padding: unset;
+.my-bootstrap-scope input.jp-mod-styled.form-range {
+  border: unset !important;
 }
