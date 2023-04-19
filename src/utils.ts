@@ -80,3 +80,8 @@ export function toOptionTags(instanceTypes: string[]): string {
   const xs = instanceTypes.map(addOptionTag);
   return xs.join('\n      ');
 }
+
+// Convert '2023-04-17 22:35:35.299177' into '2023-04-17 22:35'
+export function toDatetimeShort(datetime: string): string {
+  return datetime.slice(16);
+}
