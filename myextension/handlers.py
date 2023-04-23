@@ -19,7 +19,12 @@ import tornado.web
 
 from . import utils
 from .utils import open_or_create_db, get_hub_service_url, get_header_auth_keyval
-from .errors import FailedAwsJobRequestError, JupyterHubNotFoundError, ErrorStatusEncoder, FailedB2DownloadError
+from .errors import (
+    FailedAwsJobRequestError,
+    JupyterHubNotFoundError,
+    ErrorStatusEncoder,
+    FailedB2DownloadError,
+)
 from .types import JobInfo, JobMetadata, JobStatus, JobStatusEncoder, to_status
 
 
@@ -42,8 +47,8 @@ class RouteHandler(APIHandler):
 
 
 class ConfigViewHandler(APIHandler):
-    """For debug / testing purposes
-    """
+    """For debug / testing purposes"""
+
     @tornado.web.authenticated
     def get(self):
         self.log.info(">>>>========================================")
@@ -124,13 +129,12 @@ class TestHubHandler(APIHandler):
 
 
 class B2DownloadHandler(APIHandler):
-    """Download file(s) from B2 as batch job results
+    """Download file(s) from B2 as batch job results"""
 
-    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.db = open_or_create_db()
-        self.root_dir = utils.get_root_dir(self.config) # type: ignore
+        self.root_dir = utils.get_root_dir(self.config)  # type: ignore
 
     @tornado.web.authenticated
     def get(self, job_id):
@@ -147,7 +151,7 @@ class B2DownloadHandler(APIHandler):
         self.log.info(f"    filename: {filename}")
         self.log.info(f"    Accessing with HTTP GET: {url}")
         self.log.info("<<<<========================================")
-        req = urllib.request.Request(url=url, method='GET')
+        req = urllib.request.Request(url=url, method="GET")
         auth_keyval = get_header_auth_keyval()
         if auth_keyval is None:
             self.set_status(500)
@@ -157,10 +161,10 @@ class B2DownloadHandler(APIHandler):
         try:
             with closing(urllib.request.urlopen(req)) as response:
                 fn = utils.get_filename_from_response(response)
-                if (not fn):
+                if not fn:
                     raise FailedB2DownloadError(response)
                 fpath = output_path / fn
-                with fpath.open('wb') as f:
+                with fpath.open("wb") as f:
                     content = response.read()
                     f.write(content)
 
@@ -196,7 +200,7 @@ class B2DownloadHandler(APIHandler):
             return
 
         if fpath.name == "archive.tar.gz":
-            with tarfile.open(fpath, 'r:gz') as tar:
+            with tarfile.open(fpath, "r:gz") as tar:
                 tar.extractall(path=output_path)
 
 
@@ -259,7 +263,7 @@ class JobListHandler(APIHandler):
             self.finish(json.dumps({"data": f"The file does not exist: {apipath}"}))
             return
 
-        if filepath.suffix.lower() not in (".ipynb", ".sh", '.py', '.r'):
+        if filepath.suffix.lower() not in (".ipynb", ".sh", ".py", ".r", ".rmd"):
             self.set_status(400)
             self.finish(
                 json.dumps(
@@ -284,7 +288,9 @@ class JobListHandler(APIHandler):
                 res = self._start_job(job_id, filepath, params)
             except JupyterHubNotFoundError as e:
                 self.log.error(">>>>=======================================")
-                self.log.error("JupyterHubNotFoundError: This extension works only with JupyterHub.")
+                self.log.error(
+                    "JupyterHubNotFoundError: This extension works only with JupyterHub."
+                )
                 self.log.error(e)
                 self.log.error("<<<<=======================================")
                 self.set_status(500)
@@ -540,7 +546,6 @@ class JobListHandler(APIHandler):
         return [JobMetadata._make(tup) for tup in res.fetchall()]
 
 
-
 def setup_handlers(web_app):
     base_url = web_app.settings["base_url"]
 
@@ -560,19 +565,16 @@ def setup_handlers(web_app):
     web_app.add_handlers(host_pattern, handlers)
 
 
-
-
 def db_read(db: Connection, job_id: str) -> JobMetadata:
-
     cur = db.execute("select * from jobmeta where job_id=?", (job_id,))
     res = JobMetadata._make(cur.fetchone())
     return res
 
+
 def db_add(db: Connection, jobmeta: JobMetadata) -> None:
     with db:
-        db.execute(
-            "insert into jobmeta values (?, ?, ?, ?, ?, ?, ?, ?)", jobmeta
-        )
+        db.execute("insert into jobmeta values (?, ?, ?, ?, ?, ?, ?, ?)", jobmeta)
+
 
 def db_delete(db: Connection, job_id: str) -> None:
     with db:
