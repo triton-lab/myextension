@@ -5,6 +5,7 @@ const esModules = [
   'lib0',
   'y\\-protocols',
   'y\\-websocket',
+  '@jupyter/ydoc',
   'yjs'
 ].join('|');
 
@@ -42,5 +43,5 @@ module.exports = {
     }
   },
   testRegex: 'src/.*/.*.spec.ts[x]?$',
-  transformIgnorePatterns: [`/node_modules/(?!${esModules}).+`]
+  transformIgnorePatterns: [`/node_modules/(?!${esModules}).*`]
 };
