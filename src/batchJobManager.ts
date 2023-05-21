@@ -186,7 +186,7 @@ export class BatchJobManager extends Widget {
         <td class="job-table-row-output">
           <a href="#" class="job-table-row-output-link"></a>
         </td>
-        <td>${toDatetimeShort(job.timestamp.toUTCString())}</td>
+        <td>${toDatetimeShort(job.timestamp)}</td>
         <td>${job.instance_type}</td>
         <td><a href="#" class="job-status" data-job-log="${escaped_console}">${job.status}</a></td>
         <td><button class="btn btn-danger btn-sm delete-job" data-job-id="${job.job_id}">Delete</button></td>

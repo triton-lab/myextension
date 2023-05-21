@@ -3,7 +3,7 @@ export interface IBatchJobItem {
   file_path: string;
   job_id: string;
   instance_type: string;
-  timestamp: Date;
+  timestamp: string;
   extra: string;
   status: string;
   console_output: string;
