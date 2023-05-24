@@ -256,7 +256,8 @@ class JobListHandler(APIHandler):
         instance_type = payload["instance_type"]
         self.log.info(f"HTTP POST: Received file '{apipath}'")
 
-        filepath = Path(self.settings["server_root_dir"]).expanduser() / apipath
+        filepath = Path(self.settings["server_root_dir"]).expanduser() / str(apipath)
+        params["filepath"] = filepath.as_posix()
         self.log.info(f"HTTP POST: filepath: '{filepath}'")
         if not filepath.exists():
             self.set_status(400)
