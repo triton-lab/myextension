@@ -62,17 +62,17 @@ class ConfigViewHandler(APIHandler):
         self.log.info(f"   config: {self.config}")
         self.log.info("<<<<========================================")
         self.log.info("")
-        self.finish(json.dumps(self.config))
+        self.finish(json.dumps({"data": str(self.config)}))
 
 
 class TestHubHandler(APIHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not bool(os.environ.get("JUPYTERHUB_API_URL", "")):
-            self.log.error(">>>>========================================")
-            self.log.error("  Failed to get JUPYTERHUB_API_URL: running properly?")
-            self.log.info("    Activates DRY_RUN due to lack of JupyterHub")
-            self.log.error("<<<<========================================")
+            self.log.error(">>>>======================================================")
+            self.log.error("  Failed to get JUPYTERHUB_API_URL: not running JupyterHub?")
+            self.log.error("    ---> Activates DRY_RUN")
+            self.log.error("<<<<=======================================================")
 
     @tornado.web.authenticated
     def get(self):
@@ -80,7 +80,9 @@ class TestHubHandler(APIHandler):
         self.log.info("   TestHubHandler: GET received")
         self.log.info("<<<<========================================")
         status = self._get_status()
-        self.finish(status)
+        if status:
+            self.finish(status)
+
 
     def _get_status(self) -> Dict:
         url = get_hub_service_url("/status")
@@ -89,18 +91,19 @@ class TestHubHandler(APIHandler):
 
     def _http_get(self, url):
         self.log.info(">>>>--------------------------------------------")
-        self.log.info("  Sending HTTP GET request")
+        self.log.info("  TestHubHandler: Sending HTTP GET request")
         self.log.info(f"    {url}")
         self.log.info("<<<<--------------------------------------------")
         return self._http_meta(url, method="GET")
 
-    def _http_meta(self, url: str, method: str = "GET"):
+    def _http_meta(self, url: str, method: str = "GET") -> Dict:
         req = urllib.request.Request(url=url, method=method)
         auth_keyval = get_header_auth_keyval()
         if auth_keyval is None:
             self.set_status(500)
+            self.log.error("JupyterHub auth info is not found.")
             self.write(json.dumps({"data": f"JupyterHub auth info is not found."}))
-            raise JupyterHubNotFoundError("JupyterHub auth info is not found.")
+            return dict()
         req.add_header(*auth_keyval)
         return self._send_request(req)
 
@@ -210,10 +213,10 @@ class JobListHandler(APIHandler):
         self.db = open_or_create_db()
 
         if not bool(os.environ.get("JUPYTERHUB_API_URL", "")):
-            self.log.error(">>>>========================================")
-            self.log.error("  Failed to get JUPYTERHUB_API_URL: running properly?")
-            self.log.error("    Activates DRY_RUN due to lack of JupyterHub")
-            self.log.error("<<<<========================================")
+            self.log.error(">>>>=======================================================")
+            self.log.error("  Failed to get JUPYTERHUB_API_URL: JupyterHub unavailable?")
+            self.log.error("    ---> Activates DRY_RUN")
+            self.log.error("<<<<=======================================================")
 
     def __del__(self):
         self.db.close()
@@ -222,7 +225,7 @@ class JobListHandler(APIHandler):
     def get(self):
         """Get the job list as JSON"""
         self.log.info(">>>>========================================")
-        self.log.info("   GET request received")
+        self.log.info("   JobListHandler: GET request received")
         self.log.info("<<<<========================================")
         jobs_info = self._get_job_info()
         jobs_as_dicts = [x._asdict() for x in jobs_info]
@@ -236,7 +239,7 @@ class JobListHandler(APIHandler):
         """Receive a filepath, and then request a job to the JupyterHub 'batch' service"""
         # tornado.escape.json_decode(self.request.body) works similarly
         self.log.info(">>>>========================================")
-        self.log.info("   POST request received")
+        self.log.info("   JobListHandler: POST request received")
         self.log.info("<<<<========================================")
         payload: Optional[Dict] = self.get_json_body()
         if payload is None:
@@ -333,7 +336,7 @@ class JobListHandler(APIHandler):
     def delete(self, job_id: str):
         """send cancel to the JupyterHub service 'batch'"""
         self.log.info(">>>>========================================")
-        self.log.info("  DELETE request received")
+        self.log.info("  JobListHandler: DELETE request received")
         self.log.info(f"     Job ID: {job_id}")
         self.log.info("<<<<========================================")
 
@@ -361,21 +364,21 @@ class JobListHandler(APIHandler):
 
     def _http_get(self, url):
         self.log.info(">>>>--------------------------------------------")
-        self.log.info("  Sending HTTP GET request")
+        self.log.info("  JobListHandler: Sending HTTP GET request")
         self.log.info(f"    {url}")
         self.log.info("<<<<--------------------------------------------")
         return self._http_meta(url, method="GET")
 
     def _http_delete(self, url):
         self.log.info(">>>>--------------------------------------------")
-        self.log.info("  Sending HTTP DELETE request")
+        self.log.info("  JobListHandler: Sending HTTP DELETE request")
         self.log.info(f"    {url}")
         self.log.info("<<<<--------------------------------------------")
         return self._http_meta(url, method="DELETE")
 
     def _http_post(self, url: str, data: bytes):
         self.log.info(">>>>--------------------------------------------")
-        self.log.info("  Sending HTTP POST request")
+        self.log.info("  JobListHandler: Sending HTTP POST request")
         self.log.info(f"    {url}")
         self.log.info(f"    {data.decode()}")
         self.log.info("<<<<--------------------------------------------")
@@ -392,7 +395,7 @@ class JobListHandler(APIHandler):
         self, url: str, filename: Path, params: Dict
     ) -> requests.Response:
         self.log.info(">>>>--------------------------------------------")
-        self.log.info("  Sending HTTP POST request")
+        self.log.info("  JobListHandler: Sending HTTP POST request")
         self.log.info(f"    {url}")
         self.log.info(f"    {filename}")
         self.log.info(f"    {params}")
@@ -421,12 +424,12 @@ class JobListHandler(APIHandler):
         result = self._http_post_multipart(url, filename, params)
         ## TODO: Align with JupyterHub's failure modes
         if not result.ok:
-            self.log.error(">>>>=======================================")
-            self.log.error("AWS somehow failed to start EC2 instance request")
+            self.log.error(">>>>============================================================")
+            self.log.error("  JobListHandler: AWS somehow failed to start EC2 instance request")
             self.log.error(url)
             d = result.json()
             self.log.error(d)
-            self.log.error("<<<<=======================================")
+            self.log.error("<<<<============================================================")
             raise FailedAwsJobRequestError(d)
         return result.json()
 
