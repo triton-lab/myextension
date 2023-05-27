@@ -279,6 +279,7 @@ class JobListHandler(APIHandler):
             return
 
         job_id = str(uuid.uuid4())  # TODO: check collision of job ID?
+        params["job_id"] = job_id
 
         if DRY_RUN:
             self.log.debug("DRY_RUN: SpotInstanceRequestId and InstanceId are made up.")
@@ -380,7 +381,7 @@ class JobListHandler(APIHandler):
         self, url: str, params: Dict
     ) -> requests.Response:
         self.log.info(">>>>--------------------------------------------")
-        self.log.info("  [Experiment] POST via requests")
+        self.log.info("  JobListHandler: Sending POST via application/json")
         self.log.info(f"    {url}")
         self.log.info(f"    {params}")
         self.log.info("<<<<--------------------------------------------")
@@ -419,11 +420,9 @@ class JobListHandler(APIHandler):
             - SpotInstanceRequestId
             - LaunchTime
         """
-        url = get_hub_service_url(f"/job/{job_id}")
+        url = get_hub_service_url(f"/submit_job")
         self.log.debug(f"url: {url}")
-        url_exp = get_hub_service_url(f"/experiment")
-        result_test = self._http_post_requests(url_exp, params)
-        result = self._http_post_multipart(url, filename, params)
+        result = self._http_post_requests(url, params)
         ## TODO: Align with JupyterHub's failure modes
         if not result.ok:
             self.log.error(">>>>============================================================")
