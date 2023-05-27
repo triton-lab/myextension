@@ -376,20 +376,20 @@ class JobListHandler(APIHandler):
         self.log.info("<<<<--------------------------------------------")
         return self._http_meta(url, method="DELETE")
 
-    def _http_post(self, url: str, data: bytes):
+    def _http_post_requests(
+        self, url: str, params: Dict
+    ) -> requests.Response:
         self.log.info(">>>>--------------------------------------------")
-        self.log.info("  JobListHandler: Sending HTTP POST request")
+        self.log.info("  [Experiment] POST via requests")
         self.log.info(f"    {url}")
-        self.log.info(f"    {data.decode()}")
+        self.log.info(f"    {params}")
         self.log.info("<<<<--------------------------------------------")
-        req = urllib.request.Request(url=url, data=data, method="POST")
         auth_keyval = get_header_auth_keyval()
         if auth_keyval is None:
             raise JupyterHubNotFoundError("JupyterHub is not running?")
-
-        req.add_header("Content-Type", "text/plain")
-        req.add_header(*auth_keyval)
-        return self._send_request(req)
+        headers = dict([auth_keyval])
+        res = requests.post(url, headers=headers, json=params)
+        return res
 
     def _http_post_multipart(
         self, url: str, filename: Path, params: Dict
@@ -421,6 +421,8 @@ class JobListHandler(APIHandler):
         """
         url = get_hub_service_url(f"/job/{job_id}")
         self.log.debug(f"url: {url}")
+        url_exp = get_hub_service_url(f"/experiment")
+        result_test = self._http_post_requests(url_exp, params)
         result = self._http_post_multipart(url, filename, params)
         ## TODO: Align with JupyterHub's failure modes
         if not result.ok:
