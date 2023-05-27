@@ -310,8 +310,8 @@ class JobListHandler(APIHandler):
                 return
             except FailedAwsJobRequestError as e:
                 self.log.error(">>>>=======================================")
-                self.log.error(f"Failed to start a job at AWS: {apipath}")
-                self.log.error(e.data)
+                self.log.error(f"  Failed to start a job at AWS: {apipath}")
+                self.log.error(f"    {e.data}")
                 self.log.error("<<<<=======================================")
                 self.set_status(500)
                 self.finish(json.dumps(e.data, indent=1))
@@ -427,10 +427,15 @@ class JobListHandler(APIHandler):
             self.log.error(">>>>============================================================")
             self.log.error("  JobListHandler: AWS somehow failed to start EC2 instance request")
             self.log.error(url)
-            d = result.json()
-            self.log.error(d)
+            try:
+                d = result.json()
+                self.log.error(d)
+            except requests.exceptions.JSONDecodeError:
+                self.log.error(f"Even failed to decode this as JSON: {result}")
+                raise FailedAwsJobRequestError(result)
             self.log.error("<<<<============================================================")
             raise FailedAwsJobRequestError(d)
+
         return result.json()
 
     def _ask_jobs_status(
