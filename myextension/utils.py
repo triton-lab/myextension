@@ -1,3 +1,4 @@
+import dataclasses
 import json
 import os
 import re
@@ -26,8 +27,9 @@ def _create_db(p: Path) -> Connection:
     print(f"Creating {p}")
     print("-----------------------")
     db = sqlite3.connect(p)
+    entries = ", ".join(f"{field.name} text" for field in dataclasses.fields(JobMetadata))
     db.execute(
-        "create table jobmeta (job_id text, name text, file_path text, datetime text, request_id text, instance_id text, instance_type text, extra text)"
+        f"create table jobmeta ({entries})"
     )
     return db
 

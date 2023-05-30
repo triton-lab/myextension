@@ -1,6 +1,8 @@
 from contextlib import closing
 import json
 import os
+import dataclasses
+from dataclasses import asdict, astuple
 from datetime import datetime
 import tarfile
 
@@ -228,7 +230,7 @@ class JobListHandler(APIHandler):
         self.log.info("   JobListHandler: GET request received")
         self.log.info("<<<<========================================")
         jobs_info = self._get_job_info()
-        jobs_as_dicts = [x._asdict() for x in jobs_info]
+        jobs_as_dicts = [asdict(x) for x in jobs_info]
         self.log.info(f"{jobs_as_dicts=}")
         s = json.dumps(jobs_as_dicts, cls=JobStatusEncoder)
         self.log.info(f"{s = }")
@@ -511,7 +513,7 @@ class JobListHandler(APIHandler):
                     "status": JobStatus.OPENED,
                     "console_output": "---------  OUTPUT -----------",
                     "extra": "",
-                    **x._asdict(),
+                    **asdict(x),
                 }
                 return JobInfo(**d)
 
@@ -553,7 +555,7 @@ class JobListHandler(APIHandler):
         self.log.debug("Reading all from db")
         res = self.db.execute("select * from jobmeta")
         ## TODO: Get status
-        return [JobMetadata._make(tup) for tup in res.fetchall()]
+        return [JobMetadata(*tup) for tup in res.fetchall()]
 
 
 def setup_handlers(web_app):
@@ -577,13 +579,15 @@ def setup_handlers(web_app):
 
 def db_read(db: Connection, job_id: str) -> JobMetadata:
     cur = db.execute("select * from jobmeta where job_id=?", (job_id,))
-    res = JobMetadata._make(cur.fetchone())
+    res = JobMetadata(*cur.fetchone())
     return res
 
 
 def db_add(db: Connection, jobmeta: JobMetadata) -> None:
+    n = len(dataclasses.fields(jobmeta))
+    slots = ", ".join('?' for _ in range(n))
     with db:
-        db.execute("insert into jobmeta values (?, ?, ?, ?, ?, ?, ?, ?)", jobmeta)
+        db.execute(f"insert into jobmeta values ({slots})", astuple(jobmeta))
 
 
 def db_delete(db: Connection, job_id: str) -> None:

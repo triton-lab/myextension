@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
+from dataclasses import dataclass
 from enum import Enum, auto
-from typing import NamedTuple
 
 
 class JobStatus(Enum):
@@ -24,7 +24,8 @@ class JobStatusEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class JobMetadata(NamedTuple):
+@dataclass()
+class JobMetadata:
     job_id: str
     name: str
     file_path: str
@@ -35,7 +36,8 @@ class JobMetadata(NamedTuple):
     extra: str
 
 
-class JobInfo(NamedTuple):
+@dataclass()
+class JobInfo:
     job_id: str
     name: str
     file_path: str
