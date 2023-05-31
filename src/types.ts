@@ -4,6 +4,7 @@ export interface IBatchJobItem {
   job_id: string;
   instance_type: string;
   timestamp: string;
+  shared_dir: string;
   extra: string;
   status: string;
   console_output: string;

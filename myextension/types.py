@@ -33,7 +33,8 @@ class JobMetadata:
     request_id: str
     instance_id: str
     instance_type: str
-    extra: str
+    shared_dir: str = ""
+    extra: str = ""
 
 
 @dataclass()
@@ -45,6 +46,7 @@ class JobInfo:
     request_id: str
     instance_id: str
     instance_type: str
+    shared_dir: str
     extra: str
     status: JobStatus
     console_output: str

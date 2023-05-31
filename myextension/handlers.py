@@ -20,7 +20,6 @@ from jupyter_server.utils import url_path_join
 import tornado.web
 
 from . import utils
-from .utils import open_or_create_db, get_hub_service_url, get_header_auth_keyval
 from .errors import (
     FailedAwsJobRequestError,
     JupyterHubNotFoundError,
@@ -87,7 +86,7 @@ class TestHubHandler(APIHandler):
 
 
     def _get_status(self) -> Dict:
-        url = get_hub_service_url("/status")
+        url = utils.get_hub_service_url("/status")
         self.log.info(f"Accessing /status in hub: {url}")
         return self._http_get(url)
 
@@ -100,7 +99,7 @@ class TestHubHandler(APIHandler):
 
     def _http_meta(self, url: str, method: str = "GET") -> Dict:
         req = urllib.request.Request(url=url, method=method)
-        auth_keyval = get_header_auth_keyval()
+        auth_keyval = utils.get_header_auth_keyval()
         if auth_keyval is None:
             self.set_status(500)
             self.log.error("JupyterHub auth info is not found.")
@@ -138,7 +137,7 @@ class B2DownloadHandler(APIHandler):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.db = open_or_create_db()
+        self.db = utils.open_or_create_db()
         self.root_dir = utils.get_root_dir(self.config)  # type: ignore
 
     @tornado.web.authenticated
@@ -150,14 +149,14 @@ class B2DownloadHandler(APIHandler):
         meta = db_read(self.db, job_id)
         filename = Path(meta.file_path).name
         params = urllib.parse.urlencode({"job_id": job_id, "filename": filename})
-        url = get_hub_service_url(f"/download?{params}")
+        url = utils.get_hub_service_url(f"/download?{params}")
         output_path = utils.get_output_path(meta, self.root_dir)
 
         self.log.info(f"    filename: {filename}")
         self.log.info(f"    Accessing with HTTP GET: {url}")
         self.log.info("<<<<========================================")
         req = urllib.request.Request(url=url, method="GET")
-        auth_keyval = get_header_auth_keyval()
+        auth_keyval = utils.get_header_auth_keyval()
         if auth_keyval is None:
             self.set_status(500)
             self.write(json.dumps({"data": f"JupyterHub auth info is not found."}))
@@ -212,8 +211,7 @@ class B2DownloadHandler(APIHandler):
 class JobListHandler(APIHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.db = open_or_create_db()
-
+        self.db = utils.open_or_create_db()
         if not bool(os.environ.get("JUPYTERHUB_API_URL", "")):
             self.log.error(">>>>=======================================================")
             self.log.error("  Failed to get JUPYTERHUB_API_URL: JupyterHub unavailable?")
@@ -231,9 +229,13 @@ class JobListHandler(APIHandler):
         self.log.info("<<<<========================================")
         jobs_info = self._get_job_info()
         jobs_as_dicts = [asdict(x) for x in jobs_info]
-        self.log.info(f"{jobs_as_dicts=}")
+        self.log.info(f"jobs_as_dicts (except console_output):")
+        for job_as_dict in jobs_as_dicts:
+            self.log.info("  ---- ")
+            for k, v in job_as_dict.items():
+                if k != "console_output":
+                    self.log.info(f"  {k}: {v}")
         s = json.dumps(jobs_as_dicts, cls=JobStatusEncoder)
-        self.log.info(f"{s = }")
         self.finish(s)
 
     @tornado.web.authenticated
@@ -258,11 +260,14 @@ class JobListHandler(APIHandler):
             params[x] = payload[x]
         name = payload["name"]
         apipath = payload["path"]
+        apipath_shared_dir = payload["shared_directory"]
         instance_type = payload["instance_type"]
         self.log.info(f"HTTP POST: Received file '{apipath}'")
 
         filepath = Path(self.settings["server_root_dir"]).expanduser() / str(apipath)
+        shared_dir = Path(self.settings["server_root_dir"]).expanduser() / str(apipath_shared_dir)
         params["filepath"] = filepath.as_posix()
+        params["shared_dir"] = shared_dir.as_posix()
         self.log.info(f"HTTP POST: filepath: '{filepath}'")
         if not filepath.exists():
             self.set_status(400)
@@ -278,6 +283,16 @@ class JobListHandler(APIHandler):
                     }
                 )
             )
+            return
+
+        if not shared_dir.exists():
+            self.set_status(400)
+            self.finish(json.dumps({"data": f"The shared directory does not exist: {apipath_shared_dir}"}))
+            return
+
+        if not shared_dir.is_dir():
+            self.set_status(400)
+            self.finish(json.dumps({"data": f"The shared directory is not directory: {apipath_shared_dir}"}))
             return
 
         job_id = str(uuid.uuid4())  # TODO: check collision of job ID?
@@ -322,13 +337,14 @@ class JobListHandler(APIHandler):
 
         ## TODO: Should I include `max_coins_per_hour` information here?
         meta = JobMetadata(
-            job_id,
-            name,
-            apipath,
-            res["LaunchTime"],
-            res["SpotInstanceRequestId"],
+            job_id=job_id,
+            name=name,
+            file_path=apipath,
+            timestamp=res["LaunchTime"],
+            request_id=res["SpotInstanceRequestId"],
             instance_id=res["InstanceId"],
             instance_type=instance_type,
+            shared_dir=apipath_shared_dir,
             extra="",
         )
         self.log.debug(f"Adding an entry to db: {meta}")
@@ -359,7 +375,7 @@ class JobListHandler(APIHandler):
 
     def _http_meta(self, url: str, method: str = "GET"):
         req = urllib.request.Request(url=url, method=method)
-        auth_keyval = get_header_auth_keyval()
+        auth_keyval = utils.get_header_auth_keyval()
         if auth_keyval is None:
             raise JupyterHubNotFoundError("JupyterHub is not running?")
         req.add_header(*auth_keyval)
@@ -387,7 +403,7 @@ class JobListHandler(APIHandler):
         self.log.info(f"    {url}")
         self.log.info(f"    {params}")
         self.log.info("<<<<--------------------------------------------")
-        auth_keyval = get_header_auth_keyval()
+        auth_keyval = utils.get_header_auth_keyval()
         if auth_keyval is None:
             raise JupyterHubNotFoundError("JupyterHub is not running?")
         headers = dict([auth_keyval])
@@ -406,7 +422,7 @@ class JobListHandler(APIHandler):
         files = {
             "file": (filename.name, filename.open("rb"), "text/plain", {"Expires": "0"})
         }
-        auth_keyval = get_header_auth_keyval()
+        auth_keyval = utils.get_header_auth_keyval()
         if auth_keyval is None:
             raise JupyterHubNotFoundError("JupyterHub is not running?")
 
@@ -422,7 +438,7 @@ class JobListHandler(APIHandler):
             - SpotInstanceRequestId
             - LaunchTime
         """
-        url = get_hub_service_url(f"/submit_job")
+        url = utils.get_hub_service_url(f"/submit_job")
         self.log.debug(f"url: {url}")
         result = self._http_post_requests(url, params)
         ## TODO: Align with JupyterHub's failure modes
@@ -459,7 +475,7 @@ class JobListHandler(APIHandler):
                 "instance_ids": ",".join(instance_ids),
             }
         )
-        url = get_hub_service_url(f"/job?{params}")
+        url = utils.get_hub_service_url(f"/job?{params}")
         self.log.info(f"Asking jobs statuses: {url}")
         return self._http_get(url)
 
@@ -475,7 +491,7 @@ class JobListHandler(APIHandler):
                 "instance_id": instance_id,
             }
         )
-        url = get_hub_service_url(f"/job?{params}")
+        url = utils.get_hub_service_url(f"/job?{params}")
 
         self.log.debug(f"Canceling job: {url}")
         return self._http_delete(url)
@@ -512,7 +528,6 @@ class JobListHandler(APIHandler):
                 d = {
                     "status": JobStatus.OPENED,
                     "console_output": "---------  OUTPUT -----------",
-                    "extra": "",
                     **asdict(x),
                 }
                 return JobInfo(**d)
@@ -526,7 +541,7 @@ class JobListHandler(APIHandler):
 
         r = self._ask_jobs_status(request_ids=request_ids, instance_ids=instance_ids)
         self.log.debug("---- Job status ----")
-        self.log.debug(r)
+        # self.log.debug(r)
 
         result: List[JobInfo] = []
         for x in jobs_metadata:
@@ -537,16 +552,9 @@ class JobListHandler(APIHandler):
             # TODO: check instance_type and other fields agrees with `x`
             status = to_status(request_state, instance_state, console_output)
             jobinfo = JobInfo(
-                x.job_id,
-                x.name,
-                x.file_path,
-                x.timestamp,
-                x.request_id,
-                x.instance_id,
-                x.instance_type,
-                "",
-                status,
-                console_output,
+                status=status,
+                console_output=console_output,
+                **asdict(x)
             )
             result.append(jobinfo)
         return result
@@ -584,8 +592,7 @@ def db_read(db: Connection, job_id: str) -> JobMetadata:
 
 
 def db_add(db: Connection, jobmeta: JobMetadata) -> None:
-    n = len(dataclasses.fields(jobmeta))
-    slots = ", ".join('?' for _ in range(n))
+    slots = ", ".join('?' for _ in dataclasses.fields(JobMetadata))
     with db:
         db.execute(f"insert into jobmeta values ({slots})", astuple(jobmeta))
 

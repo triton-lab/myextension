@@ -33,6 +33,7 @@ const JOB_TABLE = `
         <th scope="col">Name</th>
         <th scope="col">Input File</th>
         <th scope="col">Outputs</th>
+        <th scope="col">Shared Directory</th>
         <th scope="col">Job ID</th>
         <th scope="col">Instance Type</th>
         <th scope="col">Status</th>
@@ -93,13 +94,18 @@ const INSTANCE_TYPES = [
 const JOB_DEFINITION = `
 <form id="create-job-form">
   <div class="mb-3">
-    <label for="job-name" class="form-label">Name</label>
+    <label for="job-name" class="form-label">Name (you name it!)</label>
     <input type="text" class="form-control" id="job-name" placeholder="Enter job name">
   </div>
   <div class="mb-3">
-    <label for="job-file-path" class="form-label">File Path</label>
+    <label for="job-file-path" class="form-label">Notebook or Script Path</label>
     <input type="text" class="form-control" id="job-file-path" placeholder="Enter file path">
     <button type="button" id="job-file-path-button" class="btn btn-sm btn-secondary">Browse</button>
+  </div>
+  <div class="mb-3">
+    <label for="job-shared-dir" class="form-label">Shared Directory (Optional)</label>
+    <input type="text" class="form-control" id="job-shared-dir" placeholder="Enter directory path">
+    <button type="button" id="job-shared-dir-button" class="btn btn-sm btn-secondary">Browse</button>
   </div>
   <div class="mb-3">
     <label for="job-instance-type" class="form-label">Instance Type (<a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">INFO</a>)</label>
@@ -187,6 +193,7 @@ export class BatchJobManager extends Widget {
         <td class="job-table-row-output">
           <a href="#" class="job-table-row-output-link"></a>
         </td>
+        <td><a href="#" class="job-table-row-shared-dir-link"></a></td>
         <td>${shortenId(job.job_id)}</td>
         <td>${job.instance_type}</td>
         <td><a href="#" class="job-status" data-job-log="${escaped_console}">${job.status}</a></td>
@@ -195,6 +202,21 @@ export class BatchJobManager extends Widget {
 
       // Add link to input file
       this.addlink(row, 'job-table-row-input-link', job.file_path);
+      console.log('-----------------------------------');
+      console.log(`job.shared_dir = ${job.shared_dir}`);
+      console.log('-----------------------------------');
+      if (
+        job.shared_dir &&
+        job.shared_dir.trim().length > 0 &&
+        (await fileExists(job.shared_dir))
+      ) {
+        this.addlink(
+          row,
+          'job-table-row-shared-dir-link',
+          job.shared_dir,
+          false
+        );
+      }
 
       // Add nothing / button to download / link to output file
       if (await fileExists(outputPath)) {
@@ -274,13 +296,20 @@ export class BatchJobManager extends Widget {
     });
   }
 
-  private addlink(row: HTMLTableRowElement, classname: string, path: string) {
+  private addlink(
+    row: HTMLTableRowElement,
+    classname: string,
+    path: string,
+    isFile = true
+  ) {
     const link = row.querySelector(`.${classname}`);
     if (link) {
       link.textContent = path;
       link.addEventListener('click', event => {
         event.preventDefault();
-        this.commands.execute('docmanager:open', { path });
+        if (isFile) {
+          this.commands.execute('docmanager:open', { path });
+        }
         this.commands.execute('filebrowser:activate', { path });
         this.commands.execute('filebrowser:go-to-path', { path });
       });
@@ -307,7 +336,8 @@ export class BatchJobManager extends Widget {
     name: string,
     filePath: string,
     instanceType: string,
-    maxCoinsPerHour: string
+    maxCoinsPerHour: string,
+    sharedDirectory: string
   ): Promise<void> {
     let response: Response;
     try {
@@ -320,7 +350,8 @@ export class BatchJobManager extends Widget {
           name: name,
           path: filePath,
           instance_type: instanceType,
-          max_coins_per_hour: maxCoinsPerHour
+          max_coins_per_hour: maxCoinsPerHour,
+          shared_directory: sharedDirectory
         })
       });
     } catch (error) {
@@ -356,6 +387,12 @@ export class BatchJobManager extends Widget {
     ) as HTMLInputElement;
     const filePathButton = body.node.querySelector(
       '#job-file-path-button'
+    ) as HTMLButtonElement;
+    const sharedDirInput = body.node.querySelector(
+      '#job-shared-dir'
+    ) as HTMLInputElement;
+    const sharedDirButton = body.node.querySelector(
+      '#job-shared-dir-button'
     ) as HTMLButtonElement;
 
     const options = {
@@ -394,6 +431,26 @@ export class BatchJobManager extends Widget {
       queue.push(dialog.launch());
     });
 
+    //
+    // [FIXME] Almost duplicate of filePathButton.addEventLIstener
+    sharedDirButton.addEventListener('click', async () => {
+      const pOpenFiles = FileDialog.getOpenFiles({
+        manager: this.factory.defaultBrowser.model.manager
+      });
+
+      queue.push(pOpenFiles);
+      dialog.reject();
+
+      const res = await pOpenFiles;
+      if (res.button.accept && res.value && res.value.length > 0) {
+        sharedDirInput.value = res.value[0].path;
+      }
+
+      dialog = new Dialog(options);
+      queue.push(dialog.launch());
+    });
+
+    // Check if main job definition has been submitted
     let valuesEntered = false;
     while (queue.length > 0) {
       const result = await queue.pop();
@@ -419,14 +476,24 @@ export class BatchJobManager extends Widget {
       const maxCoinsPerHour = (
         body.node.querySelector('#job-max-coins-per-hour') as HTMLSelectElement
       ).value;
+      const sharedDir = (
+        body.node.querySelector('#job-shared-dir') as HTMLSelectElement
+      ).value;
       console.log('Name:', name);
       console.log('File Path:', filePath);
       console.log('Instance Type:', instanceType);
       console.log('maxCoinsPerHour:', maxCoinsPerHour);
+      console.log('sharedDir:', sharedDir);
 
       try {
         this.showAlert('Submitting a job...', 'submitting-job-alert', 'info');
-        await this.addJob(name, filePath, instanceType, maxCoinsPerHour);
+        await this.addJob(
+          name,
+          filePath,
+          instanceType,
+          maxCoinsPerHour,
+          sharedDir
+        );
         await this.fetchJobs();
         this.removeAlert('submitting-job-alert');
       } catch (error) {

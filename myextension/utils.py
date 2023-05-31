@@ -1,5 +1,6 @@
 import dataclasses
 import json
+import logging
 import os
 import re
 from pathlib import Path
@@ -17,27 +18,99 @@ class JupyterPathLoadingError(Exception):
     pass
 
 
-def _get_db_path() -> Path:
+class JobDBUpgradeError(Exception):
+    pass
+
+
+class IncompatibleDbError(Exception):
+    pass
+
+
+def _get_default_db_path() -> Path:
     p = platformdirs.user_data_dir("jupyter")
     return Path(p) / "batchjob.db"
 
 
+def get_db_path(db: Connection) -> Path:
+    res = db.execute("pragma database_list;")
+    if res is None:
+        return _get_default_db_path()
+    return Path(res.fetchone()[2])
+
+
 def _create_db(p: Path) -> Connection:
-    print("-----------------------")
-    print(f"Creating {p}")
-    print("-----------------------")
+    logging.info(">>>-----------------------")
+    logging.info(f"  Creating SQLite DB: {p}")
     db = sqlite3.connect(p)
     entries = ", ".join(f"{field.name} text" for field in dataclasses.fields(JobMetadata))
     db.execute(
         f"create table jobmeta ({entries})"
     )
+    logging.info("<<<-----------------------")
     return db
 
 
 def open_or_create_db(p: Optional[Path] = None) -> Connection:
     if p is None:
-        p = _get_db_path()
-    return sqlite3.connect(p) if p.exists() else _create_db(p)
+        p = _get_default_db_path()
+    db =  sqlite3.connect(p) if p.exists() else _create_db(p)
+
+    if _is_db_outdated(db):
+        logging.warn(">>>>==============================")
+        logging.warn("  Upgrading the job DB")
+        db = _upgrade_db(db)
+        logging.warn("<<<<==============================")
+    return db
+
+
+def _is_db_outdated(db: Connection) -> bool:
+    """Check if the database schema is comptible with with JobMetadata
+    """
+    rows = db.execute(f"pragma table_info(jobmeta)").fetchall()
+    db_fields = tuple(row[1] for row in rows)
+    jobmeta_fields = tuple(x.name for x in dataclasses.fields(JobMetadata))
+    res = db_fields != jobmeta_fields
+    if res:
+        logging.info(f"  db_fields     : {db_fields}")
+        logging.info(f"  jobmeta_fields: {jobmeta_fields}")
+    return res
+
+
+def _upgrade_db(db: Connection) -> Connection:
+    """Make DB compatible with JobMetadata fields
+    """
+    # extract data to memory
+    xs = db.execute(f"pragma table_info(jobmeta)").fetchall()
+    past_field_names = tuple(x[1] for x in xs)
+    jobmeta_fields = [x.name for x in dataclasses.fields(JobMetadata)]
+    past_rows = db.execute("select * from jobmeta").fetchall()
+    p = get_db_path(db)
+
+    if not (set(past_field_names) < set(jobmeta_fields)):
+        logging.warn(">>>======================================================")
+        logging.warn("  Existing DB is incompatible with JobMetadata")
+        logging.warn(f"   unique past field names: ")
+        for name in (set(past_field_names) - set(jobmeta_fields)):
+            logging.warn(f"     {name}")
+        logging.warn(f" ---> Recreating the DB file: {p}")
+        logging.warn(">>>======================================================")
+        db.close()
+        p.unlink()
+        return _create_db(p)
+
+    # remove the original file
+    db.close()
+    p.unlink()
+    db = _create_db(p)
+
+    slots = ", ".join("?" for _ in jobmeta_fields)
+    with db:
+        for row in past_rows:
+            d = dict(zip(past_field_names, row))
+            item = JobMetadata(**d)   # supply default value here
+            db.execute(f"insert into jobmeta values ({slots})", dataclasses.astuple(item))
+
+    return db
 
 
 def join_url_parts(*parts):
