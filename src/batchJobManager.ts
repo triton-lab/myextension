@@ -10,6 +10,7 @@ import {
   escapeHtmlAttribute,
   getOutputPath,
   fileExists,
+  shortenId,
   toOptionTags,
   toDatetimeShort
 } from './utils';
@@ -28,11 +29,11 @@ const JOB_TABLE = `
   <table class="table">
     <thead>
       <tr>
-        <th scope="col">Job ID</th>
+        <th scope="col">Created At</th>
         <th scope="col">Name</th>
         <th scope="col">Input File</th>
         <th scope="col">Outputs</th>
-        <th scope="col">Created At</th>
+        <th scope="col">Job ID</th>
         <th scope="col">Instance Type</th>
         <th scope="col">Status</th>
         <th scope="col">Actions</th>
@@ -180,13 +181,13 @@ export class BatchJobManager extends Widget {
       const escaped_console = escapeHtmlAttribute(job.console_output);
       const outputPath = getOutputPath(job);
       row.innerHTML = `
-        <td>${job.job_id}</td>
+        <td>${toDatetimeShort(job.timestamp)}</td>
         <td>${job.name}</td>
         <td><a href="#" class="job-table-row-input-link"></a></td>
         <td class="job-table-row-output">
           <a href="#" class="job-table-row-output-link"></a>
         </td>
-        <td>${toDatetimeShort(job.timestamp)}</td>
+        <td>${shortenId(job.job_id)}</td>
         <td>${job.instance_type}</td>
         <td><a href="#" class="job-status" data-job-log="${escaped_console}">${job.status}</a></td>
         <td><button class="btn btn-danger btn-sm delete-job" data-job-id="${job.job_id}">Delete</button></td>

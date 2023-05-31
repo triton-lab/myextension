@@ -10,7 +10,7 @@ export function escapeHtmlAttribute(str: string): string {
     .replace(/'/g, '&#39;');
 }
 
-function shortenId(job_id: string): string {
+export function shortenId(job_id: string): string {
   const parts = job_id.split('-');
   return parts[0];
 }
