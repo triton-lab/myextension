@@ -34,8 +34,8 @@ const JOB_TABLE = `
         <th scope="col">Input File</th>
         <th scope="col">Outputs</th>
         <th scope="col">Shared Directory</th>
-        <th scope="col">Job ID</th>
         <th scope="col">Instance Type</th>
+        <th scope="col">Job ID</th>
         <th scope="col">Status</th>
         <th scope="col">Actions</th>
         <th class="text-center">
@@ -94,16 +94,16 @@ const INSTANCE_TYPES = [
 const JOB_DEFINITION = `
 <form id="create-job-form">
   <div class="mb-3">
-    <label for="job-name" class="form-label">Name (you name it!)</label>
-    <input type="text" class="form-control" id="job-name" placeholder="Enter job name">
-  </div>
-  <div class="mb-3">
-    <label for="job-file-path" class="form-label">Notebook or Script Path</label>
+    <label for="job-file-path" class="form-label">Notebook or script file to run</label>
     <input type="text" class="form-control" id="job-file-path" placeholder="Enter file path">
     <button type="button" id="job-file-path-button" class="btn btn-sm btn-secondary">Browse</button>
   </div>
   <div class="mb-3">
-    <label for="job-shared-dir" class="form-label">Shared Directory (Optional)</label>
+    <label for="job-name" class="form-label">Name this job</label>
+    <input type="text" class="form-control" id="job-name" placeholder="Enter job name">
+  </div>
+  <div class="mb-3">
+    <label for="job-shared-dir" class="form-label">Set reference directory (Optional)</label>
     <input type="text" class="form-control" id="job-shared-dir" placeholder="Enter directory path">
     <button type="button" id="job-shared-dir-button" class="btn btn-sm btn-secondary">Browse</button>
   </div>
@@ -194,8 +194,8 @@ export class BatchJobManager extends Widget {
           <a href="#" class="job-table-row-output-link"></a>
         </td>
         <td><a href="#" class="job-table-row-shared-dir-link"></a></td>
-        <td>${shortenId(job.job_id)}</td>
         <td>${job.instance_type}</td>
+        <td>${shortenId(job.job_id)}</td>
         <td><a href="#" class="job-status" data-job-log="${escaped_console}">${job.status}</a></td>
         <td><button class="btn btn-danger btn-sm delete-job" data-job-id="${job.job_id}">Delete</button></td>
       `;
