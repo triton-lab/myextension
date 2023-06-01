@@ -206,6 +206,7 @@ class B2DownloadHandler(APIHandler):
         if fpath.name == "archive.tar.gz":
             with tarfile.open(fpath, "r:gz") as tar:
                 tar.extractall(path=output_path)
+            fpath.unlink()
 
 
 class JobListHandler(APIHandler):
