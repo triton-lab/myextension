@@ -3,7 +3,7 @@ import json
 import os
 import dataclasses
 from dataclasses import asdict, astuple
-from datetime import datetime
+from datetime import datetime, timezone
 import tarfile
 
 from pathlib import Path
@@ -302,7 +302,7 @@ class JobListHandler(APIHandler):
         if DRY_RUN:
             self.log.debug("DRY_RUN: SpotInstanceRequestId and InstanceId are made up.")
             res = {
-                "LaunchTime": datetime.utcnow(),
+                "LaunchTime": datetime.now(timezone.utc),
                 "SpotInstanceRequestId": str(uuid.uuid4()),
                 "InstanceId": str(uuid.uuid4()),
             }

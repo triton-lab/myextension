@@ -81,7 +81,7 @@ export function toOptionTags(instanceTypes: string[]): string {
   return xs.join('\n      ');
 }
 
-// Convert '2023-04-17T22:35:35.299177' into '2023-04-17 22:35 (UTC)'
+// Convert '2023-04-17T22:35:35.299177+00:00' into '2023-04-17 22:35 (UTC)'
 export function toDatetimeShort(timestamp: string): string {
   const date = timestamp.slice(0, 10);
   const hhmm = timestamp.slice(11, 16);
