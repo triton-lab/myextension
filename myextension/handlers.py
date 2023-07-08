@@ -84,7 +84,6 @@ class TestHubHandler(APIHandler):
         if status:
             self.finish(status)
 
-
     def _get_status(self) -> Dict:
         url = utils.get_hub_service_url("/status")
         self.log.info(f"Accessing /status in hub: {url}")
@@ -259,20 +258,30 @@ class JobListHandler(APIHandler):
                 self.finish(json.dumps({"data": f"POST needs '{x}' field"}))
                 return
             params[x] = payload[x]
-        name = payload["name"]
-        apipath = payload["path"]
-        apipath_shared_dir = payload["shared_directory"]
+        name = payload["name"].strip()
+        apipath = payload["path"].strip()
+
+        apipath_shared_dir = payload["shared_directory"].strip()
         instance_type = payload["instance_type"]
         self.log.info(f"HTTP POST: Received file '{apipath}'")
 
+        # set shared_dir as Path only if apipath_shared_dir is non-empty
+        shared_dir = None
+        if apipath_shared_dir:
+            shared_dir = Path(self.settings["server_root_dir"]).expanduser() / str(
+                apipath_shared_dir
+            )
+        params["shared_dir"] = shared_dir.as_posix() if shared_dir else ""
+
         filepath = Path(self.settings["server_root_dir"]).expanduser() / str(apipath)
-        shared_dir = Path(self.settings["server_root_dir"]).expanduser() / str(apipath_shared_dir)
         params["filepath"] = filepath.as_posix()
-        params["shared_dir"] = shared_dir.as_posix()
         self.log.info(f"HTTP POST: filepath: '{filepath}'")
         if not filepath.exists():
             self.set_status(400)
             self.finish(json.dumps({"data": f"The file does not exist: {apipath}"}))
+        elif not filepath.is_file():
+            self.set_status(400)
+            self.finish(json.dumps({"data": f"This is not a file: {apipath}"}))
             return
 
         if filepath.suffix.lower() not in (".ipynb", ".sh", ".py", ".r", ".rmd"):
@@ -286,15 +295,15 @@ class JobListHandler(APIHandler):
             )
             return
 
-        if not shared_dir.exists():
-            self.set_status(400)
-            self.finish(json.dumps({"data": f"The shared directory does not exist: {apipath_shared_dir}"}))
-            return
-
-        if not shared_dir.is_dir():
-            self.set_status(400)
-            self.finish(json.dumps({"data": f"The shared directory is not directory: {apipath_shared_dir}"}))
-            return
+        if shared_dir is not None:
+            if not shared_dir.exists():
+                self.set_status(400)
+                self.finish(json.dumps({"data": f"The shared directory does not exist: {apipath_shared_dir}"}))
+                return
+            elif not shared_dir.is_dir():
+                self.set_status(400)
+                self.finish(json.dumps({"data": f"The shared directory is not a directory: {apipath_shared_dir}"}))
+                return
 
         job_id = str(uuid.uuid4())  # TODO: check collision of job ID?
         params["job_id"] = job_id
@@ -396,9 +405,7 @@ class JobListHandler(APIHandler):
         self.log.info("<<<<--------------------------------------------")
         return self._http_meta(url, method="DELETE")
 
-    def _http_post_requests(
-        self, url: str, params: Dict
-    ) -> requests.Response:
+    def _http_post_requests(self, url: str, params: Dict) -> requests.Response:
         self.log.info(">>>>--------------------------------------------")
         self.log.info("  JobListHandler: Sending POST via application/json")
         self.log.info(f"    {url}")
@@ -552,11 +559,7 @@ class JobListHandler(APIHandler):
             console_output = r[id_].get("console", "")
             # TODO: check instance_type and other fields agrees with `x`
             status = to_status(request_state, instance_state, console_output)
-            jobinfo = JobInfo(
-                status=status,
-                console_output=console_output,
-                **asdict(x)
-            )
+            jobinfo = JobInfo(status=status, console_output=console_output, **asdict(x))
             result.append(jobinfo)
         return result
 
@@ -593,7 +596,7 @@ def db_read(db: Connection, job_id: str) -> JobMetadata:
 
 
 def db_add(db: Connection, jobmeta: JobMetadata) -> None:
-    slots = ", ".join('?' for _ in dataclasses.fields(JobMetadata))
+    slots = ", ".join("?" for _ in dataclasses.fields(JobMetadata))
     with db:
         db.execute(f"insert into jobmeta values ({slots})", astuple(jobmeta))
 
