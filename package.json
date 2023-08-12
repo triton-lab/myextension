@@ -56,6 +56,9 @@
     "watch:src": "tsc -w",
     "watch:labextension": "jupyter labextension watch ."
   },
+  "resolutions": {
+    "@lumino/widgets": "~1.37"
+  },
   "dependencies": {
     "@jupyterlab/application": "^3.6.5",
     "@jupyterlab/apputils": "^3.6.5",
