@@ -33,6 +33,7 @@ class JobMetadata:
     request_id: str
     instance_id: str
     instance_type: str
+    ensured_storage_size: int
     shared_dir: str = ""
     extra: str = ""
 
@@ -46,6 +47,7 @@ class JobInfo:
     request_id: str
     instance_id: str
     instance_type: str
+    ensured_storage_size: int
     shared_dir: str
     extra: str
     status: JobStatus

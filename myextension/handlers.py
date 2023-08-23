@@ -252,17 +252,18 @@ class JobListHandler(APIHandler):
             return
 
         params: Dict[str, str] = dict()
-        for x in ("name", "path", "instance_type", "max_coins_per_hour"):
+        for x in ("name", "path", "instance_type", "max_coins_per_hour", "ensured_storage_size"):
             if x not in payload:
                 self.set_status(400)
                 self.finish(json.dumps({"data": f"POST needs '{x}' field"}))
                 return
-            params[x] = payload[x]
+            params[x] = payload[x].strip()
         name = payload["name"].strip()
         apipath = payload["path"].strip()
 
         apipath_shared_dir = payload["shared_directory"].strip()
         instance_type = payload["instance_type"]
+        ensured_storage_size = int(payload["ensured_storage_size"]) if payload["ensured_storage_size"].strip() else 0
         self.log.info(f"HTTP POST: Received file '{apipath}'")
 
         # set shared_dir as Path only if apipath_shared_dir is non-empty
@@ -354,6 +355,7 @@ class JobListHandler(APIHandler):
             request_id=res["SpotInstanceRequestId"],
             instance_id=res["InstanceId"],
             instance_type=instance_type,
+            ensured_storage_size=ensured_storage_size,
             shared_dir=apipath_shared_dir,
             extra="",
         )

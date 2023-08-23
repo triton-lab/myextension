@@ -35,6 +35,7 @@ const JOB_TABLE = `
         <th scope="col">Outputs</th>
         <th scope="col">Shared Directory</th>
         <th scope="col">Instance Type</th>
+        <th scope="col">Ensured Storage (GB)</th>
         <th scope="col">Job ID</th>
         <th scope="col">Status</th>
         <th scope="col">Actions</th>
@@ -112,6 +113,10 @@ const JOB_DEFINITION = `
     <select class="form-select" id="job-instance-type">
       ${toOptionTags(INSTANCE_TYPES)}
     </select>
+  </div>
+  <div class="mb-3">
+    <label for="job-ensured-storage-size" class="form-label">Ensured storage size: <span id="job-ensured-storage-size-value">0</span> GB</label>
+    <input type="range" min="0" max="2000" value="0" step="10" class="form-range" id="job-ensured-storage-size">
   </div>
   <div class="mb-3">
     <label for="job-max-coins-per-hour" class="form-label">Max Coins Per Hour: <span id="job-max-coins-per-hour-value">10</span></label>
@@ -195,6 +200,7 @@ export class BatchJobManager extends Widget {
         </td>
         <td><a href="#" class="job-table-row-shared-dir-link"></a></td>
         <td>${job.instance_type}</td>
+        <td>${job.ensured_storage_size}</td>
         <td>${shortenId(job.job_id)}</td>
         <td><a href="#" class="job-status" data-job-log="${escaped_console}">${job.status}</a></td>
         <td><button class="btn btn-danger btn-sm delete-job" data-job-id="${job.job_id}">Delete</button></td>
@@ -336,6 +342,7 @@ export class BatchJobManager extends Widget {
     name: string,
     filePath: string,
     instanceType: string,
+    ensuredStorageSize: string,
     maxCoinsPerHour: string,
     sharedDirectory: string
   ): Promise<void> {
@@ -350,6 +357,7 @@ export class BatchJobManager extends Widget {
           name: name,
           path: filePath,
           instance_type: instanceType,
+          ensured_storage_size: ensuredStorageSize,
           max_coins_per_hour: maxCoinsPerHour,
           shared_directory: sharedDirectory
         })
@@ -369,6 +377,21 @@ export class BatchJobManager extends Widget {
     body.node.innerHTML = JOB_DEFINITION;
     body.addClass('my-bootstrap-scope');
 
+    // interactive slider for storage size
+    const rangeStorageInput = (body.node as HTMLElement).querySelector(
+      '#job-ensured-storage-size'
+    );
+    const rangeStorageValue = body.node.querySelector(
+      '#job-ensured-storage-size-value'
+    );
+    if (rangeStorageInput && rangeStorageValue) {
+      rangeStorageInput.addEventListener('input', event => {
+        const x = (event.target as HTMLInputElement).value;
+        rangeStorageValue.textContent = x;
+      });
+    }
+
+    // interactive slider for max coins
     const rangeInput = (body.node as HTMLElement).querySelector(
       '#job-max-coins-per-hour'
     );
@@ -473,6 +496,11 @@ export class BatchJobManager extends Widget {
       const instanceType = (
         body.node.querySelector('#job-instance-type') as HTMLSelectElement
       ).value;
+      const ensuredStorageSize = (
+        body.node.querySelector(
+          '#job-ensured-storage-size'
+        ) as HTMLSelectElement
+      ).value;
       const maxCoinsPerHour = (
         body.node.querySelector('#job-max-coins-per-hour') as HTMLSelectElement
       ).value;
@@ -482,6 +510,7 @@ export class BatchJobManager extends Widget {
       console.log('Name:', name);
       console.log('File Path:', filePath);
       console.log('Instance Type:', instanceType);
+      console.log('ensuredStorageSize:', ensuredStorageSize);
       console.log('maxCoinsPerHour:', maxCoinsPerHour);
       console.log('sharedDir:', sharedDir);
 
@@ -491,6 +520,7 @@ export class BatchJobManager extends Widget {
           name,
           filePath,
           instanceType,
+          ensuredStorageSize,
           maxCoinsPerHour,
           sharedDir
         );

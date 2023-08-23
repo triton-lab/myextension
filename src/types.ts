@@ -3,6 +3,7 @@ export interface IBatchJobItem {
   file_path: string;
   job_id: string;
   instance_type: string;
+  ensured_storage_size: number;
   timestamp: string;
   shared_dir: string;
   extra: string;
