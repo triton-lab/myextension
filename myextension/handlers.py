@@ -162,19 +162,23 @@ class B2DownloadHandler(APIHandler):
             raise JupyterHubNotFoundError("JupyterHub is not running?")
         req.add_header(*auth_keyval)
         try:
+            CHUNK_SIZE = 1024 * 1024  # = 1 MB
             with closing(urllib.request.urlopen(req)) as response:
                 fn = utils.get_filename_from_response(response)
                 if not fn:
-                    raise FailedB2DownloadError(response)
+                    raise FailedB2DownloadError("Failed to obtain filename from response")
                 fpath = output_path / fn
                 with fpath.open("wb") as f:
-                    content = response.read()
-                    f.write(content)
+                    while True:
+                        chunk = response.read(CHUNK_SIZE)
+                        if not chunk:  # No more data to read
+                            break
+                        f.write(chunk)
 
             self.log.info(">>>>=================================================")
             self.log.info(f"    Original file: {filename}")
-            self.log.info(f"    Content of '{fpath}'")
-            self.log.info(content)
+            self.log.info(f"    Saved to: '{fpath}'")
+            self.log.info(f"    File size (MB): '{fpath.stat().st_size / 1024 / 1024:.2f}'")
             self.log.info("<<<<=================================================")
         except HTTPError as e:
             msg = f"Unable to download the file. Status code: {e.code}"
