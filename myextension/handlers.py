@@ -162,7 +162,7 @@ class B2DownloadHandler(APIHandler):
             raise JupyterHubNotFoundError("JupyterHub is not running?")
         req.add_header(*auth_keyval)
         try:
-            CHUNK_SIZE = 1024 * 1024  # = 1 MB
+            CHUNK_SIZE = 1024 * 1024 * 16  # = 16 MB
             with closing(urllib.request.urlopen(req)) as response:
                 fn = utils.get_filename_from_response(response)
                 if not fn:
