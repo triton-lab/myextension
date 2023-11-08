@@ -17,33 +17,33 @@ import {
 
 const SERVER_URL = '/myextension';
 
+// NOTE: me-* sets the space between "Reload" and "Create Job"
+//       me-0 (closer) to me-5 (farther)
 const JOB_TABLE = `
 <div class="container mt-5 job-table-page">
   <div class="container job-table-alert">
   </div>
   <div class="container job-table-header d-flex align-items-center">
-    <button type="button" class="btn btn-secondary my-update-button">
-    <i class="bi bi-arrow-clockwise"></i> Reload
+    <button type="button" class="btn btn-secondary my-update-button me-4">
+      <i class="bi bi-arrow-clockwise"></i> Reload
+    </button>
+    <button type="button" class="btn btn-primary my-create-button">
+      <i class="bi bi-plus-lg"></i> Create Job
     </button>
   </div>
   <table class="table">
     <thead>
       <tr>
+        <th scope="col">Action</th>
         <th scope="col">Created At</th>
         <th scope="col">Name</th>
         <th scope="col">Input File</th>
         <th scope="col">Outputs</th>
-        <th scope="col">Shared Directory</th>
+        <th scope="col">Shared Dir</th>
         <th scope="col">Instance Type</th>
-        <th scope="col">Ensured Storage (GB)</th>
+        <th scope="col">Extra Storage (GB)</th>
         <th scope="col">Job ID</th>
         <th scope="col">Status</th>
-        <th scope="col">Actions</th>
-        <th class="text-center">
-          <button type="button" class="btn btn-primary my-create-button">
-            Create Job
-          </button>
-        </th>
       </tr>
     </thead>
     <tbody id="jobs-table-body">
@@ -192,6 +192,10 @@ export class BatchJobManager extends Widget {
       const escaped_console = escapeHtmlAttribute(job.console_output);
       const outputPath = getOutputPath(job);
       row.innerHTML = `
+        <td>
+          <button class="btn btn-danger btn-sm delete-job" data-job-id="${job.job_id}">
+            <i class="bi bi-trash"></i> </button>
+        </td>
         <td>${toDatetimeShort(job.timestamp)}</td>
         <td>${job.name}</td>
         <td><a href="#" class="job-table-row-input-link"></a></td>
@@ -203,7 +207,6 @@ export class BatchJobManager extends Widget {
         <td>${job.ensured_storage_size}</td>
         <td>${shortenId(job.job_id)}</td>
         <td><a href="#" class="job-status" data-job-log="${escaped_console}">${job.status}</a></td>
-        <td><button class="btn btn-danger btn-sm delete-job" data-job-id="${job.job_id}">Delete</button></td>
       `;
 
       // Add link to input file
@@ -250,14 +253,12 @@ export class BatchJobManager extends Widget {
           clickedButtons.add(button);
           button.classList.add('btn-warning');
           button.classList.remove('btn-danger');
-          button.textContent = 'Confirm Delete';
 
           // Reset the button state after a timeout (e.g., 3 seconds)
           setTimeout(() => {
             clickedButtons.delete(button);
             button.classList.add('btn-danger');
             button.classList.remove('btn-warning');
-            button.textContent = 'Delete';
           }, 3000);
         } else {
           const job_id = (event.target as HTMLElement).dataset.jobId;
