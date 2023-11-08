@@ -193,7 +193,7 @@ export class BatchJobManager extends Widget {
       const outputPath = getOutputPath(job);
       row.innerHTML = `
         <td>
-          <button class="btn btn-danger btn-sm delete-job" data-job-id="${job.job_id}">
+          <button class="btn btn-warning btn-sm delete-job" data-job-id="${job.job_id}">
             <i class="bi bi-trash"></i> </button>
         </td>
         <td>${toDatetimeShort(job.timestamp)}</td>
@@ -251,14 +251,14 @@ export class BatchJobManager extends Widget {
         if (!clickedButtons.has(button)) {
           // Change the appearance of the button on the first click
           clickedButtons.add(button);
-          button.classList.add('btn-warning');
-          button.classList.remove('btn-danger');
+          button.classList.add('btn-danger');
+          button.classList.remove('btn-warning');
 
           // Reset the button state after a timeout (e.g., 3 seconds)
           setTimeout(() => {
             clickedButtons.delete(button);
-            button.classList.add('btn-danger');
-            button.classList.remove('btn-warning');
+            button.classList.add('btn-warning');
+            button.classList.remove('btn-danger');
           }, 3000);
         } else {
           const job_id = (event.target as HTMLElement).dataset.jobId;
