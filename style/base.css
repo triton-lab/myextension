@@ -35,3 +35,9 @@
 .my-bootstrap-scope input.jp-mod-styled.form-range {
   border: unset !important;
 }
+
+
+/* Modal Dialog width */
+.jp-Dialog-content {
+  min-width: 600px;   /* default: 300px */
+}
