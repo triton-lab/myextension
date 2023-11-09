@@ -40,7 +40,7 @@ def get_db_path(db: Connection) -> Path:
 
 def _create_db(p: Path) -> Connection:
     logging.info(">>>-----------------------")
-    logging.info(f"  Creating SQLite DB: {p}")
+    logging.info("  Creating SQLite DB: %s", p)
     db = sqlite3.connect(p)
     entries = ", ".join(
         f"{field.name} text" for field in dataclasses.fields(JobMetadata)
@@ -70,8 +70,8 @@ def _is_db_outdated(db: Connection) -> bool:
     jobmeta_fields = tuple(x.name for x in dataclasses.fields(JobMetadata))
     res = db_fields != jobmeta_fields
     if res:
-        logging.info(f"  db_fields     : {db_fields}")
-        logging.info(f"  jobmeta_fields: {jobmeta_fields}")
+        logging.info("  db_fields     : %s", db_fields)
+        logging.info("  jobmeta_fields: %s", jobmeta_fields)
     return res
 
 
@@ -89,8 +89,8 @@ def _upgrade_db(db: Connection) -> Connection:
         logging.warning("  Existing DB is incompatible with JobMetadata")
         logging.warning("   unique past field names: ")
         for name in set(past_field_names) - set(jobmeta_fields):
-            logging.warning(f"     {name}")
-        logging.warning(f" ---> Recreating the DB file: {p}")
+            logging.warning("     %s", name)
+        logging.warning(" ---> Recreating the DB file: %s", p)
         logging.warning(">>>======================================================")
         db.close()
         p.unlink()

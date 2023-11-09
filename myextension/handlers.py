@@ -57,11 +57,11 @@ class ConfigViewHandler(APIHandler):
         self.log.info(" ConfigHandler: GET received")
         self.log.info("   settings:")
         for k, v in sorted(self.settings.items()):
-            self.log.info(f"      {k}: {v}")
+            self.log.info("      %s: %s", k, v)
         self.log.info("   lab_config:")
         for k, v in sorted(self.settings["lab_config"].items()):
-            self.log.info(f"      {k}: {v}")
-        self.log.info(f"   config: {self.config}")
+            self.log.info("      %s: %s", k, v)
+        self.log.info("   config: %s", self.config)
         self.log.info("<<<<========================================")
         self.log.info("")
         self.finish(json.dumps({"data": str(self.config)}))
@@ -91,13 +91,13 @@ class TestHubHandler(APIHandler):
 
     def _get_status(self) -> Dict:
         url = utils.get_hub_service_url("/status")
-        self.log.info(f"Accessing /status in hub: {url}")
+        self.log.info("Accessing /status in hub: %s", url)
         return self._http_get(url)
 
     def _http_get(self, url):
         self.log.info(">>>>--------------------------------------------")
         self.log.info("  TestHubHandler: Sending HTTP GET request")
-        self.log.info(f"    {url}")
+        self.log.info("    %s", url)
         self.log.info("<<<<--------------------------------------------")
         return self._http_meta(url, method="GET")
 
@@ -119,20 +119,19 @@ class TestHubHandler(APIHandler):
                 return result
         except HTTPError as e:
             if e.code != 200 or e.code != 201 or e.code != 204:
-                self.log.error(">>>>=======================================")
-                self.log.error(f"{e.code}: Failed {req.get_full_url()}")
+                self.log.error("%d: Failed %s", e.code, req.get_full_url())
                 self.log.error(e)
                 self.log.error("<<<<=======================================")
                 self.set_status(500)
                 self.write(
                     json.dumps(
                         {
-                            "data": f"JupyterHub service responded with an error: {e}\n{req}"
+                            "data": "JupyterHub service responded with an error: %s\n%s" % (e, req)
                         }
                     )
                 )
             else:
-                self.log.info(f"{e.code}: OK")
+                self.log.info("%d: OK", e.code)
         return dict()
 
 
@@ -148,7 +147,7 @@ class B2DownloadHandler(APIHandler):
     def get(self, job_id):
         self.log.info(">>>>========================================")
         self.log.info("  B2DownloadHandler: GET received")
-        self.log.info(f"    job_id: {job_id}")
+        self.log.info("    job_id: %s", job_id)
 
         meta = db_read(self.db, job_id)
         filename = Path(meta.file_path).name
@@ -156,8 +155,8 @@ class B2DownloadHandler(APIHandler):
         url = utils.get_hub_service_url(f"/download?{params}")
         output_path = utils.get_output_path(meta, self.root_dir)
 
-        self.log.info(f"    filename: {filename}")
-        self.log.info(f"    Accessing with HTTP GET: {url}")
+        self.log.info("    filename: %s", filename)
+        self.log.info("    Accessing with HTTP GET: %s", url)
         self.log.info("<<<<========================================")
         req = urllib.request.Request(url=url, method="GET")
         auth_keyval = utils.get_header_auth_keyval()
@@ -183,33 +182,32 @@ class B2DownloadHandler(APIHandler):
                         f.write(chunk)
 
             self.log.info(">>>>=================================================")
-            self.log.info(f"    Original file: {filename}")
-            self.log.info(f"    Saved to: '{fpath}'")
+            self.log.info("    Original file: %s", filename)
+            self.log.info("    Saved to: '%s'", fpath)
             self.log.info(
-                f"    File size (MB): '{fpath.stat().st_size / 1024 / 1024:.2f}'"
+                "    File size (MB): '%.2f'", fpath.stat().st_size / 1024 / 1024
             )
             self.log.info("<<<<=================================================")
         except HTTPError as e:
-            msg = f"Unable to download the file. Status code: {e.code}"
+            msg = "Unable to download the file. Status code: %s" % e.code
             self.log.error(">>>>========================================")
-            self.log.error(f"Error: {msg}")
+            self.log.error("Error: %s", msg)
             self.log.error("<<<<========================================")
             self.set_status(e.code)
             self.write(utils.asjson(msg))
             return
         except FailedB2DownloadError as e:
             msg = "Failed to get file name from a HTTP response."
-            self.log.error(">>>>========================================")
-            self.log.error(f"Error: {msg}")
+            self.log.error("Error: %s", msg)
             self.log.error(e.data)
             self.log.error("<<<<========================================")
             self.set_status(500)
             self.write(utils.asjson(e.data))
             return
         except Exception as e:
-            msg = f"{e}"
+            msg = "%s" % e
             self.log.error(">>>>========================================")
-            self.log.error(f"Error downloading and saving file: {msg}")
+            self.log.error("Error downloading and saving file: %s", msg)
             self.log.error("<<<<========================================")
             self.set_status(500)
             self.write(utils.asjson(msg))
@@ -253,7 +251,7 @@ class JobListHandler(APIHandler):
             self.log.info("  ---- ")
             for k, v in job_as_dict.items():
                 if k != "console_output":
-                    self.log.info(f"  {k}: {v}")
+                    self.log.info("  %s: %s", k, v)
         s = json.dumps(jobs_as_dicts, cls=JobStatusEncoder)
         self.finish(s)
 
@@ -293,7 +291,7 @@ class JobListHandler(APIHandler):
             if payload["ensured_storage_size"].strip()
             else 0
         )
-        self.log.info(f"HTTP POST: Received file '{apipath}'")
+        self.log.info("HTTP POST: Received file '%s'", apipath)
 
         # set shared_dir as Path only if apipath_shared_dir is non-empty
         shared_dir = None
@@ -305,7 +303,7 @@ class JobListHandler(APIHandler):
 
         filepath = Path(self.settings["server_root_dir"]).expanduser() / str(apipath)
         params["filepath"] = filepath.as_posix()
-        self.log.info(f"HTTP POST: filepath: '{filepath}'")
+        self.log.info("HTTP POST: filepath: '%s'", filepath)
         if not filepath.exists():
             self.set_status(400)
             self.finish(json.dumps({"data": f"The file does not exist: {apipath}"}))
@@ -375,8 +373,8 @@ class JobListHandler(APIHandler):
                 return
             except FailedAwsJobRequestError as e:
                 self.log.error(">>>>=======================================")
-                self.log.error(f"  Failed to start a job at AWS: {apipath}")
-                self.log.error(f"    {e.data}")
+                self.log.error("  Failed to start a job at AWS: %s", apipath)
+                self.log.error("    %s", e.data)
                 self.log.error("<<<<=======================================")
                 self.set_status(500)
                 self.finish(json.dumps(e.data, indent=1))
@@ -395,7 +393,7 @@ class JobListHandler(APIHandler):
             shared_dir=apipath_shared_dir,
             extra="",
         )
-        self.log.debug(f"Adding an entry to db: {meta}")
+        self.log.debug("Adding an entry to db: %s", meta)
         db_add(self.db, meta)
         self.get()
 
@@ -404,20 +402,20 @@ class JobListHandler(APIHandler):
         """send cancel to the JupyterHub service 'batch'"""
         self.log.info(">>>>========================================")
         self.log.info("  JobListHandler: DELETE request received")
-        self.log.info(f"     Job ID: {job_id}")
+        self.log.info("     Job ID: %s", job_id)
         self.log.info("<<<<========================================")
 
-        self.log.debug(f"Reading an entry from db: {job_id}")
+        self.log.debug("Reading an entry from db: %s", job_id)
         meta = db_read(self.db, job_id)
         if DRY_RUN:
             self.log.debug("DRY_RUN activated in delete()")
         else:
-            self.log.debug(f"---- Cancel Job: {job_id} ----")
+            self.log.debug("---- Cancel Job: %s ----", job_id)
             res = self._cancel_job(meta.request_id, meta.instance_id)
             self.log.debug(res)
 
         # TODO: delete wisely based on `res`
-        self.log.debug(f"Deleting an entry to db: {job_id}")
+        self.log.debug("Deleting an entry to db: %s", job_id)
         db_delete(self.db, job_id)
         self.get()
 
@@ -432,22 +430,22 @@ class JobListHandler(APIHandler):
     def _http_get(self, url):
         self.log.info(">>>>--------------------------------------------")
         self.log.info("  JobListHandler: Sending HTTP GET request")
-        self.log.info(f"    {url}")
+        self.log.info("    %s", url)
         self.log.info("<<<<--------------------------------------------")
         return self._http_meta(url, method="GET")
 
     def _http_delete(self, url):
         self.log.info(">>>>--------------------------------------------")
         self.log.info("  JobListHandler: Sending HTTP DELETE request")
-        self.log.info(f"    {url}")
+        self.log.info("    %s", url)
         self.log.info("<<<<--------------------------------------------")
         return self._http_meta(url, method="DELETE")
 
     def _http_post_requests(self, url: str, params: Dict) -> requests.Response:
         self.log.info(">>>>--------------------------------------------")
         self.log.info("  JobListHandler: Sending POST via application/json")
-        self.log.info(f"    {url}")
-        self.log.info(f"    {params}")
+        self.log.info("    %s", url)
+        self.log.info("    %s", params)
         self.log.info("<<<<--------------------------------------------")
         auth_keyval = utils.get_header_auth_keyval()
         if auth_keyval is None:
@@ -461,9 +459,9 @@ class JobListHandler(APIHandler):
     ) -> requests.Response:
         self.log.info(">>>>--------------------------------------------")
         self.log.info("  JobListHandler: Sending HTTP POST request")
-        self.log.info(f"    {url}")
-        self.log.info(f"    {filename}")
-        self.log.info(f"    {params}")
+        self.log.info("    %s", url)
+        self.log.info("    %s", filename)
+        self.log.info("    %s", params)
         self.log.info("<<<<--------------------------------------------")
         files = {
             "file": (filename.name, filename.open("rb"), "text/plain", {"Expires": "0"})
@@ -485,7 +483,7 @@ class JobListHandler(APIHandler):
             - LaunchTime
         """
         url = utils.get_hub_service_url("/submit_job")
-        self.log.debug(f"url: {url}")
+        self.log.debug("url: %s", url)
         result = self._http_post_requests(url, params)
         ## TODO: Align with JupyterHub's failure modes
         if not result.ok:
@@ -498,9 +496,9 @@ class JobListHandler(APIHandler):
             self.log.error(url)
             try:
                 d = result.json()
-                self.log.error(d)
+                self.log.error("Failed to decode this as JSON: %s", result)
             except requests.exceptions.JSONDecodeError as e:
-                self.log.error(f"Even failed to decode this as JSON: {result}")
+                self.log.error("Even failed to decode this as JSON: %s", result)
                 raise FailedAwsJobRequestError(result) from e
             self.log.error(
                 "<<<<============================================================"
@@ -529,7 +527,7 @@ class JobListHandler(APIHandler):
             }
         )
         url = utils.get_hub_service_url(f"/job?{params}")
-        self.log.info(f"Asking jobs statuses: {url}")
+        self.log.info("Asking jobs statuses: %s", url)
         return self._http_get(url)
 
     def _cancel_job(self, request_id: str, instance_id: str) -> Dict:
@@ -546,7 +544,7 @@ class JobListHandler(APIHandler):
         )
         url = utils.get_hub_service_url(f"/job?{params}")
 
-        self.log.debug(f"Canceling job: {url}")
+        self.log.debug("Canceling job: %s", url)
         return self._http_delete(url)
 
     def _send_request(self, req: urllib.request.Request) -> Dict:
@@ -556,10 +554,8 @@ class JobListHandler(APIHandler):
                 return result
         except HTTPError as e:
             if e.code != 200 or e.code != 201 or e.code != 204:
-                self.log.error(">>>>=======================================")
-                self.log.error(f"{e.code}: Failed {req.get_full_url()}")
+                self.log.error("%d: Failed %s", e.code, req.get_full_url())
                 self.log.error(e)
-                self.log.error("<<<<=======================================")
                 self.set_status(500)
                 self.write(
                     json.dumps(
@@ -567,7 +563,7 @@ class JobListHandler(APIHandler):
                     )
                 )
             else:
-                self.log.info(f"{e.code}: OK")
+                self.log.info("%d: OK", e.code)
         return dict()
 
     def _get_job_info(self) -> List[JobInfo]:
