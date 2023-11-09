@@ -28,6 +28,9 @@ dynamic = ["version", "description", "authors", "urls", "keywords"]
 
 [project.optional-dependencies]
 test = [
+    "types-requests",
+    "jupyterhub",
+    "jupyterlab",
     "coverage",
     "pytest",
     "pytest-asyncio",
