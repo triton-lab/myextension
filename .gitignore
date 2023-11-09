@@ -12,6 +12,9 @@ myextension/labextension
 # Version file is handled by hatchling
 myextension/_version.py
 
+
+.yarn
+
 # Integration tests
 ui-tests/test-results/
 ui-tests/playwright-report/
