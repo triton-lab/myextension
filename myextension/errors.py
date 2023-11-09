@@ -19,7 +19,7 @@ class FailedB2DownloadError(Exception):
 class ErrorStatusEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, JupyterHubNotFoundError):
-            return {"data": f"JupyterHubNotFoundError"}
+            return {"data": "JupyterHubNotFoundError"}
         elif isinstance(obj, FailedAwsJobRequestError):
             return obj.data
         return super().default(obj)

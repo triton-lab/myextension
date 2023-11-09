@@ -6,7 +6,6 @@
 @import './my-bootstrap-scope.css';
 @import 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css';
 
-
 .my-bootstrap-scope {
   --bs-body-color: var(--jp-ui-font-color1);
   --bs-body-bg: var(--jp-input-background);
@@ -28,7 +27,7 @@
 }
 
 .my-bootstrap-scope .btn {
-  --bs-btn-border-radius: .25rem;
+  --bs-btn-border-radius: 0.25rem;
   --bs-btn-border-radius-sm: var(--bs-btn-border-radius);
 }
 
@@ -36,8 +35,8 @@
   border: unset !important;
 }
 
-
 /* Modal Dialog width */
 .jp-Dialog-content {
-  min-width: 600px;   /* default: 300px */
+  /* default: 300px */
+  min-width: 600px;
 }

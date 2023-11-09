@@ -193,8 +193,10 @@ export class BatchJobManager extends Widget {
       const outputPath = getOutputPath(job);
       row.innerHTML = `
         <td>
-          <button class="btn btn-warning btn-sm delete-job" data-job-id="${job.job_id}">
-            <i class="bi bi-trash"></i> </button>
+          <button class="btn btn-warning btn-sm delete-job"
+                  data-job-id="${job.job_id}">
+            <i class="bi bi-trash"></i>
+          </button>
         </td>
         <td>${toDatetimeShort(job.timestamp)}</td>
         <td>${job.name}</td>
@@ -206,7 +208,13 @@ export class BatchJobManager extends Widget {
         <td>${job.instance_type}</td>
         <td>${job.ensured_storage_size}</td>
         <td>${shortenId(job.job_id)}</td>
-        <td><a href="#" class="job-status" data-job-log="${escaped_console}">${job.status}</a></td>
+        <td>
+          <a href="#"
+            class="job-status"
+            data-job-log="${escaped_console}">
+            ${job.status}
+          </a>
+        </td>
       `;
 
       // Add link to input file

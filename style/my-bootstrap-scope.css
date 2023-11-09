@@ -1,39 +1,11 @@
 @charset "UTF-8";
-.my-bootstrap-scope {
-  /*!
+/*!
    * Bootstrap  v5.3.0-alpha3 (https://getbootstrap.com/)
    * Copyright 2011-2023 The Bootstrap Authors
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
-   */
-  /* rtl:raw:
-  [type="tel"],
-  [type="url"],
-  [type="email"],
-  [type="number"] {
-    direction: ltr;
-  }
-  */
-  /* rtl:begin:ignore */
-  /* rtl:end:ignore */
-  /* rtl:begin:ignore */
-  /* rtl:end:ignore */
-  /* rtl:begin:ignore */
-  /* rtl:end:ignore */
-  /* rtl:begin:ignore */
-  /* rtl:end:ignore */
-  /* rtl:options: {
-    "autoRename": true,
-    "stringMap":[ {
-      "name"    : "prev-next",
-      "search"  : "prev",
-      "replace" : "next"
-    } ]
-  } */
-  /* rtl:begin:remove */
-  /* rtl:end:remove */
-}
+*/
 .my-bootstrap-scope :root,
-.my-bootstrap-scope [data-bs-theme=light] {
+.my-bootstrap-scope [data-bs-theme='light'] {
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
   --bs-purple: #6f42c1;
@@ -99,9 +71,16 @@
   --bs-dark-border-subtle: #adb5bd;
   --bs-white-rgb: 255, 255, 255;
   --bs-black-rgb: 0, 0, 0;
-  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+  --bs-font-sans-serif: system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+  --bs-gradient: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0)
+  );
   --bs-body-font-family: var(--bs-font-sans-serif);
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
@@ -150,7 +129,7 @@
   --bs-form-invalid-color: #dc3545;
   --bs-form-invalid-border-color: #dc3545;
 }
-.my-bootstrap-scope [data-bs-theme=dark] {
+.my-bootstrap-scope [data-bs-theme='dark'] {
   color-scheme: dark;
   --bs-body-color: #adb5bd;
   --bs-body-color-rgb: 173, 181, 189;
@@ -231,49 +210,70 @@
   border-top: var(--bs-border-width) solid;
   opacity: 0.25;
 }
-.my-bootstrap-scope h6, .my-bootstrap-scope .h6, .my-bootstrap-scope h5, .my-bootstrap-scope .h5, .my-bootstrap-scope h4, .my-bootstrap-scope .h4, .my-bootstrap-scope h3, .my-bootstrap-scope .h3, .my-bootstrap-scope h2, .my-bootstrap-scope .h2, .my-bootstrap-scope h1, .my-bootstrap-scope .h1 {
+.my-bootstrap-scope h6,
+.my-bootstrap-scope .h6,
+.my-bootstrap-scope h5,
+.my-bootstrap-scope .h5,
+.my-bootstrap-scope h4,
+.my-bootstrap-scope .h4,
+.my-bootstrap-scope h3,
+.my-bootstrap-scope .h3,
+.my-bootstrap-scope h2,
+.my-bootstrap-scope .h2,
+.my-bootstrap-scope h1,
+.my-bootstrap-scope .h1 {
   margin-top: 0;
   margin-bottom: 0.5rem;
   font-weight: 500;
   line-height: 1.2;
   color: var(--bs-heading-color, inherit);
 }
-.my-bootstrap-scope h1, .my-bootstrap-scope .h1 {
+.my-bootstrap-scope h1,
+.my-bootstrap-scope .h1 {
   font-size: calc(1.375rem + 1.5vw);
 }
 @media (min-width: 1200px) {
-  .my-bootstrap-scope h1, .my-bootstrap-scope .h1 {
+  .my-bootstrap-scope h1,
+  .my-bootstrap-scope .h1 {
     font-size: 2.5rem;
   }
 }
-.my-bootstrap-scope h2, .my-bootstrap-scope .h2 {
+.my-bootstrap-scope h2,
+.my-bootstrap-scope .h2 {
   font-size: calc(1.325rem + 0.9vw);
 }
 @media (min-width: 1200px) {
-  .my-bootstrap-scope h2, .my-bootstrap-scope .h2 {
+  .my-bootstrap-scope h2,
+  .my-bootstrap-scope .h2 {
     font-size: 2rem;
   }
 }
-.my-bootstrap-scope h3, .my-bootstrap-scope .h3 {
+.my-bootstrap-scope h3,
+.my-bootstrap-scope .h3 {
   font-size: calc(1.3rem + 0.6vw);
 }
 @media (min-width: 1200px) {
-  .my-bootstrap-scope h3, .my-bootstrap-scope .h3 {
+  .my-bootstrap-scope h3,
+  .my-bootstrap-scope .h3 {
     font-size: 1.75rem;
   }
 }
-.my-bootstrap-scope h4, .my-bootstrap-scope .h4 {
+.my-bootstrap-scope h4,
+.my-bootstrap-scope .h4 {
   font-size: calc(1.275rem + 0.3vw);
 }
 @media (min-width: 1200px) {
-  .my-bootstrap-scope h4, .my-bootstrap-scope .h4 {
+  .my-bootstrap-scope h4,
+  .my-bootstrap-scope .h4 {
     font-size: 1.5rem;
   }
 }
-.my-bootstrap-scope h5, .my-bootstrap-scope .h5 {
+.my-bootstrap-scope h5,
+.my-bootstrap-scope .h5 {
   font-size: 1.25rem;
 }
-.my-bootstrap-scope h6, .my-bootstrap-scope .h6 {
+.my-bootstrap-scope h6,
+.my-bootstrap-scope .h6 {
   font-size: 1rem;
 }
 .my-bootstrap-scope p {
@@ -320,10 +320,12 @@
 .my-bootstrap-scope strong {
   font-weight: bolder;
 }
-.my-bootstrap-scope small, .my-bootstrap-scope .small {
+.my-bootstrap-scope small,
+.my-bootstrap-scope .small {
   font-size: 0.875em;
 }
-.my-bootstrap-scope mark, .my-bootstrap-scope .mark {
+.my-bootstrap-scope mark,
+.my-bootstrap-scope .mark {
   padding: 0.1875em;
   background-color: var(--bs-highlight-bg);
 }
@@ -347,7 +349,8 @@
 .my-bootstrap-scope a:hover {
   --bs-link-color-rgb: var(--bs-link-hover-color-rgb);
 }
-.my-bootstrap-scope a:not([href]):not([class]), .my-bootstrap-scope a:not([href]):not([class]):hover {
+.my-bootstrap-scope a:not([href]):not([class]),
+.my-bootstrap-scope a:not([href]):not([class]):hover {
   color: inherit;
   text-decoration: none;
 }
@@ -443,7 +446,7 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope select {
   text-transform: none;
 }
-.my-bootstrap-scope [role=button] {
+.my-bootstrap-scope [role='button'] {
   cursor: pointer;
 }
 .my-bootstrap-scope select {
@@ -452,19 +455,22 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope select:disabled {
   opacity: 1;
 }
-.my-bootstrap-scope [list]:not([type=date]):not([type=datetime-local]):not([type=month]):not([type=week]):not([type=time])::-webkit-calendar-picker-indicator {
+.my-bootstrap-scope
+  [list]:not([type='date']):not([type='datetime-local']):not(
+    [type='month']
+  ):not([type='week']):not([type='time'])::-webkit-calendar-picker-indicator {
   display: none !important;
 }
 .my-bootstrap-scope button,
-.my-bootstrap-scope [type=button],
-.my-bootstrap-scope [type=reset],
-.my-bootstrap-scope [type=submit] {
+.my-bootstrap-scope [type='button'],
+.my-bootstrap-scope [type='reset'],
+.my-bootstrap-scope [type='submit'] {
   -webkit-appearance: button;
 }
 .my-bootstrap-scope button:not(:disabled),
-.my-bootstrap-scope [type=button]:not(:disabled),
-.my-bootstrap-scope [type=reset]:not(:disabled),
-.my-bootstrap-scope [type=submit]:not(:disabled) {
+.my-bootstrap-scope [type='button']:not(:disabled),
+.my-bootstrap-scope [type='reset']:not(:disabled),
+.my-bootstrap-scope [type='submit']:not(:disabled) {
   cursor: pointer;
 }
 .my-bootstrap-scope ::-moz-focus-inner {
@@ -508,7 +514,7 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope ::-webkit-inner-spin-button {
   height: auto;
 }
-.my-bootstrap-scope [type=search] {
+.my-bootstrap-scope [type='search'] {
   outline-offset: -2px;
   -webkit-appearance: textfield;
 }
@@ -634,7 +640,7 @@ a > .my-bootstrap-scope code {
   color: #6c757d;
 }
 .my-bootstrap-scope .blockquote-footer::before {
-  content: "— ";
+  content: '— ';
 }
 .my-bootstrap-scope .img-fluid {
   max-width: 100%;
@@ -675,27 +681,42 @@ a > .my-bootstrap-scope code {
   margin-left: auto;
 }
 @media (min-width: 576px) {
-  .my-bootstrap-scope .container-sm, .my-bootstrap-scope .container {
+  .my-bootstrap-scope .container-sm,
+  .my-bootstrap-scope .container {
     max-width: 540px;
   }
 }
 @media (min-width: 768px) {
-  .my-bootstrap-scope .container-md, .my-bootstrap-scope .container-sm, .my-bootstrap-scope .container {
+  .my-bootstrap-scope .container-md,
+  .my-bootstrap-scope .container-sm,
+  .my-bootstrap-scope .container {
     max-width: 720px;
   }
 }
 @media (min-width: 992px) {
-  .my-bootstrap-scope .container-lg, .my-bootstrap-scope .container-md, .my-bootstrap-scope .container-sm, .my-bootstrap-scope .container {
+  .my-bootstrap-scope .container-lg,
+  .my-bootstrap-scope .container-md,
+  .my-bootstrap-scope .container-sm,
+  .my-bootstrap-scope .container {
     max-width: 960px;
   }
 }
 @media (min-width: 1200px) {
-  .my-bootstrap-scope .container-xl, .my-bootstrap-scope .container-lg, .my-bootstrap-scope .container-md, .my-bootstrap-scope .container-sm, .my-bootstrap-scope .container {
+  .my-bootstrap-scope .container-xl,
+  .my-bootstrap-scope .container-lg,
+  .my-bootstrap-scope .container-md,
+  .my-bootstrap-scope .container-sm,
+  .my-bootstrap-scope .container {
     max-width: 1140px;
   }
 }
 @media (min-width: 1400px) {
-  .my-bootstrap-scope .container-xxl, .my-bootstrap-scope .container-xl, .my-bootstrap-scope .container-lg, .my-bootstrap-scope .container-md, .my-bootstrap-scope .container-sm, .my-bootstrap-scope .container {
+  .my-bootstrap-scope .container-xxl,
+  .my-bootstrap-scope .container-xl,
+  .my-bootstrap-scope .container-lg,
+  .my-bootstrap-scope .container-md,
+  .my-bootstrap-scope .container-sm,
+  .my-bootstrap-scope .container {
     max-width: 1320px;
   }
 }
@@ -1787,7 +1808,11 @@ a > .my-bootstrap-scope code {
   --bs-table-accent-bg: var(--bs-table-striped-bg);
   color: var(--bs-table-striped-color);
 }
-.my-bootstrap-scope .table-striped-columns > :not(caption) > tr > :nth-child(even) {
+.my-bootstrap-scope
+  .table-striped-columns
+  > :not(caption)
+  > tr
+  > :nth-child(even) {
   --bs-table-accent-bg: var(--bs-table-striped-bg);
   color: var(--bs-table-striped-color);
 }
@@ -1982,10 +2007,10 @@ a > .my-bootstrap-scope code {
     transition: none;
   }
 }
-.my-bootstrap-scope .form-control[type=file] {
+.my-bootstrap-scope .form-control[type='file'] {
   overflow: hidden;
 }
-.my-bootstrap-scope .form-control[type=file]:not(:disabled):not([readonly]) {
+.my-bootstrap-scope .form-control[type='file']:not(:disabled):not([readonly]) {
   cursor: pointer;
 }
 .my-bootstrap-scope .form-control:focus {
@@ -2024,14 +2049,16 @@ a > .my-bootstrap-scope code {
   border-width: 0;
   border-inline-end-width: var(--bs-border-width);
   border-radius: 0;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
   .my-bootstrap-scope .form-control::file-selector-button {
     transition: none;
   }
 }
-.my-bootstrap-scope .form-control:hover:not(:disabled):not([readonly])::file-selector-button {
+.my-bootstrap-scope
+  .form-control:hover:not(:disabled):not([readonly])::file-selector-button {
   background-color: var(--bs-secondary-bg);
 }
 .my-bootstrap-scope .form-control-plaintext {
@@ -2048,7 +2075,8 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .form-control-plaintext:focus {
   outline: 0;
 }
-.my-bootstrap-scope .form-control-plaintext.form-control-sm, .my-bootstrap-scope .form-control-plaintext.form-control-lg {
+.my-bootstrap-scope .form-control-plaintext.form-control-sm,
+.my-bootstrap-scope .form-control-plaintext.form-control-lg {
   padding-right: 0;
   padding-left: 0;
 }
@@ -2115,7 +2143,8 @@ a > .my-bootstrap-scope code {
   line-height: 1.5;
   color: var(--bs-body-color);
   background-color: var(--bs-body-bg);
-  background-image: var(--bs-form-select-bg-img), var(--bs-form-select-bg-icon, none);
+  background-image: var(--bs-form-select-bg-img),
+    var(--bs-form-select-bg-icon, none);
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   background-size: 16px 12px;
@@ -2134,7 +2163,8 @@ a > .my-bootstrap-scope code {
   outline: 0;
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
-.my-bootstrap-scope .form-select[multiple], .my-bootstrap-scope .form-select[size]:not([size="1"]) {
+.my-bootstrap-scope .form-select[multiple],
+.my-bootstrap-scope .form-select[size]:not([size='1']) {
   padding-right: 0.75rem;
   background-image: none;
 }
@@ -2159,7 +2189,7 @@ a > .my-bootstrap-scope code {
   font-size: 1.25rem;
   border-radius: var(--bs-border-radius-lg);
 }
-.my-bootstrap-scope [data-bs-theme=dark] .form-select {
+.my-bootstrap-scope [data-bs-theme='dark'] .form-select {
   --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
 }
 .my-bootstrap-scope .form-check {
@@ -2197,10 +2227,10 @@ a > .my-bootstrap-scope code {
   appearance: none;
   print-color-adjust: exact;
 }
-.my-bootstrap-scope .form-check-input[type=checkbox] {
+.my-bootstrap-scope .form-check-input[type='checkbox'] {
   border-radius: 0.25em;
 }
-.my-bootstrap-scope .form-check-input[type=radio] {
+.my-bootstrap-scope .form-check-input[type='radio'] {
   border-radius: 50%;
 }
 .my-bootstrap-scope .form-check-input:active {
@@ -2215,13 +2245,13 @@ a > .my-bootstrap-scope code {
   background-color: #0d6efd;
   border-color: #0d6efd;
 }
-.my-bootstrap-scope .form-check-input:checked[type=checkbox] {
+.my-bootstrap-scope .form-check-input:checked[type='checkbox'] {
   --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
 }
-.my-bootstrap-scope .form-check-input:checked[type=radio] {
+.my-bootstrap-scope .form-check-input:checked[type='radio'] {
   --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
 }
-.my-bootstrap-scope .form-check-input[type=checkbox]:indeterminate {
+.my-bootstrap-scope .form-check-input[type='checkbox']:indeterminate {
   background-color: #0d6efd;
   border-color: #0d6efd;
   --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/%3e%3c/svg%3e");
@@ -2231,7 +2261,8 @@ a > .my-bootstrap-scope code {
   filter: none;
   opacity: 0.5;
 }
-.my-bootstrap-scope .form-check-input[disabled] ~ .form-check-label, .my-bootstrap-scope .form-check-input:disabled ~ .form-check-label {
+.my-bootstrap-scope .form-check-input[disabled] ~ .form-check-label,
+.my-bootstrap-scope .form-check-input:disabled ~ .form-check-label {
   cursor: default;
   opacity: 0.5;
 }
@@ -2276,12 +2307,16 @@ a > .my-bootstrap-scope code {
   clip: rect(0, 0, 0, 0);
   pointer-events: none;
 }
-.my-bootstrap-scope .btn-check[disabled] + .btn, .my-bootstrap-scope .btn-check:disabled + .btn {
+.my-bootstrap-scope .btn-check[disabled] + .btn,
+.my-bootstrap-scope .btn-check:disabled + .btn {
   pointer-events: none;
   filter: none;
   opacity: 0.65;
 }
-.my-bootstrap-scope [data-bs-theme=dark] .form-switch .form-check-input:not(:checked):not(:focus) {
+.my-bootstrap-scope
+  [data-bs-theme='dark']
+  .form-switch
+  .form-check-input:not(:checked):not(:focus) {
   --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%28255, 255, 255, 0.25%29'/%3e%3c/svg%3e");
 }
 .my-bootstrap-scope .form-range {
@@ -2310,7 +2345,8 @@ a > .my-bootstrap-scope code {
   background-color: #0d6efd;
   border: 0;
   border-radius: 1rem;
-  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
   appearance: none;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -2336,7 +2372,8 @@ a > .my-bootstrap-scope code {
   background-color: #0d6efd;
   border: 0;
   border-radius: 1rem;
-  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
   appearance: none;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -2403,9 +2440,12 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .form-floating > .form-control-plaintext::placeholder {
   color: transparent;
 }
-.my-bootstrap-scope .form-floating > .form-control:focus, .my-bootstrap-scope .form-floating > .form-control:not(:placeholder-shown),
+.my-bootstrap-scope .form-floating > .form-control:focus,
+.my-bootstrap-scope .form-floating > .form-control:not(:placeholder-shown),
 .my-bootstrap-scope .form-floating > .form-control-plaintext:focus,
-.my-bootstrap-scope .form-floating > .form-control-plaintext:not(:placeholder-shown) {
+.my-bootstrap-scope
+  .form-floating
+  > .form-control-plaintext:not(:placeholder-shown) {
   padding-top: 1.625rem;
   padding-bottom: 0.625rem;
 }
@@ -2419,21 +2459,27 @@ a > .my-bootstrap-scope code {
   padding-bottom: 0.625rem;
 }
 .my-bootstrap-scope .form-floating > .form-control:focus ~ label,
-.my-bootstrap-scope .form-floating > .form-control:not(:placeholder-shown) ~ label,
+.my-bootstrap-scope
+  .form-floating
+  > .form-control:not(:placeholder-shown)
+  ~ label,
 .my-bootstrap-scope .form-floating > .form-control-plaintext ~ label,
 .my-bootstrap-scope .form-floating > .form-select ~ label {
   color: rgba(var(--bs-body-color-rgb), 0.65);
   transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
 }
 .my-bootstrap-scope .form-floating > .form-control:focus ~ label::after,
-.my-bootstrap-scope .form-floating > .form-control:not(:placeholder-shown) ~ label::after,
+.my-bootstrap-scope
+  .form-floating
+  > .form-control:not(:placeholder-shown)
+  ~ label::after,
 .my-bootstrap-scope .form-floating > .form-control-plaintext ~ label::after,
 .my-bootstrap-scope .form-floating > .form-select ~ label::after {
   position: absolute;
   inset: 1rem 0.375rem;
   z-index: -1;
   height: 1.5em;
-  content: "";
+  content: '';
   background-color: var(--bs-body-bg);
   border-radius: var(--bs-border-radius);
 }
@@ -2511,27 +2557,61 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .input-group-sm > .form-select {
   padding-right: 3rem;
 }
-.my-bootstrap-scope .input-group:not(.has-validation) > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating),
-.my-bootstrap-scope .input-group:not(.has-validation) > .dropdown-toggle:nth-last-child(n+3),
-.my-bootstrap-scope .input-group:not(.has-validation) > .form-floating:not(:last-child) > .form-control,
-.my-bootstrap-scope .input-group:not(.has-validation) > .form-floating:not(:last-child) > .form-select {
+.my-bootstrap-scope
+  .input-group:not(.has-validation)
+  > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu):not(
+    .form-floating
+  ),
+.my-bootstrap-scope
+  .input-group:not(.has-validation)
+  > .dropdown-toggle:nth-last-child(n + 3),
+.my-bootstrap-scope
+  .input-group:not(.has-validation)
+  > .form-floating:not(:last-child)
+  > .form-control,
+.my-bootstrap-scope
+  .input-group:not(.has-validation)
+  > .form-floating:not(:last-child)
+  > .form-select {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-.my-bootstrap-scope .input-group.has-validation > :nth-last-child(n+3):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating),
-.my-bootstrap-scope .input-group.has-validation > .dropdown-toggle:nth-last-child(n+4),
-.my-bootstrap-scope .input-group.has-validation > .form-floating:nth-last-child(n+3) > .form-control,
-.my-bootstrap-scope .input-group.has-validation > .form-floating:nth-last-child(n+3) > .form-select {
+.my-bootstrap-scope
+  .input-group.has-validation
+  > :nth-last-child(n + 3):not(.dropdown-toggle):not(.dropdown-menu):not(
+    .form-floating
+  ),
+.my-bootstrap-scope
+  .input-group.has-validation
+  > .dropdown-toggle:nth-last-child(n + 4),
+.my-bootstrap-scope
+  .input-group.has-validation
+  > .form-floating:nth-last-child(n + 3)
+  > .form-control,
+.my-bootstrap-scope
+  .input-group.has-validation
+  > .form-floating:nth-last-child(n + 3)
+  > .form-select {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-.my-bootstrap-scope .input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+.my-bootstrap-scope
+  .input-group
+  > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(
+    .valid-feedback
+  ):not(.invalid-tooltip):not(.invalid-feedback) {
   margin-left: calc(var(--bs-border-width) * -1);
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-.my-bootstrap-scope .input-group > .form-floating:not(:first-child) > .form-control,
-.my-bootstrap-scope .input-group > .form-floating:not(:first-child) > .form-select {
+.my-bootstrap-scope
+  .input-group
+  > .form-floating:not(:first-child)
+  > .form-control,
+.my-bootstrap-scope
+  .input-group
+  > .form-floating:not(:first-child)
+  > .form-select {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -2556,11 +2636,13 @@ a > .my-bootstrap-scope code {
   border-radius: var(--bs-border-radius);
 }
 .was-validated .my-bootstrap-scope:valid ~ .valid-feedback,
-.was-validated .my-bootstrap-scope:valid ~ .valid-tooltip, .my-bootstrap-scope.is-valid ~ .valid-feedback,
+.was-validated .my-bootstrap-scope:valid ~ .valid-tooltip,
+.my-bootstrap-scope.is-valid ~ .valid-feedback,
 .my-bootstrap-scope.is-valid ~ .valid-tooltip {
   display: block;
 }
-.was-validated .my-bootstrap-scope .form-control:valid, .my-bootstrap-scope .form-control.is-valid {
+.was-validated .my-bootstrap-scope .form-control:valid,
+.my-bootstrap-scope .form-control.is-valid {
   border-color: var(--bs-form-valid-border-color);
   padding-right: calc(1.5em + 0.75rem);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
@@ -2568,49 +2650,74 @@ a > .my-bootstrap-scope code {
   background-position: right calc(0.375em + 0.1875rem) center;
   background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
 }
-.was-validated .my-bootstrap-scope .form-control:valid:focus, .my-bootstrap-scope .form-control.is-valid:focus {
+.was-validated .my-bootstrap-scope .form-control:valid:focus,
+.my-bootstrap-scope .form-control.is-valid:focus {
   border-color: var(--bs-form-valid-border-color);
   box-shadow: 0 0 0 0.25rem rgba(var(--bs-success-rgb), 0.25);
 }
-.was-validated .my-bootstrap-scope textarea.form-control:valid, .my-bootstrap-scope textarea.form-control.is-valid {
+.was-validated .my-bootstrap-scope textarea.form-control:valid,
+.my-bootstrap-scope textarea.form-control.is-valid {
   padding-right: calc(1.5em + 0.75rem);
-  background-position: top calc(0.375em + 0.1875rem) right calc(0.375em + 0.1875rem);
+  background-position: top calc(0.375em + 0.1875rem) right
+    calc(0.375em + 0.1875rem);
 }
-.was-validated .my-bootstrap-scope .form-select:valid, .my-bootstrap-scope .form-select.is-valid {
+.was-validated .my-bootstrap-scope .form-select:valid,
+.my-bootstrap-scope .form-select.is-valid {
   border-color: var(--bs-form-valid-border-color);
 }
-.was-validated .my-bootstrap-scope .form-select:valid:not([multiple]):not([size]), .was-validated .my-bootstrap-scope .form-select:valid:not([multiple])[size="1"], .my-bootstrap-scope .form-select.is-valid:not([multiple]):not([size]), .my-bootstrap-scope .form-select.is-valid:not([multiple])[size="1"] {
+.was-validated
+  .my-bootstrap-scope
+  .form-select:valid:not([multiple]):not([size]),
+.was-validated .my-bootstrap-scope .form-select:valid:not([multiple])[size='1'],
+.my-bootstrap-scope .form-select.is-valid:not([multiple]):not([size]),
+.my-bootstrap-scope .form-select.is-valid:not([multiple])[size='1'] {
   --bs-form-select-bg-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
   padding-right: 4.125rem;
   background-position: right 0.75rem center, center right 2.25rem;
   background-size: 16px 12px, calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
 }
-.was-validated .my-bootstrap-scope .form-select:valid:focus, .my-bootstrap-scope .form-select.is-valid:focus {
+.was-validated .my-bootstrap-scope .form-select:valid:focus,
+.my-bootstrap-scope .form-select.is-valid:focus {
   border-color: var(--bs-form-valid-border-color);
   box-shadow: 0 0 0 0.25rem rgba(var(--bs-success-rgb), 0.25);
 }
-.was-validated .my-bootstrap-scope .form-control-color:valid, .my-bootstrap-scope .form-control-color.is-valid {
+.was-validated .my-bootstrap-scope .form-control-color:valid,
+.my-bootstrap-scope .form-control-color.is-valid {
   width: calc(3rem + calc(1.5em + 0.75rem));
 }
-.was-validated .my-bootstrap-scope .form-check-input:valid, .my-bootstrap-scope .form-check-input.is-valid {
+.was-validated .my-bootstrap-scope .form-check-input:valid,
+.my-bootstrap-scope .form-check-input.is-valid {
   border-color: var(--bs-form-valid-border-color);
 }
-.was-validated .my-bootstrap-scope .form-check-input:valid:checked, .my-bootstrap-scope .form-check-input.is-valid:checked {
+.was-validated .my-bootstrap-scope .form-check-input:valid:checked,
+.my-bootstrap-scope .form-check-input.is-valid:checked {
   background-color: var(--bs-form-valid-color);
 }
-.was-validated .my-bootstrap-scope .form-check-input:valid:focus, .my-bootstrap-scope .form-check-input.is-valid:focus {
+.was-validated .my-bootstrap-scope .form-check-input:valid:focus,
+.my-bootstrap-scope .form-check-input.is-valid:focus {
   box-shadow: 0 0 0 0.25rem rgba(var(--bs-success-rgb), 0.25);
 }
-.was-validated .my-bootstrap-scope .form-check-input:valid ~ .form-check-label, .my-bootstrap-scope .form-check-input.is-valid ~ .form-check-label {
+.was-validated .my-bootstrap-scope .form-check-input:valid ~ .form-check-label,
+.my-bootstrap-scope .form-check-input.is-valid ~ .form-check-label {
   color: var(--bs-form-valid-color);
 }
 .my-bootstrap-scope .form-check-inline .form-check-input ~ .valid-feedback {
   margin-left: 0.5em;
 }
-.was-validated .my-bootstrap-scope .input-group > .form-control:not(:focus):valid, .my-bootstrap-scope .input-group > .form-control:not(:focus).is-valid,
-.was-validated .my-bootstrap-scope .input-group > .form-select:not(:focus):valid,
+.was-validated
+  .my-bootstrap-scope
+  .input-group
+  > .form-control:not(:focus):valid,
+.my-bootstrap-scope .input-group > .form-control:not(:focus).is-valid,
+.was-validated
+  .my-bootstrap-scope
+  .input-group
+  > .form-select:not(:focus):valid,
 .my-bootstrap-scope .input-group > .form-select:not(:focus).is-valid,
-.was-validated .my-bootstrap-scope .input-group > .form-floating:not(:focus-within):valid,
+.was-validated
+  .my-bootstrap-scope
+  .input-group
+  > .form-floating:not(:focus-within):valid,
 .my-bootstrap-scope .input-group > .form-floating:not(:focus-within).is-valid {
   z-index: 3;
 }
@@ -2635,11 +2742,13 @@ a > .my-bootstrap-scope code {
   border-radius: var(--bs-border-radius);
 }
 .was-validated .my-bootstrap-scope:invalid ~ .invalid-feedback,
-.was-validated .my-bootstrap-scope:invalid ~ .invalid-tooltip, .my-bootstrap-scope.is-invalid ~ .invalid-feedback,
+.was-validated .my-bootstrap-scope:invalid ~ .invalid-tooltip,
+.my-bootstrap-scope.is-invalid ~ .invalid-feedback,
 .my-bootstrap-scope.is-invalid ~ .invalid-tooltip {
   display: block;
 }
-.was-validated .my-bootstrap-scope .form-control:invalid, .my-bootstrap-scope .form-control.is-invalid {
+.was-validated .my-bootstrap-scope .form-control:invalid,
+.my-bootstrap-scope .form-control.is-invalid {
   border-color: var(--bs-form-invalid-border-color);
   padding-right: calc(1.5em + 0.75rem);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
@@ -2647,50 +2756,82 @@ a > .my-bootstrap-scope code {
   background-position: right calc(0.375em + 0.1875rem) center;
   background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
 }
-.was-validated .my-bootstrap-scope .form-control:invalid:focus, .my-bootstrap-scope .form-control.is-invalid:focus {
+.was-validated .my-bootstrap-scope .form-control:invalid:focus,
+.my-bootstrap-scope .form-control.is-invalid:focus {
   border-color: var(--bs-form-invalid-border-color);
   box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25);
 }
-.was-validated .my-bootstrap-scope textarea.form-control:invalid, .my-bootstrap-scope textarea.form-control.is-invalid {
+.was-validated .my-bootstrap-scope textarea.form-control:invalid,
+.my-bootstrap-scope textarea.form-control.is-invalid {
   padding-right: calc(1.5em + 0.75rem);
-  background-position: top calc(0.375em + 0.1875rem) right calc(0.375em + 0.1875rem);
+  background-position: top calc(0.375em + 0.1875rem) right
+    calc(0.375em + 0.1875rem);
 }
-.was-validated .my-bootstrap-scope .form-select:invalid, .my-bootstrap-scope .form-select.is-invalid {
+.was-validated .my-bootstrap-scope .form-select:invalid,
+.my-bootstrap-scope .form-select.is-invalid {
   border-color: var(--bs-form-invalid-border-color);
 }
-.was-validated .my-bootstrap-scope .form-select:invalid:not([multiple]):not([size]), .was-validated .my-bootstrap-scope .form-select:invalid:not([multiple])[size="1"], .my-bootstrap-scope .form-select.is-invalid:not([multiple]):not([size]), .my-bootstrap-scope .form-select.is-invalid:not([multiple])[size="1"] {
+.was-validated
+  .my-bootstrap-scope
+  .form-select:invalid:not([multiple]):not([size]),
+.was-validated
+  .my-bootstrap-scope
+  .form-select:invalid:not([multiple])[size='1'],
+.my-bootstrap-scope .form-select.is-invalid:not([multiple]):not([size]),
+.my-bootstrap-scope .form-select.is-invalid:not([multiple])[size='1'] {
   --bs-form-select-bg-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
   padding-right: 4.125rem;
   background-position: right 0.75rem center, center right 2.25rem;
   background-size: 16px 12px, calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
 }
-.was-validated .my-bootstrap-scope .form-select:invalid:focus, .my-bootstrap-scope .form-select.is-invalid:focus {
+.was-validated .my-bootstrap-scope .form-select:invalid:focus,
+.my-bootstrap-scope .form-select.is-invalid:focus {
   border-color: var(--bs-form-invalid-border-color);
   box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25);
 }
-.was-validated .my-bootstrap-scope .form-control-color:invalid, .my-bootstrap-scope .form-control-color.is-invalid {
+.was-validated .my-bootstrap-scope .form-control-color:invalid,
+.my-bootstrap-scope .form-control-color.is-invalid {
   width: calc(3rem + calc(1.5em + 0.75rem));
 }
-.was-validated .my-bootstrap-scope .form-check-input:invalid, .my-bootstrap-scope .form-check-input.is-invalid {
+.was-validated .my-bootstrap-scope .form-check-input:invalid,
+.my-bootstrap-scope .form-check-input.is-invalid {
   border-color: var(--bs-form-invalid-border-color);
 }
-.was-validated .my-bootstrap-scope .form-check-input:invalid:checked, .my-bootstrap-scope .form-check-input.is-invalid:checked {
+.was-validated .my-bootstrap-scope .form-check-input:invalid:checked,
+.my-bootstrap-scope .form-check-input.is-invalid:checked {
   background-color: var(--bs-form-invalid-color);
 }
-.was-validated .my-bootstrap-scope .form-check-input:invalid:focus, .my-bootstrap-scope .form-check-input.is-invalid:focus {
+.was-validated .my-bootstrap-scope .form-check-input:invalid:focus,
+.my-bootstrap-scope .form-check-input.is-invalid:focus {
   box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25);
 }
-.was-validated .my-bootstrap-scope .form-check-input:invalid ~ .form-check-label, .my-bootstrap-scope .form-check-input.is-invalid ~ .form-check-label {
+.was-validated
+  .my-bootstrap-scope
+  .form-check-input:invalid
+  ~ .form-check-label,
+.my-bootstrap-scope .form-check-input.is-invalid ~ .form-check-label {
   color: var(--bs-form-invalid-color);
 }
 .my-bootstrap-scope .form-check-inline .form-check-input ~ .invalid-feedback {
   margin-left: 0.5em;
 }
-.was-validated .my-bootstrap-scope .input-group > .form-control:not(:focus):invalid, .my-bootstrap-scope .input-group > .form-control:not(:focus).is-invalid,
-.was-validated .my-bootstrap-scope .input-group > .form-select:not(:focus):invalid,
+.was-validated
+  .my-bootstrap-scope
+  .input-group
+  > .form-control:not(:focus):invalid,
+.my-bootstrap-scope .input-group > .form-control:not(:focus).is-invalid,
+.was-validated
+  .my-bootstrap-scope
+  .input-group
+  > .form-select:not(:focus):invalid,
 .my-bootstrap-scope .input-group > .form-select:not(:focus).is-invalid,
-.was-validated .my-bootstrap-scope .input-group > .form-floating:not(:focus-within):invalid,
-.my-bootstrap-scope .input-group > .form-floating:not(:focus-within).is-invalid {
+.was-validated
+  .my-bootstrap-scope
+  .input-group
+  > .form-floating:not(:focus-within):invalid,
+.my-bootstrap-scope
+  .input-group
+  > .form-floating:not(:focus-within).is-invalid {
   z-index: 4;
 }
 .my-bootstrap-scope .btn {
@@ -2706,9 +2847,11 @@ a > .my-bootstrap-scope code {
   --bs-btn-border-color: transparent;
   --bs-btn-border-radius: var(--bs-border-radius);
   --bs-btn-hover-border-color: transparent;
-  --bs-btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+  --bs-btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 1px 1px rgba(0, 0, 0, 0.075);
   --bs-btn-disabled-opacity: 0.65;
-  --bs-btn-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), .5);
+  --bs-btn-focus-box-shadow: 0 0 0 0.25rem
+    rgba(var(--bs-btn-focus-shadow-rgb), 0.5);
   display: inline-block;
   padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
   font-family: var(--bs-btn-font-family);
@@ -2724,7 +2867,8 @@ a > .my-bootstrap-scope code {
   border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
   border-radius: var(--bs-btn-border-radius);
   background-color: var(--bs-btn-bg);
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
   .my-bootstrap-scope .btn {
@@ -2753,15 +2897,25 @@ a > .my-bootstrap-scope code {
   outline: 0;
   box-shadow: var(--bs-btn-focus-box-shadow);
 }
-.btn-check:checked + .my-bootstrap-scope .btn, :not(.btn-check) + .my-bootstrap-scope .btn:active, .my-bootstrap-scope .btn:first-child:active, .my-bootstrap-scope .btn.active, .my-bootstrap-scope .btn.show {
+.btn-check:checked + .my-bootstrap-scope .btn,
+:not(.btn-check) + .my-bootstrap-scope .btn:active,
+.my-bootstrap-scope .btn:first-child:active,
+.my-bootstrap-scope .btn.active,
+.my-bootstrap-scope .btn.show {
   color: var(--bs-btn-active-color);
   background-color: var(--bs-btn-active-bg);
   border-color: var(--bs-btn-active-border-color);
 }
-.btn-check:checked + .my-bootstrap-scope .btn:focus-visible, :not(.btn-check) + .my-bootstrap-scope .btn:active:focus-visible, .my-bootstrap-scope .btn:first-child:active:focus-visible, .my-bootstrap-scope .btn.active:focus-visible, .my-bootstrap-scope .btn.show:focus-visible {
+.btn-check:checked + .my-bootstrap-scope .btn:focus-visible,
+:not(.btn-check) + .my-bootstrap-scope .btn:active:focus-visible,
+.my-bootstrap-scope .btn:first-child:active:focus-visible,
+.my-bootstrap-scope .btn.active:focus-visible,
+.my-bootstrap-scope .btn.show:focus-visible {
   box-shadow: var(--bs-btn-focus-box-shadow);
 }
-.my-bootstrap-scope .btn:disabled, .my-bootstrap-scope .btn.disabled, fieldset:disabled .my-bootstrap-scope .btn {
+.my-bootstrap-scope .btn:disabled,
+.my-bootstrap-scope .btn.disabled,
+fieldset:disabled .my-bootstrap-scope .btn {
   color: var(--bs-btn-disabled-color);
   pointer-events: none;
   background-color: var(--bs-btn-disabled-bg);
@@ -3045,13 +3199,15 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .btn-link:hover {
   color: var(--bs-btn-hover-color);
 }
-.my-bootstrap-scope .btn-lg, .my-bootstrap-scope .btn-group-lg > .btn {
+.my-bootstrap-scope .btn-lg,
+.my-bootstrap-scope .btn-group-lg > .btn {
   --bs-btn-padding-y: 0.5rem;
   --bs-btn-padding-x: 1rem;
   --bs-btn-font-size: 1.25rem;
   --bs-btn-border-radius: var(--bs-border-radius-lg);
 }
-.my-bootstrap-scope .btn-sm, .my-bootstrap-scope .btn-group-sm > .btn {
+.my-bootstrap-scope .btn-sm,
+.my-bootstrap-scope .btn-group-sm > .btn {
   --bs-btn-padding-y: 0.25rem;
   --bs-btn-padding-x: 0.5rem;
   --bs-btn-font-size: 0.875rem;
@@ -3106,7 +3262,7 @@ a > .my-bootstrap-scope code {
   display: inline-block;
   margin-left: 0.255em;
   vertical-align: 0.255em;
-  content: "";
+  content: '';
   border-top: 0.3em solid;
   border-right: 0.3em solid transparent;
   border-bottom: 0;
@@ -3127,7 +3283,9 @@ a > .my-bootstrap-scope code {
   --bs-dropdown-border-color: var(--bs-border-color-translucent);
   --bs-dropdown-border-radius: var(--bs-border-radius);
   --bs-dropdown-border-width: var(--bs-border-width);
-  --bs-dropdown-inner-border-radius: calc(var(--bs-border-radius) - var(--bs-border-width));
+  --bs-dropdown-inner-border-radius: calc(
+    var(--bs-border-radius) - var(--bs-border-width)
+  );
   --bs-dropdown-divider-bg: var(--bs-border-color-translucent);
   --bs-dropdown-divider-margin-y: 0.5rem;
   --bs-dropdown-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
@@ -3266,7 +3424,7 @@ a > .my-bootstrap-scope code {
   display: inline-block;
   margin-left: 0.255em;
   vertical-align: 0.255em;
-  content: "";
+  content: '';
   border-top: 0;
   border-right: 0.3em solid transparent;
   border-bottom: 0.3em solid;
@@ -3286,7 +3444,7 @@ a > .my-bootstrap-scope code {
   display: inline-block;
   margin-left: 0.255em;
   vertical-align: 0.255em;
-  content: "";
+  content: '';
   border-top: 0.3em solid transparent;
   border-right: 0;
   border-bottom: 0.3em solid transparent;
@@ -3309,7 +3467,7 @@ a > .my-bootstrap-scope code {
   display: inline-block;
   margin-left: 0.255em;
   vertical-align: 0.255em;
-  content: "";
+  content: '';
 }
 .my-bootstrap-scope .dropstart .dropdown-toggle::after {
   display: none;
@@ -3318,7 +3476,7 @@ a > .my-bootstrap-scope code {
   display: inline-block;
   margin-right: 0.255em;
   vertical-align: 0.255em;
-  content: "";
+  content: '';
   border-top: 0.3em solid transparent;
   border-right: 0.3em solid;
   border-bottom: 0.3em solid transparent;
@@ -3350,16 +3508,19 @@ a > .my-bootstrap-scope code {
   border: 0;
   border-radius: var(--bs-dropdown-item-border-radius, 0);
 }
-.my-bootstrap-scope .dropdown-item:hover, .my-bootstrap-scope .dropdown-item:focus {
+.my-bootstrap-scope .dropdown-item:hover,
+.my-bootstrap-scope .dropdown-item:focus {
   color: var(--bs-dropdown-link-hover-color);
   background-color: var(--bs-dropdown-link-hover-bg);
 }
-.my-bootstrap-scope .dropdown-item.active, .my-bootstrap-scope .dropdown-item:active {
+.my-bootstrap-scope .dropdown-item.active,
+.my-bootstrap-scope .dropdown-item:active {
   color: var(--bs-dropdown-link-active-color);
   text-decoration: none;
   background-color: var(--bs-dropdown-link-active-bg);
 }
-.my-bootstrap-scope .dropdown-item.disabled, .my-bootstrap-scope .dropdown-item:disabled {
+.my-bootstrap-scope .dropdown-item.disabled,
+.my-bootstrap-scope .dropdown-item:disabled {
   color: var(--bs-dropdown-link-disabled-color);
   pointer-events: none;
   background-color: transparent;
@@ -3369,7 +3530,8 @@ a > .my-bootstrap-scope code {
 }
 .my-bootstrap-scope .dropdown-header {
   display: block;
-  padding: var(--bs-dropdown-header-padding-y) var(--bs-dropdown-header-padding-x);
+  padding: var(--bs-dropdown-header-padding-y)
+    var(--bs-dropdown-header-padding-x);
   margin-bottom: 0;
   font-size: 0.875rem;
   color: var(--bs-dropdown-header-color);
@@ -3440,7 +3602,7 @@ a > .my-bootstrap-scope code {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-.my-bootstrap-scope .btn-group > .btn:nth-child(n+3),
+.my-bootstrap-scope .btn-group > .btn:nth-child(n + 3),
 .my-bootstrap-scope .btn-group > :not(.btn-check) + .btn,
 .my-bootstrap-scope .btn-group > .btn-group:not(:first-child) > .btn {
   border-top-left-radius: 0;
@@ -3450,17 +3612,21 @@ a > .my-bootstrap-scope code {
   padding-right: 0.5625rem;
   padding-left: 0.5625rem;
 }
-.my-bootstrap-scope .dropdown-toggle-split::after, .dropup .my-bootstrap-scope .dropdown-toggle-split::after, .dropend .my-bootstrap-scope .dropdown-toggle-split::after {
+.my-bootstrap-scope .dropdown-toggle-split::after,
+.dropup .my-bootstrap-scope .dropdown-toggle-split::after,
+.dropend .my-bootstrap-scope .dropdown-toggle-split::after {
   margin-left: 0;
 }
 .dropstart .my-bootstrap-scope .dropdown-toggle-split::before {
   margin-right: 0;
 }
-.my-bootstrap-scope .btn-sm + .dropdown-toggle-split, .my-bootstrap-scope .btn-group-sm > .btn + .dropdown-toggle-split {
+.my-bootstrap-scope .btn-sm + .dropdown-toggle-split,
+.my-bootstrap-scope .btn-group-sm > .btn + .dropdown-toggle-split {
   padding-right: 0.375rem;
   padding-left: 0.375rem;
 }
-.my-bootstrap-scope .btn-lg + .dropdown-toggle-split, .my-bootstrap-scope .btn-group-lg > .btn + .dropdown-toggle-split {
+.my-bootstrap-scope .btn-lg + .dropdown-toggle-split,
+.my-bootstrap-scope .btn-group-lg > .btn + .dropdown-toggle-split {
   padding-right: 0.75rem;
   padding-left: 0.75rem;
 }
@@ -3477,7 +3643,9 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .btn-group-vertical > .btn-group:not(:first-child) {
   margin-top: calc(var(--bs-border-width) * -1);
 }
-.my-bootstrap-scope .btn-group-vertical > .btn:not(:last-child):not(.dropdown-toggle),
+.my-bootstrap-scope
+  .btn-group-vertical
+  > .btn:not(:last-child):not(.dropdown-toggle),
 .my-bootstrap-scope .btn-group-vertical > .btn-group:not(:last-child) > .btn {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
@@ -3509,14 +3677,16 @@ a > .my-bootstrap-scope code {
   text-decoration: none;
   background: none;
   border: 0;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
   .my-bootstrap-scope .nav-link {
     transition: none;
   }
 }
-.my-bootstrap-scope .nav-link:hover, .my-bootstrap-scope .nav-link:focus {
+.my-bootstrap-scope .nav-link:hover,
+.my-bootstrap-scope .nav-link:focus {
   color: var(--bs-nav-link-hover-color);
 }
 .my-bootstrap-scope .nav-link:focus-visible {
@@ -3532,11 +3702,14 @@ a > .my-bootstrap-scope code {
   --bs-nav-tabs-border-width: var(--bs-border-width);
   --bs-nav-tabs-border-color: var(--bs-border-color);
   --bs-nav-tabs-border-radius: var(--bs-border-radius);
-  --bs-nav-tabs-link-hover-border-color: var(--bs-secondary-bg) var(--bs-secondary-bg) var(--bs-border-color);
+  --bs-nav-tabs-link-hover-border-color: var(--bs-secondary-bg)
+    var(--bs-secondary-bg) var(--bs-border-color);
   --bs-nav-tabs-link-active-color: var(--bs-emphasis-color);
   --bs-nav-tabs-link-active-bg: var(--bs-body-bg);
-  --bs-nav-tabs-link-active-border-color: var(--bs-border-color) var(--bs-border-color) var(--bs-body-bg);
-  border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
+  --bs-nav-tabs-link-active-border-color: var(--bs-border-color)
+    var(--bs-border-color) var(--bs-body-bg);
+  border-bottom: var(--bs-nav-tabs-border-width) solid
+    var(--bs-nav-tabs-border-color);
 }
 .my-bootstrap-scope .nav-tabs .nav-link {
   margin-bottom: calc(-1 * var(--bs-nav-tabs-border-width));
@@ -3544,11 +3717,13 @@ a > .my-bootstrap-scope code {
   border-top-left-radius: var(--bs-nav-tabs-border-radius);
   border-top-right-radius: var(--bs-nav-tabs-border-radius);
 }
-.my-bootstrap-scope .nav-tabs .nav-link:hover, .my-bootstrap-scope .nav-tabs .nav-link:focus {
+.my-bootstrap-scope .nav-tabs .nav-link:hover,
+.my-bootstrap-scope .nav-tabs .nav-link:focus {
   isolation: isolate;
   border-color: var(--bs-nav-tabs-link-hover-border-color);
 }
-.my-bootstrap-scope .nav-tabs .nav-link.disabled, .my-bootstrap-scope .nav-tabs .nav-link:disabled {
+.my-bootstrap-scope .nav-tabs .nav-link.disabled,
+.my-bootstrap-scope .nav-tabs .nav-link:disabled {
   color: var(--bs-nav-link-disabled-color);
   background-color: transparent;
   border-color: transparent;
@@ -3593,7 +3768,8 @@ a > .my-bootstrap-scope code {
   padding-left: 0;
   border-bottom: var(--bs-nav-underline-border-width) solid transparent;
 }
-.my-bootstrap-scope .nav-underline .nav-link:hover, .my-bootstrap-scope .nav-underline .nav-link:focus {
+.my-bootstrap-scope .nav-underline .nav-link:hover,
+.my-bootstrap-scope .nav-underline .nav-link:focus {
   border-bottom-color: currentcolor;
 }
 .my-bootstrap-scope .nav-underline .nav-link.active,
@@ -3672,7 +3848,8 @@ a > .my-bootstrap-scope code {
   text-decoration: none;
   white-space: nowrap;
 }
-.my-bootstrap-scope .navbar-brand:hover, .my-bootstrap-scope .navbar-brand:focus {
+.my-bootstrap-scope .navbar-brand:hover,
+.my-bootstrap-scope .navbar-brand:focus {
   color: var(--bs-navbar-brand-hover-color);
 }
 .my-bootstrap-scope .navbar-nav {
@@ -3688,7 +3865,8 @@ a > .my-bootstrap-scope code {
   margin-bottom: 0;
   list-style: none;
 }
-.my-bootstrap-scope .navbar-nav .nav-link.active, .my-bootstrap-scope .navbar-nav .nav-link.show {
+.my-bootstrap-scope .navbar-nav .nav-link.active,
+.my-bootstrap-scope .navbar-nav .nav-link.show {
   color: var(--bs-navbar-active-color);
 }
 .my-bootstrap-scope .navbar-nav .dropdown-menu {
@@ -4036,7 +4214,7 @@ a > .my-bootstrap-scope code {
   --bs-navbar-toggler-border-color: rgba(255, 255, 255, 0.1);
   --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
-.my-bootstrap-scope [data-bs-theme=dark] .navbar-toggler-icon {
+.my-bootstrap-scope [data-bs-theme='dark'] .navbar-toggler-icon {
   --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 .my-bootstrap-scope .card {
@@ -4049,7 +4227,9 @@ a > .my-bootstrap-scope code {
   --bs-card-border-color: var(--bs-border-color-translucent);
   --bs-card-border-radius: var(--bs-border-radius);
   --bs-card-box-shadow: ;
-  --bs-card-inner-border-radius: calc(var(--bs-border-radius) - (var(--bs-border-width)));
+  --bs-card-inner-border-radius: calc(
+    var(--bs-border-radius) - (var(--bs-border-width))
+  );
   --bs-card-cap-padding-y: 0.5rem;
   --bs-card-cap-padding-x: 1rem;
   --bs-card-cap-bg: rgba(var(--bs-body-color-rgb), 0.03);
@@ -4121,7 +4301,8 @@ a > .my-bootstrap-scope code {
   border-bottom: var(--bs-card-border-width) solid var(--bs-card-border-color);
 }
 .my-bootstrap-scope .card-header:first-child {
-  border-radius: var(--bs-card-inner-border-radius) var(--bs-card-inner-border-radius) 0 0;
+  border-radius: var(--bs-card-inner-border-radius)
+    var(--bs-card-inner-border-radius) 0 0;
 }
 .my-bootstrap-scope .card-footer {
   padding: var(--bs-card-cap-padding-y) var(--bs-card-cap-padding-x);
@@ -4130,7 +4311,8 @@ a > .my-bootstrap-scope code {
   border-top: var(--bs-card-border-width) solid var(--bs-card-border-color);
 }
 .my-bootstrap-scope .card-footer:last-child {
-  border-radius: 0 0 var(--bs-card-inner-border-radius) var(--bs-card-inner-border-radius);
+  border-radius: 0 0 var(--bs-card-inner-border-radius)
+    var(--bs-card-inner-border-radius);
 }
 .my-bootstrap-scope .card-header-tabs {
   margin-right: calc(-0.5 * var(--bs-card-cap-padding-x));
@@ -4214,11 +4396,15 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .accordion {
   --bs-accordion-color: var(--bs-body-color);
   --bs-accordion-bg: var(--bs-body-bg);
-  --bs-accordion-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, border-radius 0.15s ease;
+  --bs-accordion-transition: color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out, border-radius 0.15s ease;
   --bs-accordion-border-color: var(--bs-border-color);
   --bs-accordion-border-width: var(--bs-border-width);
   --bs-accordion-border-radius: var(--bs-border-radius);
-  --bs-accordion-inner-border-radius: calc(var(--bs-border-radius) - (var(--bs-border-width)));
+  --bs-accordion-inner-border-radius: calc(
+    var(--bs-border-radius) - (var(--bs-border-width))
+  );
   --bs-accordion-btn-padding-x: 1.25rem;
   --bs-accordion-btn-padding-y: 1rem;
   --bs-accordion-btn-color: var(--bs-body-color);
@@ -4258,7 +4444,8 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .accordion-button:not(.collapsed) {
   color: var(--bs-accordion-active-color);
   background-color: var(--bs-accordion-active-bg);
-  box-shadow: inset 0 calc(-1 * var(--bs-accordion-border-width)) 0 var(--bs-accordion-border-color);
+  box-shadow: inset 0 calc(-1 * var(--bs-accordion-border-width)) 0
+    var(--bs-accordion-border-color);
 }
 .my-bootstrap-scope .accordion-button:not(.collapsed)::after {
   background-image: var(--bs-accordion-btn-active-icon);
@@ -4269,7 +4456,7 @@ a > .my-bootstrap-scope code {
   width: var(--bs-accordion-btn-icon-width);
   height: var(--bs-accordion-btn-icon-width);
   margin-left: auto;
-  content: "";
+  content: '';
   background-image: var(--bs-accordion-btn-icon);
   background-repeat: no-repeat;
   background-size: var(--bs-accordion-btn-icon-width);
@@ -4295,7 +4482,8 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .accordion-item {
   color: var(--bs-accordion-color);
   background-color: var(--bs-accordion-bg);
-  border: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
+  border: var(--bs-accordion-border-width) solid
+    var(--bs-accordion-border-color);
 }
 .my-bootstrap-scope .accordion-item:first-of-type {
   border-top-left-radius: var(--bs-accordion-border-radius);
@@ -4337,10 +4525,14 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .accordion-flush .accordion-item:last-child {
   border-bottom: 0;
 }
-.my-bootstrap-scope .accordion-flush .accordion-item .accordion-button, .my-bootstrap-scope .accordion-flush .accordion-item .accordion-button.collapsed {
+.my-bootstrap-scope .accordion-flush .accordion-item .accordion-button,
+.my-bootstrap-scope
+  .accordion-flush
+  .accordion-item
+  .accordion-button.collapsed {
   border-radius: 0;
 }
-.my-bootstrap-scope [data-bs-theme=dark] .accordion-button::after {
+.my-bootstrap-scope [data-bs-theme='dark'] .accordion-button::after {
   --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%236ea8fe'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
   --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%236ea8fe'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
 }
@@ -4369,7 +4561,8 @@ a > .my-bootstrap-scope code {
   float: left;
   padding-right: var(--bs-breadcrumb-item-padding-x);
   color: var(--bs-breadcrumb-divider-color);
-  content: var(--bs-breadcrumb-divider, "/") /* rtl: var(--bs-breadcrumb-divider, "/") */;
+  content: var(--bs-breadcrumb-divider, '/')
+    /* rtl: var(--bs-breadcrumb-divider, "/") */;
 }
 .my-bootstrap-scope .breadcrumb-item.active {
   color: var(--bs-breadcrumb-item-active-color);
@@ -4407,8 +4600,10 @@ a > .my-bootstrap-scope code {
   color: var(--bs-pagination-color);
   text-decoration: none;
   background-color: var(--bs-pagination-bg);
-  border: var(--bs-pagination-border-width) solid var(--bs-pagination-border-color);
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  border: var(--bs-pagination-border-width) solid
+    var(--bs-pagination-border-color);
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
   .my-bootstrap-scope .page-link {
@@ -4428,13 +4623,15 @@ a > .my-bootstrap-scope code {
   outline: 0;
   box-shadow: var(--bs-pagination-focus-box-shadow);
 }
-.my-bootstrap-scope .page-link.active, .active > .my-bootstrap-scope .page-link {
+.my-bootstrap-scope .page-link.active,
+.active > .my-bootstrap-scope .page-link {
   z-index: 3;
   color: var(--bs-pagination-active-color);
   background-color: var(--bs-pagination-active-bg);
   border-color: var(--bs-pagination-active-border-color);
 }
-.my-bootstrap-scope .page-link.disabled, .disabled > .my-bootstrap-scope .page-link {
+.my-bootstrap-scope .page-link.disabled,
+.disabled > .my-bootstrap-scope .page-link {
   color: var(--bs-pagination-disabled-color);
   pointer-events: none;
   background-color: var(--bs-pagination-disabled-bg);
@@ -4610,7 +4807,16 @@ a > .my-bootstrap-scope code {
   }
 }
 .my-bootstrap-scope .progress-bar-striped {
-  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
   background-size: var(--bs-progress-height) var(--bs-progress-height);
 }
 .my-bootstrap-scope .progress-stacked > .progress {
@@ -4656,7 +4862,7 @@ a > .my-bootstrap-scope code {
   counter-reset: section;
 }
 .my-bootstrap-scope .list-group-numbered > .list-group-item::before {
-  content: counters(section, ".") ". ";
+  content: counters(section, '.') '. ';
   counter-increment: section;
 }
 .my-bootstrap-scope .list-group-item-action {
@@ -4664,7 +4870,8 @@ a > .my-bootstrap-scope code {
   color: var(--bs-list-group-action-color);
   text-align: inherit;
 }
-.my-bootstrap-scope .list-group-item-action:hover, .my-bootstrap-scope .list-group-item-action:focus {
+.my-bootstrap-scope .list-group-item-action:hover,
+.my-bootstrap-scope .list-group-item-action:focus {
   z-index: 1;
   color: var(--bs-list-group-action-hover-color);
   text-decoration: none;
@@ -4677,11 +4884,13 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .list-group-item {
   position: relative;
   display: block;
-  padding: var(--bs-list-group-item-padding-y) var(--bs-list-group-item-padding-x);
+  padding: var(--bs-list-group-item-padding-y)
+    var(--bs-list-group-item-padding-x);
   color: var(--bs-list-group-color);
   text-decoration: none;
   background-color: var(--bs-list-group-bg);
-  border: var(--bs-list-group-border-width) solid var(--bs-list-group-border-color);
+  border: var(--bs-list-group-border-width) solid
+    var(--bs-list-group-border-color);
 }
 .my-bootstrap-scope .list-group-item:first-child {
   border-top-left-radius: inherit;
@@ -4691,7 +4900,8 @@ a > .my-bootstrap-scope code {
   border-bottom-right-radius: inherit;
   border-bottom-left-radius: inherit;
 }
-.my-bootstrap-scope .list-group-item.disabled, .my-bootstrap-scope .list-group-item:disabled {
+.my-bootstrap-scope .list-group-item.disabled,
+.my-bootstrap-scope .list-group-item:disabled {
   color: var(--bs-list-group-disabled-color);
   pointer-events: none;
   background-color: var(--bs-list-group-disabled-bg);
@@ -4712,22 +4922,32 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .list-group-horizontal {
   flex-direction: row;
 }
-.my-bootstrap-scope .list-group-horizontal > .list-group-item:first-child:not(:last-child) {
+.my-bootstrap-scope
+  .list-group-horizontal
+  > .list-group-item:first-child:not(:last-child) {
   border-bottom-left-radius: var(--bs-list-group-border-radius);
   border-top-right-radius: 0;
 }
-.my-bootstrap-scope .list-group-horizontal > .list-group-item:last-child:not(:first-child) {
+.my-bootstrap-scope
+  .list-group-horizontal
+  > .list-group-item:last-child:not(:first-child) {
   border-top-right-radius: var(--bs-list-group-border-radius);
   border-bottom-left-radius: 0;
 }
 .my-bootstrap-scope .list-group-horizontal > .list-group-item.active {
   margin-top: 0;
 }
-.my-bootstrap-scope .list-group-horizontal > .list-group-item + .list-group-item {
+.my-bootstrap-scope
+  .list-group-horizontal
+  > .list-group-item
+  + .list-group-item {
   border-top-width: var(--bs-list-group-border-width);
   border-left-width: 0;
 }
-.my-bootstrap-scope .list-group-horizontal > .list-group-item + .list-group-item.active {
+.my-bootstrap-scope
+  .list-group-horizontal
+  > .list-group-item
+  + .list-group-item.active {
   margin-left: calc(-1 * var(--bs-list-group-border-width));
   border-left-width: var(--bs-list-group-border-width);
 }
@@ -4735,22 +4955,32 @@ a > .my-bootstrap-scope code {
   .my-bootstrap-scope .list-group-horizontal-sm {
     flex-direction: row;
   }
-  .my-bootstrap-scope .list-group-horizontal-sm > .list-group-item:first-child:not(:last-child) {
+  .my-bootstrap-scope
+    .list-group-horizontal-sm
+    > .list-group-item:first-child:not(:last-child) {
     border-bottom-left-radius: var(--bs-list-group-border-radius);
     border-top-right-radius: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-sm > .list-group-item:last-child:not(:first-child) {
+  .my-bootstrap-scope
+    .list-group-horizontal-sm
+    > .list-group-item:last-child:not(:first-child) {
     border-top-right-radius: var(--bs-list-group-border-radius);
     border-bottom-left-radius: 0;
   }
   .my-bootstrap-scope .list-group-horizontal-sm > .list-group-item.active {
     margin-top: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-sm > .list-group-item + .list-group-item {
+  .my-bootstrap-scope
+    .list-group-horizontal-sm
+    > .list-group-item
+    + .list-group-item {
     border-top-width: var(--bs-list-group-border-width);
     border-left-width: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-sm > .list-group-item + .list-group-item.active {
+  .my-bootstrap-scope
+    .list-group-horizontal-sm
+    > .list-group-item
+    + .list-group-item.active {
     margin-left: calc(-1 * var(--bs-list-group-border-width));
     border-left-width: var(--bs-list-group-border-width);
   }
@@ -4759,22 +4989,32 @@ a > .my-bootstrap-scope code {
   .my-bootstrap-scope .list-group-horizontal-md {
     flex-direction: row;
   }
-  .my-bootstrap-scope .list-group-horizontal-md > .list-group-item:first-child:not(:last-child) {
+  .my-bootstrap-scope
+    .list-group-horizontal-md
+    > .list-group-item:first-child:not(:last-child) {
     border-bottom-left-radius: var(--bs-list-group-border-radius);
     border-top-right-radius: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-md > .list-group-item:last-child:not(:first-child) {
+  .my-bootstrap-scope
+    .list-group-horizontal-md
+    > .list-group-item:last-child:not(:first-child) {
     border-top-right-radius: var(--bs-list-group-border-radius);
     border-bottom-left-radius: 0;
   }
   .my-bootstrap-scope .list-group-horizontal-md > .list-group-item.active {
     margin-top: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-md > .list-group-item + .list-group-item {
+  .my-bootstrap-scope
+    .list-group-horizontal-md
+    > .list-group-item
+    + .list-group-item {
     border-top-width: var(--bs-list-group-border-width);
     border-left-width: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-md > .list-group-item + .list-group-item.active {
+  .my-bootstrap-scope
+    .list-group-horizontal-md
+    > .list-group-item
+    + .list-group-item.active {
     margin-left: calc(-1 * var(--bs-list-group-border-width));
     border-left-width: var(--bs-list-group-border-width);
   }
@@ -4783,22 +5023,32 @@ a > .my-bootstrap-scope code {
   .my-bootstrap-scope .list-group-horizontal-lg {
     flex-direction: row;
   }
-  .my-bootstrap-scope .list-group-horizontal-lg > .list-group-item:first-child:not(:last-child) {
+  .my-bootstrap-scope
+    .list-group-horizontal-lg
+    > .list-group-item:first-child:not(:last-child) {
     border-bottom-left-radius: var(--bs-list-group-border-radius);
     border-top-right-radius: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-lg > .list-group-item:last-child:not(:first-child) {
+  .my-bootstrap-scope
+    .list-group-horizontal-lg
+    > .list-group-item:last-child:not(:first-child) {
     border-top-right-radius: var(--bs-list-group-border-radius);
     border-bottom-left-radius: 0;
   }
   .my-bootstrap-scope .list-group-horizontal-lg > .list-group-item.active {
     margin-top: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-lg > .list-group-item + .list-group-item {
+  .my-bootstrap-scope
+    .list-group-horizontal-lg
+    > .list-group-item
+    + .list-group-item {
     border-top-width: var(--bs-list-group-border-width);
     border-left-width: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-lg > .list-group-item + .list-group-item.active {
+  .my-bootstrap-scope
+    .list-group-horizontal-lg
+    > .list-group-item
+    + .list-group-item.active {
     margin-left: calc(-1 * var(--bs-list-group-border-width));
     border-left-width: var(--bs-list-group-border-width);
   }
@@ -4807,22 +5057,32 @@ a > .my-bootstrap-scope code {
   .my-bootstrap-scope .list-group-horizontal-xl {
     flex-direction: row;
   }
-  .my-bootstrap-scope .list-group-horizontal-xl > .list-group-item:first-child:not(:last-child) {
+  .my-bootstrap-scope
+    .list-group-horizontal-xl
+    > .list-group-item:first-child:not(:last-child) {
     border-bottom-left-radius: var(--bs-list-group-border-radius);
     border-top-right-radius: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-xl > .list-group-item:last-child:not(:first-child) {
+  .my-bootstrap-scope
+    .list-group-horizontal-xl
+    > .list-group-item:last-child:not(:first-child) {
     border-top-right-radius: var(--bs-list-group-border-radius);
     border-bottom-left-radius: 0;
   }
   .my-bootstrap-scope .list-group-horizontal-xl > .list-group-item.active {
     margin-top: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-xl > .list-group-item + .list-group-item {
+  .my-bootstrap-scope
+    .list-group-horizontal-xl
+    > .list-group-item
+    + .list-group-item {
     border-top-width: var(--bs-list-group-border-width);
     border-left-width: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-xl > .list-group-item + .list-group-item.active {
+  .my-bootstrap-scope
+    .list-group-horizontal-xl
+    > .list-group-item
+    + .list-group-item.active {
     margin-left: calc(-1 * var(--bs-list-group-border-width));
     border-left-width: var(--bs-list-group-border-width);
   }
@@ -4831,22 +5091,32 @@ a > .my-bootstrap-scope code {
   .my-bootstrap-scope .list-group-horizontal-xxl {
     flex-direction: row;
   }
-  .my-bootstrap-scope .list-group-horizontal-xxl > .list-group-item:first-child:not(:last-child) {
+  .my-bootstrap-scope
+    .list-group-horizontal-xxl
+    > .list-group-item:first-child:not(:last-child) {
     border-bottom-left-radius: var(--bs-list-group-border-radius);
     border-top-right-radius: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-xxl > .list-group-item:last-child:not(:first-child) {
+  .my-bootstrap-scope
+    .list-group-horizontal-xxl
+    > .list-group-item:last-child:not(:first-child) {
     border-top-right-radius: var(--bs-list-group-border-radius);
     border-bottom-left-radius: 0;
   }
   .my-bootstrap-scope .list-group-horizontal-xxl > .list-group-item.active {
     margin-top: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-xxl > .list-group-item + .list-group-item {
+  .my-bootstrap-scope
+    .list-group-horizontal-xxl
+    > .list-group-item
+    + .list-group-item {
     border-top-width: var(--bs-list-group-border-width);
     border-left-width: 0;
   }
-  .my-bootstrap-scope .list-group-horizontal-xxl > .list-group-item + .list-group-item.active {
+  .my-bootstrap-scope
+    .list-group-horizontal-xxl
+    > .list-group-item
+    + .list-group-item.active {
     margin-left: calc(-1 * var(--bs-list-group-border-width));
     border-left-width: var(--bs-list-group-border-width);
   }
@@ -4985,7 +5255,8 @@ a > .my-bootstrap-scope code {
   box-shadow: var(--bs-btn-close-focus-shadow);
   opacity: var(--bs-btn-close-focus-opacity);
 }
-.my-bootstrap-scope .btn-close:disabled, .my-bootstrap-scope .btn-close.disabled {
+.my-bootstrap-scope .btn-close:disabled,
+.my-bootstrap-scope .btn-close.disabled {
   pointer-events: none;
   user-select: none;
   opacity: var(--bs-btn-close-disabled-opacity);
@@ -4993,7 +5264,7 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .btn-close-white {
   filter: var(--bs-btn-close-white-filter);
 }
-.my-bootstrap-scope [data-bs-theme=dark] .btn-close {
+.my-bootstrap-scope [data-bs-theme='dark'] .btn-close {
   filter: var(--bs-btn-close-white-filter);
 }
 .my-bootstrap-scope .toast {
@@ -5047,9 +5318,14 @@ a > .my-bootstrap-scope code {
   color: var(--bs-toast-header-color);
   background-color: var(--bs-toast-header-bg);
   background-clip: padding-box;
-  border-bottom: var(--bs-toast-border-width) solid var(--bs-toast-header-border-color);
-  border-top-left-radius: calc(var(--bs-toast-border-radius) - var(--bs-toast-border-width));
-  border-top-right-radius: calc(var(--bs-toast-border-radius) - var(--bs-toast-border-width));
+  border-bottom: var(--bs-toast-border-width) solid
+    var(--bs-toast-header-border-color);
+  border-top-left-radius: calc(
+    var(--bs-toast-border-radius) - var(--bs-toast-border-width)
+  );
+  border-top-right-radius: calc(
+    var(--bs-toast-border-radius) - var(--bs-toast-border-width)
+  );
 }
 .my-bootstrap-scope .toast-header .btn-close {
   margin-right: calc(-0.5 * var(--bs-toast-padding-x));
@@ -5070,7 +5346,9 @@ a > .my-bootstrap-scope code {
   --bs-modal-border-width: var(--bs-border-width);
   --bs-modal-border-radius: var(--bs-border-radius-lg);
   --bs-modal-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  --bs-modal-inner-border-radius: calc(var(--bs-border-radius-lg) - (var(--bs-border-width)));
+  --bs-modal-inner-border-radius: calc(
+    var(--bs-border-radius-lg) - (var(--bs-border-width))
+  );
   --bs-modal-header-padding-x: 1rem;
   --bs-modal-header-padding-y: 1rem;
   --bs-modal-header-padding: 1rem 1rem;
@@ -5165,13 +5443,17 @@ a > .my-bootstrap-scope code {
   align-items: center;
   justify-content: space-between;
   padding: var(--bs-modal-header-padding);
-  border-bottom: var(--bs-modal-header-border-width) solid var(--bs-modal-header-border-color);
+  border-bottom: var(--bs-modal-header-border-width) solid
+    var(--bs-modal-header-border-color);
   border-top-left-radius: var(--bs-modal-inner-border-radius);
   border-top-right-radius: var(--bs-modal-inner-border-radius);
 }
 .my-bootstrap-scope .modal-header .btn-close {
-  padding: calc(var(--bs-modal-header-padding-y) * 0.5) calc(var(--bs-modal-header-padding-x) * 0.5);
-  margin: calc(-0.5 * var(--bs-modal-header-padding-y)) calc(-0.5 * var(--bs-modal-header-padding-x)) calc(-0.5 * var(--bs-modal-header-padding-y)) auto;
+  padding: calc(var(--bs-modal-header-padding-y) * 0.5)
+    calc(var(--bs-modal-header-padding-x) * 0.5);
+  margin: calc(-0.5 * var(--bs-modal-header-padding-y))
+    calc(-0.5 * var(--bs-modal-header-padding-x))
+    calc(-0.5 * var(--bs-modal-header-padding-y)) auto;
 }
 .my-bootstrap-scope .modal-title {
   margin-bottom: 0;
@@ -5190,7 +5472,8 @@ a > .my-bootstrap-scope code {
   justify-content: flex-end;
   padding: calc(var(--bs-modal-padding) - var(--bs-modal-footer-gap) * 0.5);
   background-color: var(--bs-modal-footer-bg);
-  border-top: var(--bs-modal-footer-border-width) solid var(--bs-modal-footer-border-color);
+  border-top: var(--bs-modal-footer-border-width) solid
+    var(--bs-modal-footer-border-color);
   border-bottom-right-radius: var(--bs-modal-inner-border-radius);
   border-bottom-left-radius: var(--bs-modal-inner-border-radius);
 }
@@ -5384,44 +5667,72 @@ a > .my-bootstrap-scope code {
 }
 .my-bootstrap-scope .tooltip .tooltip-arrow::before {
   position: absolute;
-  content: "";
+  content: '';
   border-color: transparent;
   border-style: solid;
 }
-.my-bootstrap-scope .bs-tooltip-top .tooltip-arrow, .my-bootstrap-scope .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow {
+.my-bootstrap-scope .bs-tooltip-top .tooltip-arrow,
+.my-bootstrap-scope
+  .bs-tooltip-auto[data-popper-placement^='top']
+  .tooltip-arrow {
   bottom: calc(-1 * var(--bs-tooltip-arrow-height));
 }
-.my-bootstrap-scope .bs-tooltip-top .tooltip-arrow::before, .my-bootstrap-scope .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before {
+.my-bootstrap-scope .bs-tooltip-top .tooltip-arrow::before,
+.my-bootstrap-scope
+  .bs-tooltip-auto[data-popper-placement^='top']
+  .tooltip-arrow::before {
   top: -1px;
-  border-width: var(--bs-tooltip-arrow-height) calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
+  border-width: var(--bs-tooltip-arrow-height)
+    calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
   border-top-color: var(--bs-tooltip-bg);
 }
-.my-bootstrap-scope .bs-tooltip-end .tooltip-arrow, .my-bootstrap-scope .bs-tooltip-auto[data-popper-placement^=right] .tooltip-arrow {
+.my-bootstrap-scope .bs-tooltip-end .tooltip-arrow,
+.my-bootstrap-scope
+  .bs-tooltip-auto[data-popper-placement^='right']
+  .tooltip-arrow {
   left: calc(-1 * var(--bs-tooltip-arrow-height));
   width: var(--bs-tooltip-arrow-height);
   height: var(--bs-tooltip-arrow-width);
 }
-.my-bootstrap-scope .bs-tooltip-end .tooltip-arrow::before, .my-bootstrap-scope .bs-tooltip-auto[data-popper-placement^=right] .tooltip-arrow::before {
+.my-bootstrap-scope .bs-tooltip-end .tooltip-arrow::before,
+.my-bootstrap-scope
+  .bs-tooltip-auto[data-popper-placement^='right']
+  .tooltip-arrow::before {
   right: -1px;
-  border-width: calc(var(--bs-tooltip-arrow-width) * 0.5) var(--bs-tooltip-arrow-height) calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
+  border-width: calc(var(--bs-tooltip-arrow-width) * 0.5)
+    var(--bs-tooltip-arrow-height) calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
   border-right-color: var(--bs-tooltip-bg);
 }
-.my-bootstrap-scope .bs-tooltip-bottom .tooltip-arrow, .my-bootstrap-scope .bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow {
+.my-bootstrap-scope .bs-tooltip-bottom .tooltip-arrow,
+.my-bootstrap-scope
+  .bs-tooltip-auto[data-popper-placement^='bottom']
+  .tooltip-arrow {
   top: calc(-1 * var(--bs-tooltip-arrow-height));
 }
-.my-bootstrap-scope .bs-tooltip-bottom .tooltip-arrow::before, .my-bootstrap-scope .bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow::before {
+.my-bootstrap-scope .bs-tooltip-bottom .tooltip-arrow::before,
+.my-bootstrap-scope
+  .bs-tooltip-auto[data-popper-placement^='bottom']
+  .tooltip-arrow::before {
   bottom: -1px;
-  border-width: 0 calc(var(--bs-tooltip-arrow-width) * 0.5) var(--bs-tooltip-arrow-height);
+  border-width: 0 calc(var(--bs-tooltip-arrow-width) * 0.5)
+    var(--bs-tooltip-arrow-height);
   border-bottom-color: var(--bs-tooltip-bg);
 }
-.my-bootstrap-scope .bs-tooltip-start .tooltip-arrow, .my-bootstrap-scope .bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow {
+.my-bootstrap-scope .bs-tooltip-start .tooltip-arrow,
+.my-bootstrap-scope
+  .bs-tooltip-auto[data-popper-placement^='left']
+  .tooltip-arrow {
   right: calc(-1 * var(--bs-tooltip-arrow-height));
   width: var(--bs-tooltip-arrow-height);
   height: var(--bs-tooltip-arrow-width);
 }
-.my-bootstrap-scope .bs-tooltip-start .tooltip-arrow::before, .my-bootstrap-scope .bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow::before {
+.my-bootstrap-scope .bs-tooltip-start .tooltip-arrow::before,
+.my-bootstrap-scope
+  .bs-tooltip-auto[data-popper-placement^='left']
+  .tooltip-arrow::before {
   left: -1px;
-  border-width: calc(var(--bs-tooltip-arrow-width) * 0.5) 0 calc(var(--bs-tooltip-arrow-width) * 0.5) var(--bs-tooltip-arrow-height);
+  border-width: calc(var(--bs-tooltip-arrow-width) * 0.5) 0
+    calc(var(--bs-tooltip-arrow-width) * 0.5) var(--bs-tooltip-arrow-height);
   border-left-color: var(--bs-tooltip-bg);
 }
 .my-bootstrap-scope .tooltip-inner {
@@ -5440,7 +5751,9 @@ a > .my-bootstrap-scope code {
   --bs-popover-border-width: var(--bs-border-width);
   --bs-popover-border-color: var(--bs-border-color-translucent);
   --bs-popover-border-radius: var(--bs-border-radius-lg);
-  --bs-popover-inner-border-radius: calc(var(--bs-border-radius-lg) - var(--bs-border-width));
+  --bs-popover-inner-border-radius: calc(
+    var(--bs-border-radius-lg) - var(--bs-border-width)
+  );
   --bs-popover-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   --bs-popover-header-padding-x: 1rem;
   --bs-popover-header-padding-y: 0.5rem;
@@ -5482,81 +5795,162 @@ a > .my-bootstrap-scope code {
   width: var(--bs-popover-arrow-width);
   height: var(--bs-popover-arrow-height);
 }
-.my-bootstrap-scope .popover .popover-arrow::before, .my-bootstrap-scope .popover .popover-arrow::after {
+.my-bootstrap-scope .popover .popover-arrow::before,
+.my-bootstrap-scope .popover .popover-arrow::after {
   position: absolute;
   display: block;
-  content: "";
+  content: '';
   border-color: transparent;
   border-style: solid;
   border-width: 0;
 }
-.my-bootstrap-scope .bs-popover-top > .popover-arrow, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=top] > .popover-arrow {
-  bottom: calc(-1 * (var(--bs-popover-arrow-height)) - var(--bs-popover-border-width));
+.my-bootstrap-scope .bs-popover-top > .popover-arrow,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='top']
+  > .popover-arrow {
+  bottom: calc(
+    -1 * (var(--bs-popover-arrow-height)) - var(--bs-popover-border-width)
+  );
 }
-.my-bootstrap-scope .bs-popover-top > .popover-arrow::before, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=top] > .popover-arrow::before, .my-bootstrap-scope .bs-popover-top > .popover-arrow::after, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=top] > .popover-arrow::after {
-  border-width: var(--bs-popover-arrow-height) calc(var(--bs-popover-arrow-width) * 0.5) 0;
+.my-bootstrap-scope .bs-popover-top > .popover-arrow::before,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='top']
+  > .popover-arrow::before,
+.my-bootstrap-scope .bs-popover-top > .popover-arrow::after,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='top']
+  > .popover-arrow::after {
+  border-width: var(--bs-popover-arrow-height)
+    calc(var(--bs-popover-arrow-width) * 0.5) 0;
 }
-.my-bootstrap-scope .bs-popover-top > .popover-arrow::before, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=top] > .popover-arrow::before {
+.my-bootstrap-scope .bs-popover-top > .popover-arrow::before,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='top']
+  > .popover-arrow::before {
   bottom: 0;
   border-top-color: var(--bs-popover-arrow-border);
 }
-.my-bootstrap-scope .bs-popover-top > .popover-arrow::after, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=top] > .popover-arrow::after {
+.my-bootstrap-scope .bs-popover-top > .popover-arrow::after,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='top']
+  > .popover-arrow::after {
   bottom: var(--bs-popover-border-width);
   border-top-color: var(--bs-popover-bg);
 }
-.my-bootstrap-scope .bs-popover-end > .popover-arrow, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=right] > .popover-arrow {
-  left: calc(-1 * (var(--bs-popover-arrow-height)) - var(--bs-popover-border-width));
+.my-bootstrap-scope .bs-popover-end > .popover-arrow,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='right']
+  > .popover-arrow {
+  left: calc(
+    -1 * (var(--bs-popover-arrow-height)) - var(--bs-popover-border-width)
+  );
   width: var(--bs-popover-arrow-height);
   height: var(--bs-popover-arrow-width);
 }
-.my-bootstrap-scope .bs-popover-end > .popover-arrow::before, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=right] > .popover-arrow::before, .my-bootstrap-scope .bs-popover-end > .popover-arrow::after, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=right] > .popover-arrow::after {
-  border-width: calc(var(--bs-popover-arrow-width) * 0.5) var(--bs-popover-arrow-height) calc(var(--bs-popover-arrow-width) * 0.5) 0;
+.my-bootstrap-scope .bs-popover-end > .popover-arrow::before,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='right']
+  > .popover-arrow::before,
+.my-bootstrap-scope .bs-popover-end > .popover-arrow::after,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='right']
+  > .popover-arrow::after {
+  border-width: calc(var(--bs-popover-arrow-width) * 0.5)
+    var(--bs-popover-arrow-height) calc(var(--bs-popover-arrow-width) * 0.5) 0;
 }
-.my-bootstrap-scope .bs-popover-end > .popover-arrow::before, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=right] > .popover-arrow::before {
+.my-bootstrap-scope .bs-popover-end > .popover-arrow::before,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='right']
+  > .popover-arrow::before {
   left: 0;
   border-right-color: var(--bs-popover-arrow-border);
 }
-.my-bootstrap-scope .bs-popover-end > .popover-arrow::after, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=right] > .popover-arrow::after {
+.my-bootstrap-scope .bs-popover-end > .popover-arrow::after,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='right']
+  > .popover-arrow::after {
   left: var(--bs-popover-border-width);
   border-right-color: var(--bs-popover-bg);
 }
-.my-bootstrap-scope .bs-popover-bottom > .popover-arrow, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=bottom] > .popover-arrow {
-  top: calc(-1 * (var(--bs-popover-arrow-height)) - var(--bs-popover-border-width));
+.my-bootstrap-scope .bs-popover-bottom > .popover-arrow,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='bottom']
+  > .popover-arrow {
+  top: calc(
+    -1 * (var(--bs-popover-arrow-height)) - var(--bs-popover-border-width)
+  );
 }
-.my-bootstrap-scope .bs-popover-bottom > .popover-arrow::before, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=bottom] > .popover-arrow::before, .my-bootstrap-scope .bs-popover-bottom > .popover-arrow::after, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=bottom] > .popover-arrow::after {
-  border-width: 0 calc(var(--bs-popover-arrow-width) * 0.5) var(--bs-popover-arrow-height);
+.my-bootstrap-scope .bs-popover-bottom > .popover-arrow::before,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='bottom']
+  > .popover-arrow::before,
+.my-bootstrap-scope .bs-popover-bottom > .popover-arrow::after,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='bottom']
+  > .popover-arrow::after {
+  border-width: 0 calc(var(--bs-popover-arrow-width) * 0.5)
+    var(--bs-popover-arrow-height);
 }
-.my-bootstrap-scope .bs-popover-bottom > .popover-arrow::before, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=bottom] > .popover-arrow::before {
+.my-bootstrap-scope .bs-popover-bottom > .popover-arrow::before,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='bottom']
+  > .popover-arrow::before {
   top: 0;
   border-bottom-color: var(--bs-popover-arrow-border);
 }
-.my-bootstrap-scope .bs-popover-bottom > .popover-arrow::after, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=bottom] > .popover-arrow::after {
+.my-bootstrap-scope .bs-popover-bottom > .popover-arrow::after,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='bottom']
+  > .popover-arrow::after {
   top: var(--bs-popover-border-width);
   border-bottom-color: var(--bs-popover-bg);
 }
-.my-bootstrap-scope .bs-popover-bottom .popover-header::before, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=bottom] .popover-header::before {
+.my-bootstrap-scope .bs-popover-bottom .popover-header::before,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='bottom']
+  .popover-header::before {
   position: absolute;
   top: 0;
   left: 50%;
   display: block;
   width: var(--bs-popover-arrow-width);
   margin-left: calc(-0.5 * var(--bs-popover-arrow-width));
-  content: "";
-  border-bottom: var(--bs-popover-border-width) solid var(--bs-popover-header-bg);
+  content: '';
+  border-bottom: var(--bs-popover-border-width) solid
+    var(--bs-popover-header-bg);
 }
-.my-bootstrap-scope .bs-popover-start > .popover-arrow, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=left] > .popover-arrow {
-  right: calc(-1 * (var(--bs-popover-arrow-height)) - var(--bs-popover-border-width));
+.my-bootstrap-scope .bs-popover-start > .popover-arrow,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='left']
+  > .popover-arrow {
+  right: calc(
+    -1 * (var(--bs-popover-arrow-height)) - var(--bs-popover-border-width)
+  );
   width: var(--bs-popover-arrow-height);
   height: var(--bs-popover-arrow-width);
 }
-.my-bootstrap-scope .bs-popover-start > .popover-arrow::before, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=left] > .popover-arrow::before, .my-bootstrap-scope .bs-popover-start > .popover-arrow::after, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=left] > .popover-arrow::after {
-  border-width: calc(var(--bs-popover-arrow-width) * 0.5) 0 calc(var(--bs-popover-arrow-width) * 0.5) var(--bs-popover-arrow-height);
+.my-bootstrap-scope .bs-popover-start > .popover-arrow::before,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='left']
+  > .popover-arrow::before,
+.my-bootstrap-scope .bs-popover-start > .popover-arrow::after,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='left']
+  > .popover-arrow::after {
+  border-width: calc(var(--bs-popover-arrow-width) * 0.5) 0
+    calc(var(--bs-popover-arrow-width) * 0.5) var(--bs-popover-arrow-height);
 }
-.my-bootstrap-scope .bs-popover-start > .popover-arrow::before, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=left] > .popover-arrow::before {
+.my-bootstrap-scope .bs-popover-start > .popover-arrow::before,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='left']
+  > .popover-arrow::before {
   right: 0;
   border-left-color: var(--bs-popover-arrow-border);
 }
-.my-bootstrap-scope .bs-popover-start > .popover-arrow::after, .my-bootstrap-scope .bs-popover-auto[data-popper-placement^=left] > .popover-arrow::after {
+.my-bootstrap-scope .bs-popover-start > .popover-arrow::after,
+.my-bootstrap-scope
+  .bs-popover-auto[data-popper-placement^='left']
+  > .popover-arrow::after {
   right: var(--bs-popover-border-width);
   border-left-color: var(--bs-popover-bg);
 }
@@ -5566,7 +5960,8 @@ a > .my-bootstrap-scope code {
   font-size: var(--bs-popover-header-font-size);
   color: var(--bs-popover-header-color);
   background-color: var(--bs-popover-header-bg);
-  border-bottom: var(--bs-popover-border-width) solid var(--bs-popover-border-color);
+  border-bottom: var(--bs-popover-border-width) solid
+    var(--bs-popover-border-color);
   border-top-left-radius: var(--bs-popover-inner-border-radius);
   border-top-right-radius: var(--bs-popover-inner-border-radius);
 }
@@ -5591,7 +5986,7 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .carousel-inner::after {
   display: block;
   clear: both;
-  content: "";
+  content: '';
 }
 .my-bootstrap-scope .carousel-item {
   position: relative;
@@ -5667,7 +6062,8 @@ a > .my-bootstrap-scope code {
     transition: none;
   }
 }
-.my-bootstrap-scope .carousel-control-prev:hover, .my-bootstrap-scope .carousel-control-prev:focus,
+.my-bootstrap-scope .carousel-control-prev:hover,
+.my-bootstrap-scope .carousel-control-prev:focus,
 .my-bootstrap-scope .carousel-control-next:hover,
 .my-bootstrap-scope .carousel-control-next:focus {
   color: #fff;
@@ -5755,15 +6151,33 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .carousel-dark .carousel-caption {
   color: #000;
 }
-.my-bootstrap-scope [data-bs-theme=dark] .carousel .carousel-control-prev-icon,
-.my-bootstrap-scope [data-bs-theme=dark] .carousel .carousel-control-next-icon, .my-bootstrap-scope [data-bs-theme=dark].carousel .carousel-control-prev-icon,
-.my-bootstrap-scope [data-bs-theme=dark].carousel .carousel-control-next-icon {
+.my-bootstrap-scope
+  [data-bs-theme='dark']
+  .carousel
+  .carousel-control-prev-icon,
+.my-bootstrap-scope
+  [data-bs-theme='dark']
+  .carousel
+  .carousel-control-next-icon,
+.my-bootstrap-scope [data-bs-theme='dark'].carousel .carousel-control-prev-icon,
+.my-bootstrap-scope
+  [data-bs-theme='dark'].carousel
+  .carousel-control-next-icon {
   filter: invert(1) grayscale(100);
 }
-.my-bootstrap-scope [data-bs-theme=dark] .carousel .carousel-indicators [data-bs-target], .my-bootstrap-scope [data-bs-theme=dark].carousel .carousel-indicators [data-bs-target] {
+.my-bootstrap-scope
+  [data-bs-theme='dark']
+  .carousel
+  .carousel-indicators
+  [data-bs-target],
+.my-bootstrap-scope
+  [data-bs-theme='dark'].carousel
+  .carousel-indicators
+  [data-bs-target] {
   background-color: #000;
 }
-.my-bootstrap-scope [data-bs-theme=dark] .carousel .carousel-caption, .my-bootstrap-scope [data-bs-theme=dark].carousel .carousel-caption {
+.my-bootstrap-scope [data-bs-theme='dark'] .carousel .carousel-caption,
+.my-bootstrap-scope [data-bs-theme='dark'].carousel .carousel-caption {
   color: #000;
 }
 .my-bootstrap-scope .spinner-grow,
@@ -5773,7 +6187,8 @@ a > .my-bootstrap-scope code {
   height: var(--bs-spinner-height);
   vertical-align: var(--bs-spinner-vertical-align);
   border-radius: 50%;
-  animation: var(--bs-spinner-animation-speed) linear infinite var(--bs-spinner-animation-name);
+  animation: var(--bs-spinner-animation-speed) linear infinite
+    var(--bs-spinner-animation-name);
 }
 @keyframes spinner-border {
   to {
@@ -5823,7 +6238,12 @@ a > .my-bootstrap-scope code {
     --bs-spinner-animation-speed: 1.5s;
   }
 }
-.my-bootstrap-scope .offcanvas, .my-bootstrap-scope .offcanvas-xxl, .my-bootstrap-scope .offcanvas-xl, .my-bootstrap-scope .offcanvas-lg, .my-bootstrap-scope .offcanvas-md, .my-bootstrap-scope .offcanvas-sm {
+.my-bootstrap-scope .offcanvas,
+.my-bootstrap-scope .offcanvas-xxl,
+.my-bootstrap-scope .offcanvas-xl,
+.my-bootstrap-scope .offcanvas-lg,
+.my-bootstrap-scope .offcanvas-md,
+.my-bootstrap-scope .offcanvas-sm {
   --bs-offcanvas-zindex: 1045;
   --bs-offcanvas-width: 400px;
   --bs-offcanvas-height: 30vh;
@@ -5863,14 +6283,16 @@ a > .my-bootstrap-scope code {
     top: 0;
     left: 0;
     width: var(--bs-offcanvas-width);
-    border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-right: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateX(-100%);
   }
   .my-bootstrap-scope .offcanvas-sm.offcanvas-end {
     top: 0;
     right: 0;
     width: var(--bs-offcanvas-width);
-    border-left: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-left: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateX(100%);
   }
   .my-bootstrap-scope .offcanvas-sm.offcanvas-top {
@@ -5879,7 +6301,8 @@ a > .my-bootstrap-scope code {
     left: 0;
     height: var(--bs-offcanvas-height);
     max-height: 100%;
-    border-bottom: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-bottom: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateY(-100%);
   }
   .my-bootstrap-scope .offcanvas-sm.offcanvas-bottom {
@@ -5887,13 +6310,17 @@ a > .my-bootstrap-scope code {
     left: 0;
     height: var(--bs-offcanvas-height);
     max-height: 100%;
-    border-top: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-top: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateY(100%);
   }
-  .my-bootstrap-scope .offcanvas-sm.showing, .my-bootstrap-scope .offcanvas-sm.show:not(.hiding) {
+  .my-bootstrap-scope .offcanvas-sm.showing,
+  .my-bootstrap-scope .offcanvas-sm.show:not(.hiding) {
     transform: none;
   }
-  .my-bootstrap-scope .offcanvas-sm.showing, .my-bootstrap-scope .offcanvas-sm.hiding, .my-bootstrap-scope .offcanvas-sm.show {
+  .my-bootstrap-scope .offcanvas-sm.showing,
+  .my-bootstrap-scope .offcanvas-sm.hiding,
+  .my-bootstrap-scope .offcanvas-sm.show {
     visibility: visible;
   }
 }
@@ -5940,14 +6367,16 @@ a > .my-bootstrap-scope code {
     top: 0;
     left: 0;
     width: var(--bs-offcanvas-width);
-    border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-right: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateX(-100%);
   }
   .my-bootstrap-scope .offcanvas-md.offcanvas-end {
     top: 0;
     right: 0;
     width: var(--bs-offcanvas-width);
-    border-left: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-left: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateX(100%);
   }
   .my-bootstrap-scope .offcanvas-md.offcanvas-top {
@@ -5956,7 +6385,8 @@ a > .my-bootstrap-scope code {
     left: 0;
     height: var(--bs-offcanvas-height);
     max-height: 100%;
-    border-bottom: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-bottom: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateY(-100%);
   }
   .my-bootstrap-scope .offcanvas-md.offcanvas-bottom {
@@ -5964,13 +6394,17 @@ a > .my-bootstrap-scope code {
     left: 0;
     height: var(--bs-offcanvas-height);
     max-height: 100%;
-    border-top: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-top: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateY(100%);
   }
-  .my-bootstrap-scope .offcanvas-md.showing, .my-bootstrap-scope .offcanvas-md.show:not(.hiding) {
+  .my-bootstrap-scope .offcanvas-md.showing,
+  .my-bootstrap-scope .offcanvas-md.show:not(.hiding) {
     transform: none;
   }
-  .my-bootstrap-scope .offcanvas-md.showing, .my-bootstrap-scope .offcanvas-md.hiding, .my-bootstrap-scope .offcanvas-md.show {
+  .my-bootstrap-scope .offcanvas-md.showing,
+  .my-bootstrap-scope .offcanvas-md.hiding,
+  .my-bootstrap-scope .offcanvas-md.show {
     visibility: visible;
   }
 }
@@ -6017,14 +6451,16 @@ a > .my-bootstrap-scope code {
     top: 0;
     left: 0;
     width: var(--bs-offcanvas-width);
-    border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-right: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateX(-100%);
   }
   .my-bootstrap-scope .offcanvas-lg.offcanvas-end {
     top: 0;
     right: 0;
     width: var(--bs-offcanvas-width);
-    border-left: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-left: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateX(100%);
   }
   .my-bootstrap-scope .offcanvas-lg.offcanvas-top {
@@ -6033,7 +6469,8 @@ a > .my-bootstrap-scope code {
     left: 0;
     height: var(--bs-offcanvas-height);
     max-height: 100%;
-    border-bottom: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-bottom: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateY(-100%);
   }
   .my-bootstrap-scope .offcanvas-lg.offcanvas-bottom {
@@ -6041,13 +6478,17 @@ a > .my-bootstrap-scope code {
     left: 0;
     height: var(--bs-offcanvas-height);
     max-height: 100%;
-    border-top: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-top: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateY(100%);
   }
-  .my-bootstrap-scope .offcanvas-lg.showing, .my-bootstrap-scope .offcanvas-lg.show:not(.hiding) {
+  .my-bootstrap-scope .offcanvas-lg.showing,
+  .my-bootstrap-scope .offcanvas-lg.show:not(.hiding) {
     transform: none;
   }
-  .my-bootstrap-scope .offcanvas-lg.showing, .my-bootstrap-scope .offcanvas-lg.hiding, .my-bootstrap-scope .offcanvas-lg.show {
+  .my-bootstrap-scope .offcanvas-lg.showing,
+  .my-bootstrap-scope .offcanvas-lg.hiding,
+  .my-bootstrap-scope .offcanvas-lg.show {
     visibility: visible;
   }
 }
@@ -6094,14 +6535,16 @@ a > .my-bootstrap-scope code {
     top: 0;
     left: 0;
     width: var(--bs-offcanvas-width);
-    border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-right: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateX(-100%);
   }
   .my-bootstrap-scope .offcanvas-xl.offcanvas-end {
     top: 0;
     right: 0;
     width: var(--bs-offcanvas-width);
-    border-left: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-left: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateX(100%);
   }
   .my-bootstrap-scope .offcanvas-xl.offcanvas-top {
@@ -6110,7 +6553,8 @@ a > .my-bootstrap-scope code {
     left: 0;
     height: var(--bs-offcanvas-height);
     max-height: 100%;
-    border-bottom: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-bottom: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateY(-100%);
   }
   .my-bootstrap-scope .offcanvas-xl.offcanvas-bottom {
@@ -6118,13 +6562,17 @@ a > .my-bootstrap-scope code {
     left: 0;
     height: var(--bs-offcanvas-height);
     max-height: 100%;
-    border-top: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-top: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateY(100%);
   }
-  .my-bootstrap-scope .offcanvas-xl.showing, .my-bootstrap-scope .offcanvas-xl.show:not(.hiding) {
+  .my-bootstrap-scope .offcanvas-xl.showing,
+  .my-bootstrap-scope .offcanvas-xl.show:not(.hiding) {
     transform: none;
   }
-  .my-bootstrap-scope .offcanvas-xl.showing, .my-bootstrap-scope .offcanvas-xl.hiding, .my-bootstrap-scope .offcanvas-xl.show {
+  .my-bootstrap-scope .offcanvas-xl.showing,
+  .my-bootstrap-scope .offcanvas-xl.hiding,
+  .my-bootstrap-scope .offcanvas-xl.show {
     visibility: visible;
   }
 }
@@ -6171,14 +6619,16 @@ a > .my-bootstrap-scope code {
     top: 0;
     left: 0;
     width: var(--bs-offcanvas-width);
-    border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-right: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateX(-100%);
   }
   .my-bootstrap-scope .offcanvas-xxl.offcanvas-end {
     top: 0;
     right: 0;
     width: var(--bs-offcanvas-width);
-    border-left: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-left: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateX(100%);
   }
   .my-bootstrap-scope .offcanvas-xxl.offcanvas-top {
@@ -6187,7 +6637,8 @@ a > .my-bootstrap-scope code {
     left: 0;
     height: var(--bs-offcanvas-height);
     max-height: 100%;
-    border-bottom: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-bottom: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateY(-100%);
   }
   .my-bootstrap-scope .offcanvas-xxl.offcanvas-bottom {
@@ -6195,13 +6646,17 @@ a > .my-bootstrap-scope code {
     left: 0;
     height: var(--bs-offcanvas-height);
     max-height: 100%;
-    border-top: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    border-top: var(--bs-offcanvas-border-width) solid
+      var(--bs-offcanvas-border-color);
     transform: translateY(100%);
   }
-  .my-bootstrap-scope .offcanvas-xxl.showing, .my-bootstrap-scope .offcanvas-xxl.show:not(.hiding) {
+  .my-bootstrap-scope .offcanvas-xxl.showing,
+  .my-bootstrap-scope .offcanvas-xxl.show:not(.hiding) {
     transform: none;
   }
-  .my-bootstrap-scope .offcanvas-xxl.showing, .my-bootstrap-scope .offcanvas-xxl.hiding, .my-bootstrap-scope .offcanvas-xxl.show {
+  .my-bootstrap-scope .offcanvas-xxl.showing,
+  .my-bootstrap-scope .offcanvas-xxl.hiding,
+  .my-bootstrap-scope .offcanvas-xxl.show {
     visibility: visible;
   }
 }
@@ -6245,14 +6700,16 @@ a > .my-bootstrap-scope code {
   top: 0;
   left: 0;
   width: var(--bs-offcanvas-width);
-  border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+  border-right: var(--bs-offcanvas-border-width) solid
+    var(--bs-offcanvas-border-color);
   transform: translateX(-100%);
 }
 .my-bootstrap-scope .offcanvas.offcanvas-end {
   top: 0;
   right: 0;
   width: var(--bs-offcanvas-width);
-  border-left: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+  border-left: var(--bs-offcanvas-border-width) solid
+    var(--bs-offcanvas-border-color);
   transform: translateX(100%);
 }
 .my-bootstrap-scope .offcanvas.offcanvas-top {
@@ -6261,7 +6718,8 @@ a > .my-bootstrap-scope code {
   left: 0;
   height: var(--bs-offcanvas-height);
   max-height: 100%;
-  border-bottom: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+  border-bottom: var(--bs-offcanvas-border-width) solid
+    var(--bs-offcanvas-border-color);
   transform: translateY(-100%);
 }
 .my-bootstrap-scope .offcanvas.offcanvas-bottom {
@@ -6269,13 +6727,17 @@ a > .my-bootstrap-scope code {
   left: 0;
   height: var(--bs-offcanvas-height);
   max-height: 100%;
-  border-top: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+  border-top: var(--bs-offcanvas-border-width) solid
+    var(--bs-offcanvas-border-color);
   transform: translateY(100%);
 }
-.my-bootstrap-scope .offcanvas.showing, .my-bootstrap-scope .offcanvas.show:not(.hiding) {
+.my-bootstrap-scope .offcanvas.showing,
+.my-bootstrap-scope .offcanvas.show:not(.hiding) {
   transform: none;
 }
-.my-bootstrap-scope .offcanvas.showing, .my-bootstrap-scope .offcanvas.hiding, .my-bootstrap-scope .offcanvas.show {
+.my-bootstrap-scope .offcanvas.showing,
+.my-bootstrap-scope .offcanvas.hiding,
+.my-bootstrap-scope .offcanvas.show {
   visibility: visible;
 }
 .my-bootstrap-scope .offcanvas-backdrop {
@@ -6300,7 +6762,8 @@ a > .my-bootstrap-scope code {
   padding: var(--bs-offcanvas-padding-y) var(--bs-offcanvas-padding-x);
 }
 .my-bootstrap-scope .offcanvas-header .btn-close {
-  padding: calc(var(--bs-offcanvas-padding-y) * 0.5) calc(var(--bs-offcanvas-padding-x) * 0.5);
+  padding: calc(var(--bs-offcanvas-padding-y) * 0.5)
+    calc(var(--bs-offcanvas-padding-x) * 0.5);
   margin-top: calc(-0.5 * var(--bs-offcanvas-padding-y));
   margin-right: calc(-0.5 * var(--bs-offcanvas-padding-x));
   margin-bottom: calc(-0.5 * var(--bs-offcanvas-padding-y));
@@ -6324,7 +6787,7 @@ a > .my-bootstrap-scope code {
 }
 .my-bootstrap-scope .placeholder.btn::before {
   display: inline-block;
-  content: "";
+  content: '';
 }
 .my-bootstrap-scope .placeholder-xs {
   min-height: 0.6em;
@@ -6344,7 +6807,12 @@ a > .my-bootstrap-scope code {
   }
 }
 .my-bootstrap-scope .placeholder-wave {
-  mask-image: linear-gradient(130deg, #000 55%, rgba(0, 0, 0, 0.8) 75%, #000 95%);
+  mask-image: linear-gradient(
+    130deg,
+    #000 55%,
+    rgba(0, 0, 0, 0.8) 75%,
+    #000 95%
+  );
   mask-size: 200% 100%;
   animation: placeholder-wave 2s linear infinite;
 }
@@ -6356,7 +6824,7 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .clearfix::after {
   display: block;
   clear: both;
-  content: "";
+  content: '';
 }
 .my-bootstrap-scope .text-bg-primary {
   color: #fff !important;
@@ -6392,85 +6860,144 @@ a > .my-bootstrap-scope code {
 }
 .my-bootstrap-scope .link-primary {
   color: RGBA(var(--bs-primary-rgb, var(--bs-link-opacity, 1)));
-  text-decoration-color: RGBA(var(--bs-primary-rgb), var(--bs-link-underline-opacity, 1));
+  text-decoration-color: RGBA(
+    var(--bs-primary-rgb),
+    var(--bs-link-underline-opacity, 1)
+  );
 }
-.my-bootstrap-scope .link-primary:hover, .my-bootstrap-scope .link-primary:focus {
+.my-bootstrap-scope .link-primary:hover,
+.my-bootstrap-scope .link-primary:focus {
   color: RGBA(10, 88, 202, var(--bs-link-opacity, 1));
   text-decoration-color: RGBA(10, 88, 202, var(--bs-link-underline-opacity, 1));
 }
 .my-bootstrap-scope .link-secondary {
   color: RGBA(var(--bs-secondary-rgb, var(--bs-link-opacity, 1)));
-  text-decoration-color: RGBA(var(--bs-secondary-rgb), var(--bs-link-underline-opacity, 1));
+  text-decoration-color: RGBA(
+    var(--bs-secondary-rgb),
+    var(--bs-link-underline-opacity, 1)
+  );
 }
-.my-bootstrap-scope .link-secondary:hover, .my-bootstrap-scope .link-secondary:focus {
+.my-bootstrap-scope .link-secondary:hover,
+.my-bootstrap-scope .link-secondary:focus {
   color: RGBA(86, 94, 100, var(--bs-link-opacity, 1));
   text-decoration-color: RGBA(86, 94, 100, var(--bs-link-underline-opacity, 1));
 }
 .my-bootstrap-scope .link-success {
   color: RGBA(var(--bs-success-rgb, var(--bs-link-opacity, 1)));
-  text-decoration-color: RGBA(var(--bs-success-rgb), var(--bs-link-underline-opacity, 1));
+  text-decoration-color: RGBA(
+    var(--bs-success-rgb),
+    var(--bs-link-underline-opacity, 1)
+  );
 }
-.my-bootstrap-scope .link-success:hover, .my-bootstrap-scope .link-success:focus {
+.my-bootstrap-scope .link-success:hover,
+.my-bootstrap-scope .link-success:focus {
   color: RGBA(20, 108, 67, var(--bs-link-opacity, 1));
   text-decoration-color: RGBA(20, 108, 67, var(--bs-link-underline-opacity, 1));
 }
 .my-bootstrap-scope .link-info {
   color: RGBA(var(--bs-info-rgb, var(--bs-link-opacity, 1)));
-  text-decoration-color: RGBA(var(--bs-info-rgb), var(--bs-link-underline-opacity, 1));
+  text-decoration-color: RGBA(
+    var(--bs-info-rgb),
+    var(--bs-link-underline-opacity, 1)
+  );
 }
-.my-bootstrap-scope .link-info:hover, .my-bootstrap-scope .link-info:focus {
+.my-bootstrap-scope .link-info:hover,
+.my-bootstrap-scope .link-info:focus {
   color: RGBA(61, 213, 243, var(--bs-link-opacity, 1));
-  text-decoration-color: RGBA(61, 213, 243, var(--bs-link-underline-opacity, 1));
+  text-decoration-color: RGBA(
+    61,
+    213,
+    243,
+    var(--bs-link-underline-opacity, 1)
+  );
 }
 .my-bootstrap-scope .link-warning {
   color: RGBA(var(--bs-warning-rgb, var(--bs-link-opacity, 1)));
-  text-decoration-color: RGBA(var(--bs-warning-rgb), var(--bs-link-underline-opacity, 1));
+  text-decoration-color: RGBA(
+    var(--bs-warning-rgb),
+    var(--bs-link-underline-opacity, 1)
+  );
 }
-.my-bootstrap-scope .link-warning:hover, .my-bootstrap-scope .link-warning:focus {
+.my-bootstrap-scope .link-warning:hover,
+.my-bootstrap-scope .link-warning:focus {
   color: RGBA(255, 205, 57, var(--bs-link-opacity, 1));
-  text-decoration-color: RGBA(255, 205, 57, var(--bs-link-underline-opacity, 1));
+  text-decoration-color: RGBA(
+    255,
+    205,
+    57,
+    var(--bs-link-underline-opacity, 1)
+  );
 }
 .my-bootstrap-scope .link-danger {
   color: RGBA(var(--bs-danger-rgb, var(--bs-link-opacity, 1)));
-  text-decoration-color: RGBA(var(--bs-danger-rgb), var(--bs-link-underline-opacity, 1));
+  text-decoration-color: RGBA(
+    var(--bs-danger-rgb),
+    var(--bs-link-underline-opacity, 1)
+  );
 }
-.my-bootstrap-scope .link-danger:hover, .my-bootstrap-scope .link-danger:focus {
+.my-bootstrap-scope .link-danger:hover,
+.my-bootstrap-scope .link-danger:focus {
   color: RGBA(176, 42, 55, var(--bs-link-opacity, 1));
   text-decoration-color: RGBA(176, 42, 55, var(--bs-link-underline-opacity, 1));
 }
 .my-bootstrap-scope .link-light {
   color: RGBA(var(--bs-light-rgb, var(--bs-link-opacity, 1)));
-  text-decoration-color: RGBA(var(--bs-light-rgb), var(--bs-link-underline-opacity, 1));
+  text-decoration-color: RGBA(
+    var(--bs-light-rgb),
+    var(--bs-link-underline-opacity, 1)
+  );
 }
-.my-bootstrap-scope .link-light:hover, .my-bootstrap-scope .link-light:focus {
+.my-bootstrap-scope .link-light:hover,
+.my-bootstrap-scope .link-light:focus {
   color: RGBA(249, 250, 251, var(--bs-link-opacity, 1));
-  text-decoration-color: RGBA(249, 250, 251, var(--bs-link-underline-opacity, 1));
+  text-decoration-color: RGBA(
+    249,
+    250,
+    251,
+    var(--bs-link-underline-opacity, 1)
+  );
 }
 .my-bootstrap-scope .link-dark {
   color: RGBA(var(--bs-dark-rgb, var(--bs-link-opacity, 1)));
-  text-decoration-color: RGBA(var(--bs-dark-rgb), var(--bs-link-underline-opacity, 1));
+  text-decoration-color: RGBA(
+    var(--bs-dark-rgb),
+    var(--bs-link-underline-opacity, 1)
+  );
 }
-.my-bootstrap-scope .link-dark:hover, .my-bootstrap-scope .link-dark:focus {
+.my-bootstrap-scope .link-dark:hover,
+.my-bootstrap-scope .link-dark:focus {
   color: RGBA(26, 30, 33, var(--bs-link-opacity, 1));
   text-decoration-color: RGBA(26, 30, 33, var(--bs-link-underline-opacity, 1));
 }
 .my-bootstrap-scope .link-body-emphasis {
   color: RGBA(var(--bs-emphasis-color-rgb), var(--bs-link-opacity, 1));
-  text-decoration-color: RGBA(var(--bs-emphasis-color-rgb), var(--bs-link-underline-opacity, 1));
+  text-decoration-color: RGBA(
+    var(--bs-emphasis-color-rgb),
+    var(--bs-link-underline-opacity, 1)
+  );
 }
-.my-bootstrap-scope .link-body-emphasis:hover, .my-bootstrap-scope .link-body-emphasis:focus {
+.my-bootstrap-scope .link-body-emphasis:hover,
+.my-bootstrap-scope .link-body-emphasis:focus {
   color: RGBA(var(--bs-emphasis-color-rgb), var(--bs-link-opacity, 0.75));
-  text-decoration-color: RGBA(var(--bs-emphasis-color-rgb), var(--bs-link-underline-opacity, 0.75));
+  text-decoration-color: RGBA(
+    var(--bs-emphasis-color-rgb),
+    var(--bs-link-underline-opacity, 0.75)
+  );
 }
 .my-bootstrap-scope .focus-ring:focus {
   outline: 0;
-  box-shadow: var(--bs-focus-ring-x, 0) var(--bs-focus-ring-y, 0) var(--bs-focus-ring-blur, 0) var(--bs-focus-ring-width) var(--bs-focus-ring-color);
+  box-shadow: var(--bs-focus-ring-x, 0) var(--bs-focus-ring-y, 0)
+    var(--bs-focus-ring-blur, 0) var(--bs-focus-ring-width)
+    var(--bs-focus-ring-color);
 }
 .my-bootstrap-scope .icon-link {
   display: inline-flex;
   gap: 0.375rem;
   align-items: center;
-  text-decoration-color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 0.5));
+  text-decoration-color: rgba(
+    var(--bs-link-color-rgb),
+    var(--bs-link-opacity, 0.5)
+  );
   text-underline-offset: 0.25em;
   backface-visibility: hidden;
 }
@@ -6486,7 +7013,8 @@ a > .my-bootstrap-scope code {
     transition: none;
   }
 }
-.my-bootstrap-scope .icon-link-hover:hover > .bi, .my-bootstrap-scope .icon-link-hover:focus-visible > .bi {
+.my-bootstrap-scope .icon-link-hover:hover > .bi,
+.my-bootstrap-scope .icon-link-hover:focus-visible > .bi {
   transform: var(--bs-icon-link-transform, translate3d(0.25em, 0, 0));
 }
 .my-bootstrap-scope .ratio {
@@ -6496,7 +7024,7 @@ a > .my-bootstrap-scope code {
 .my-bootstrap-scope .ratio::before {
   display: block;
   padding-top: var(--bs-aspect-ratio);
-  content: "";
+  content: '';
 }
 .my-bootstrap-scope .ratio > * {
   position: absolute;
@@ -6625,7 +7153,8 @@ a > .my-bootstrap-scope code {
   border: 0 !important;
 }
 .my-bootstrap-scope .visually-hidden:not(caption),
-.my-bootstrap-scope .visually-hidden-focusable:not(:focus):not(:focus-within):not(caption) {
+.my-bootstrap-scope
+  .visually-hidden-focusable:not(:focus):not(:focus-within):not(caption) {
   position: absolute !important;
 }
 .my-bootstrap-scope .stretched-link::after {
@@ -6635,7 +7164,7 @@ a > .my-bootstrap-scope code {
   bottom: 0;
   left: 0;
   z-index: 1;
-  content: "";
+  content: '';
 }
 .my-bootstrap-scope .text-truncate {
   overflow: hidden;
@@ -6789,25 +7318,43 @@ a > .my-bootstrap-scope code {
   box-shadow: none !important;
 }
 .my-bootstrap-scope .focus-ring-primary {
-  --bs-focus-ring-color: rgba(var(--bs-primary-rgb), var(--bs-focus-ring-opacity));
+  --bs-focus-ring-color: rgba(
+    var(--bs-primary-rgb),
+    var(--bs-focus-ring-opacity)
+  );
 }
 .my-bootstrap-scope .focus-ring-secondary {
-  --bs-focus-ring-color: rgba(var(--bs-secondary-rgb), var(--bs-focus-ring-opacity));
+  --bs-focus-ring-color: rgba(
+    var(--bs-secondary-rgb),
+    var(--bs-focus-ring-opacity)
+  );
 }
 .my-bootstrap-scope .focus-ring-success {
-  --bs-focus-ring-color: rgba(var(--bs-success-rgb), var(--bs-focus-ring-opacity));
+  --bs-focus-ring-color: rgba(
+    var(--bs-success-rgb),
+    var(--bs-focus-ring-opacity)
+  );
 }
 .my-bootstrap-scope .focus-ring-info {
   --bs-focus-ring-color: rgba(var(--bs-info-rgb), var(--bs-focus-ring-opacity));
 }
 .my-bootstrap-scope .focus-ring-warning {
-  --bs-focus-ring-color: rgba(var(--bs-warning-rgb), var(--bs-focus-ring-opacity));
+  --bs-focus-ring-color: rgba(
+    var(--bs-warning-rgb),
+    var(--bs-focus-ring-opacity)
+  );
 }
 .my-bootstrap-scope .focus-ring-danger {
-  --bs-focus-ring-color: rgba(var(--bs-danger-rgb), var(--bs-focus-ring-opacity));
+  --bs-focus-ring-color: rgba(
+    var(--bs-danger-rgb),
+    var(--bs-focus-ring-opacity)
+  );
 }
 .my-bootstrap-scope .focus-ring-light {
-  --bs-focus-ring-color: rgba(var(--bs-light-rgb), var(--bs-focus-ring-opacity));
+  --bs-focus-ring-color: rgba(
+    var(--bs-light-rgb),
+    var(--bs-focus-ring-opacity)
+  );
 }
 .my-bootstrap-scope .focus-ring-dark {
   --bs-focus-ring-color: rgba(var(--bs-dark-rgb), var(--bs-focus-ring-opacity));
@@ -6879,40 +7426,53 @@ a > .my-bootstrap-scope code {
   border: 0 !important;
 }
 .my-bootstrap-scope .border-top {
-  border-top: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+  border-top: var(--bs-border-width) var(--bs-border-style)
+    var(--bs-border-color) !important;
 }
 .my-bootstrap-scope .border-top-0 {
   border-top: 0 !important;
 }
 .my-bootstrap-scope .border-end {
-  border-right: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+  border-right: var(--bs-border-width) var(--bs-border-style)
+    var(--bs-border-color) !important;
 }
 .my-bootstrap-scope .border-end-0 {
   border-right: 0 !important;
 }
 .my-bootstrap-scope .border-bottom {
-  border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+  border-bottom: var(--bs-border-width) var(--bs-border-style)
+    var(--bs-border-color) !important;
 }
 .my-bootstrap-scope .border-bottom-0 {
   border-bottom: 0 !important;
 }
 .my-bootstrap-scope .border-start {
-  border-left: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+  border-left: var(--bs-border-width) var(--bs-border-style)
+    var(--bs-border-color) !important;
 }
 .my-bootstrap-scope .border-start-0 {
   border-left: 0 !important;
 }
 .my-bootstrap-scope .border-primary {
   --bs-border-opacity: 1;
-  border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
+  border-color: rgba(
+    var(--bs-primary-rgb),
+    var(--bs-border-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .border-secondary {
   --bs-border-opacity: 1;
-  border-color: rgba(var(--bs-secondary-rgb), var(--bs-border-opacity)) !important;
+  border-color: rgba(
+    var(--bs-secondary-rgb),
+    var(--bs-border-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .border-success {
   --bs-border-opacity: 1;
-  border-color: rgba(var(--bs-success-rgb), var(--bs-border-opacity)) !important;
+  border-color: rgba(
+    var(--bs-success-rgb),
+    var(--bs-border-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .border-info {
   --bs-border-opacity: 1;
@@ -6920,7 +7480,10 @@ a > .my-bootstrap-scope code {
 }
 .my-bootstrap-scope .border-warning {
   --bs-border-opacity: 1;
-  border-color: rgba(var(--bs-warning-rgb), var(--bs-border-opacity)) !important;
+  border-color: rgba(
+    var(--bs-warning-rgb),
+    var(--bs-border-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .border-danger {
   --bs-border-opacity: 1;
@@ -7781,39 +8344,66 @@ a > .my-bootstrap-scope code {
 }
 .my-bootstrap-scope .link-underline-primary {
   --bs-link-underline-opacity: 1;
-  text-decoration-color: rgba(var(--bs-primary-rgb), var(--bs-link-underline-opacity)) !important;
+  text-decoration-color: rgba(
+    var(--bs-primary-rgb),
+    var(--bs-link-underline-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .link-underline-secondary {
   --bs-link-underline-opacity: 1;
-  text-decoration-color: rgba(var(--bs-secondary-rgb), var(--bs-link-underline-opacity)) !important;
+  text-decoration-color: rgba(
+    var(--bs-secondary-rgb),
+    var(--bs-link-underline-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .link-underline-success {
   --bs-link-underline-opacity: 1;
-  text-decoration-color: rgba(var(--bs-success-rgb), var(--bs-link-underline-opacity)) !important;
+  text-decoration-color: rgba(
+    var(--bs-success-rgb),
+    var(--bs-link-underline-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .link-underline-info {
   --bs-link-underline-opacity: 1;
-  text-decoration-color: rgba(var(--bs-info-rgb), var(--bs-link-underline-opacity)) !important;
+  text-decoration-color: rgba(
+    var(--bs-info-rgb),
+    var(--bs-link-underline-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .link-underline-warning {
   --bs-link-underline-opacity: 1;
-  text-decoration-color: rgba(var(--bs-warning-rgb), var(--bs-link-underline-opacity)) !important;
+  text-decoration-color: rgba(
+    var(--bs-warning-rgb),
+    var(--bs-link-underline-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .link-underline-danger {
   --bs-link-underline-opacity: 1;
-  text-decoration-color: rgba(var(--bs-danger-rgb), var(--bs-link-underline-opacity)) !important;
+  text-decoration-color: rgba(
+    var(--bs-danger-rgb),
+    var(--bs-link-underline-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .link-underline-light {
   --bs-link-underline-opacity: 1;
-  text-decoration-color: rgba(var(--bs-light-rgb), var(--bs-link-underline-opacity)) !important;
+  text-decoration-color: rgba(
+    var(--bs-light-rgb),
+    var(--bs-link-underline-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .link-underline-dark {
   --bs-link-underline-opacity: 1;
-  text-decoration-color: rgba(var(--bs-dark-rgb), var(--bs-link-underline-opacity)) !important;
+  text-decoration-color: rgba(
+    var(--bs-dark-rgb),
+    var(--bs-link-underline-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .link-underline {
   --bs-link-underline-opacity: 1;
-  text-decoration-color: rgba(var(--bs-link-color-rgb), var(--bs-link-underline-opacity, 1)) !important;
+  text-decoration-color: rgba(
+    var(--bs-link-color-rgb),
+    var(--bs-link-underline-opacity, 1)
+  ) !important;
 }
 .my-bootstrap-scope .link-underline-opacity-0 {
   --bs-link-underline-opacity: 0;
@@ -7853,15 +8443,24 @@ a > .my-bootstrap-scope code {
 }
 .my-bootstrap-scope .bg-primary {
   --bs-bg-opacity: 1;
-  background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
+  background-color: rgba(
+    var(--bs-primary-rgb),
+    var(--bs-bg-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .bg-secondary {
   --bs-bg-opacity: 1;
-  background-color: rgba(var(--bs-secondary-rgb), var(--bs-bg-opacity)) !important;
+  background-color: rgba(
+    var(--bs-secondary-rgb),
+    var(--bs-bg-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .bg-success {
   --bs-bg-opacity: 1;
-  background-color: rgba(var(--bs-success-rgb), var(--bs-bg-opacity)) !important;
+  background-color: rgba(
+    var(--bs-success-rgb),
+    var(--bs-bg-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .bg-info {
   --bs-bg-opacity: 1;
@@ -7869,7 +8468,10 @@ a > .my-bootstrap-scope code {
 }
 .my-bootstrap-scope .bg-warning {
   --bs-bg-opacity: 1;
-  background-color: rgba(var(--bs-warning-rgb), var(--bs-bg-opacity)) !important;
+  background-color: rgba(
+    var(--bs-warning-rgb),
+    var(--bs-bg-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .bg-danger {
   --bs-bg-opacity: 1;
@@ -7893,7 +8495,10 @@ a > .my-bootstrap-scope code {
 }
 .my-bootstrap-scope .bg-body {
   --bs-bg-opacity: 1;
-  background-color: rgba(var(--bs-body-bg-rgb), var(--bs-bg-opacity)) !important;
+  background-color: rgba(
+    var(--bs-body-bg-rgb),
+    var(--bs-bg-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .bg-transparent {
   --bs-bg-opacity: 1;
@@ -7901,11 +8506,17 @@ a > .my-bootstrap-scope code {
 }
 .my-bootstrap-scope .bg-body-secondary {
   --bs-bg-opacity: 1;
-  background-color: rgba(var(--bs-secondary-bg-rgb), var(--bs-bg-opacity)) !important;
+  background-color: rgba(
+    var(--bs-secondary-bg-rgb),
+    var(--bs-bg-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .bg-body-tertiary {
   --bs-bg-opacity: 1;
-  background-color: rgba(var(--bs-tertiary-bg-rgb), var(--bs-bg-opacity)) !important;
+  background-color: rgba(
+    var(--bs-tertiary-bg-rgb),
+    var(--bs-bg-opacity)
+  ) !important;
 }
 .my-bootstrap-scope .bg-opacity-10 {
   --bs-bg-opacity: 0.1;

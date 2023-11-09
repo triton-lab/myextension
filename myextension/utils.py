@@ -7,9 +7,9 @@ from pathlib import Path
 from typing import Dict, Optional, Tuple
 import sqlite3
 from sqlite3 import Connection
-import platformdirs
 import urllib.parse
 from http.client import HTTPResponse
+import platformdirs
 
 from .types import JobMetadata
 
@@ -42,10 +42,10 @@ def _create_db(p: Path) -> Connection:
     logging.info(">>>-----------------------")
     logging.info(f"  Creating SQLite DB: {p}")
     db = sqlite3.connect(p)
-    entries = ", ".join(f"{field.name} text" for field in dataclasses.fields(JobMetadata))
-    db.execute(
-        f"create table jobmeta ({entries})"
+    entries = ", ".join(
+        f"{field.name} text" for field in dataclasses.fields(JobMetadata)
     )
+    db.execute(f"create table jobmeta ({entries})")
     logging.info("<<<-----------------------")
     return db
 
@@ -53,20 +53,19 @@ def _create_db(p: Path) -> Connection:
 def open_or_create_db(p: Optional[Path] = None) -> Connection:
     if p is None:
         p = _get_default_db_path()
-    db =  sqlite3.connect(p) if p.exists() else _create_db(p)
+    db = sqlite3.connect(p) if p.exists() else _create_db(p)
 
     if _is_db_outdated(db):
-        logging.warn(">>>>==============================")
-        logging.warn("  Upgrading the job DB")
+        logging.warning(">>>>==============================")
+        logging.warning("  Upgrading the job DB")
         db = _upgrade_db(db)
-        logging.warn("<<<<==============================")
+        logging.warning("<<<<==============================")
     return db
 
 
 def _is_db_outdated(db: Connection) -> bool:
-    """Check if the database schema is comptible with with JobMetadata
-    """
-    rows = db.execute(f"pragma table_info(jobmeta)").fetchall()
+    """Check if the database schema is comptible with with JobMetadata"""
+    rows = db.execute("pragma table_info(jobmeta)").fetchall()
     db_fields = tuple(row[1] for row in rows)
     jobmeta_fields = tuple(x.name for x in dataclasses.fields(JobMetadata))
     res = db_fields != jobmeta_fields
@@ -77,23 +76,22 @@ def _is_db_outdated(db: Connection) -> bool:
 
 
 def _upgrade_db(db: Connection) -> Connection:
-    """Make DB compatible with JobMetadata fields
-    """
+    """Make DB compatible with JobMetadata fields"""
     # extract data to memory
-    xs = db.execute(f"pragma table_info(jobmeta)").fetchall()
+    xs = db.execute("pragma table_info(jobmeta)").fetchall()
     past_field_names = tuple(x[1] for x in xs)
     jobmeta_fields = [x.name for x in dataclasses.fields(JobMetadata)]
     past_rows = db.execute("select * from jobmeta").fetchall()
     p = get_db_path(db)
 
     if not (set(past_field_names) < set(jobmeta_fields)):
-        logging.warn(">>>======================================================")
-        logging.warn("  Existing DB is incompatible with JobMetadata")
-        logging.warn(f"   unique past field names: ")
-        for name in (set(past_field_names) - set(jobmeta_fields)):
-            logging.warn(f"     {name}")
-        logging.warn(f" ---> Recreating the DB file: {p}")
-        logging.warn(">>>======================================================")
+        logging.warning(">>>======================================================")
+        logging.warning("  Existing DB is incompatible with JobMetadata")
+        logging.warning("   unique past field names: ")
+        for name in set(past_field_names) - set(jobmeta_fields):
+            logging.warning(f"     {name}")
+        logging.warning(f" ---> Recreating the DB file: {p}")
+        logging.warning(">>>======================================================")
         db.close()
         p.unlink()
         return _create_db(p)
@@ -107,8 +105,10 @@ def _upgrade_db(db: Connection) -> Connection:
     with db:
         for row in past_rows:
             d = dict(zip(past_field_names, row))
-            item = JobMetadata(**d)   # supply default value here
-            db.execute(f"insert into jobmeta values ({slots})", dataclasses.astuple(item))
+            item = JobMetadata(**d)  # supply default value here
+            db.execute(
+                f"insert into jobmeta values ({slots})", dataclasses.astuple(item)
+            )
 
     return db
 
@@ -125,7 +125,7 @@ def get_hub_service_url(api: str) -> str:
     # Also consider using JUPYTERHUBSERVICE_URL if available.
     # https://jupyterhub.readthedocs.io/en/stable/reference/spawners.html#environment-variables-and-command-line-arguments
     base = parsed.scheme + "://" + (parsed.hostname or "") + ":12345"
-    return join_url_parts(base, f"/services/batch", api)
+    return join_url_parts(base, "/services/batch", api)
 
 
 def get_header_auth_keyval() -> Optional[Tuple[str, str]]:
