@@ -31,7 +31,7 @@ from .types import JobInfo, JobMetadata, JobStatus, JobStatusEncoder, to_status
 
 
 DRY_RUN = (not bool(os.environ.get("JUPYTERHUB_API_URL", ""))) or bool(
-    os.environ.get("JUPYTERLAB_BATCH_DRYRUN", "")
+    os.environ.get("JUPYTERHUB_BATCH_DRYRUN", "")
 )
 
 
