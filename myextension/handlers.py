@@ -411,7 +411,7 @@ class JobListHandler(APIHandler):
             self.log.debug("DRY_RUN activated in delete()")
         else:
             self.log.debug("---- Cancel Job: %s ----", job_id)
-            res = self._cancel_job(meta.request_id, meta.instance_id)
+            res = self._cancel_job(meta.request_id, meta.instance_id, job_id)
             self.log.debug(res)
 
         # TODO: delete wisely based on `res`
@@ -530,7 +530,7 @@ class JobListHandler(APIHandler):
         self.log.info("Asking jobs statuses: %s", url)
         return self._http_get(url)
 
-    def _cancel_job(self, request_id: str, instance_id: str) -> Dict:
+    def _cancel_job(self, request_id: str, instance_id: str, job_id: str) -> Dict:
         """
         Return a dict with response keys:
             cancel: notfound_request_id|error...|<cancel_spot_instance_requests response>
@@ -540,6 +540,7 @@ class JobListHandler(APIHandler):
             {
                 "request_id": request_id,
                 "instance_id": instance_id,
+                "job_id": job_id,
             }
         )
         url = utils.get_hub_service_url(f"/job?{params}")
