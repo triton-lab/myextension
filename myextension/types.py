@@ -24,7 +24,7 @@ class JobStatusEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-@dataclass()
+@dataclass
 class JobMetadata:
     job_id: str
     name: str
@@ -38,7 +38,7 @@ class JobMetadata:
     extra: str = ""
 
 
-@dataclass()
+@dataclass
 class JobInfo:
     job_id: str
     name: str
